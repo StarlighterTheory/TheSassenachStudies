@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Sassenach Studies — Media Library</title>
+<meta name="description" content="Audio & video library for The Sassenach Studies — Bloodlines & Timelines (Season 1)." />
+<link rel="preconnect" href="https://archive.org" />
+<style>
+  /* =============================
+     Sassenach Studies — parchment & ink skin
+     Single‑file GitHub Pages site
+     ============================= */
+  :root{
+    /* Watercolor/ink palette to match your artwork */
+    --ink: #2a2a2a;
+    --ink-2: #3a3a3a;
+    --parchment: #f3ecd8;
+    --parchment-2:#efe6cf;
+    --stone:#6c7a86;
+    --fern:#6c8a6b;
+    --heather:#8b6f9d;
+    --thread:#c64a3a; /* red thread */
+    --sky:#4a6b8a;    /* spiral blue */
+    --accent:#274C56; /* deep teal */
+  }
+  html,body{height:100%}
+  body{
+    margin:0; font:16px/1.5 "Georgia", ui-serif, Cambria, "Times New Roman", serif; color:var(--ink);
+    background: radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)) , var(--parchment);
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding:28px 16px 64px}
+  header{display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; margin-bottom:22px}
+  .brand{display:flex; gap:14px; align-items:center}
+  .brand .logo{width:54px; height:54px; border-radius:12px; background: conic-gradient(from 0deg, var(--sky), var(--parchment) 35%, var(--thread) 36%, var(--thread) 64%, var(--parchment) 65%, var(--sky)); box-shadow:0 2px 0 rgba(0,0,0,.05) inset, 0 2px 6px rgba(0,0,0,.15)}
+  .brand h1{font-size: clamp(20px, 3vw, 30px); margin:0}
+  .brand h1 small{display:block; font-size:.6em; color:var(--stone); letter-spacing:.5px}
+  .actions a{display:inline-block; padding:8px 12px; border:2px solid var(--ink); border-radius:10px; text-decoration:none; color:var(--ink); background:linear-gradient(var(--parchment-2), var(--parchment)); box-shadow:0 2px 0 rgba(0,0,0,.08)}
+  .actions a:hover{transform:translateY(-1px)}
+
+  .hero{position:relative; border-radius:18px; overflow:hidden; margin:10px 0 22px; border:2px solid rgba(0,0,0,.1); background:var(--parchment-2)}
+  .hero img{display:block; width:100%; height:auto}
+  .hero .ribbon{position:absolute; left:16px; bottom:16px; background:rgba(255,255,255,.85); border:2px solid rgba(0,0,0,.15); padding:10px 14px; border-radius:10px}
+  .hero .ribbon h2{margin:0; font-size:clamp(18px, 2.2vw, 26px)}
+  .hero .ribbon p{margin:4px 0 0; font-size:.95rem; color:var(--stone)}
+
+  .filters{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:18px 0 10px}
+  .filters .seg{display:flex; gap:6px; padding:6px; background:var(--parchment-2); border:2px solid rgba(0,0,0,.08); border-radius:12px}
+  .filters .seg button{border:0; padding:8px 12px; border-radius:8px; background:transparent; cursor:pointer; font-weight:600}
+  .filters .seg button[aria-pressed="true"]{background:var(--ink); color:#fff}
+  .filters input[type="search"]{flex:1 1 240px; padding:10px 12px; border-radius:10px; border:2px solid rgba(0,0,0,.12); background:#fff}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px; margin-top:8px}
+  .card{background:linear-gradient(#fff, #faf7ee); border:2px solid rgba(0,0,0,.12); border-radius:16px; overflow:hidden; box-shadow:0 3px 12px rgba(0,0,0,.05)}
+  .thumb{aspect-ratio:16/9; background:#ddd; position:relative}
+  .thumb img{width:100%; height:100%; object-fit:cover; display:block}
+  .badge{position:absolute; top:10px; left:10px; background:#fff; color:var(--ink); border:2px solid rgba(0,0,0,.12); padding:3px 8px; border-radius:999px; font-size:.8rem; font-weight:700}
+  .meta{padding:12px 14px}
+  .title{margin:0 0 4px; font-size:1.05rem}
+  .small{color:var(--stone); font-size:.92rem}
+  .meta .tags{margin-top:8px; display:flex; gap:8px; flex-wrap:wrap}
+  .tag{font-size:.8rem; background:rgba(198,74,58,.08); color:var(--thread); border:1px solid rgba(198,74,58,.25); padding:2px 8px; border-radius:999px}
+  .row{display:flex; gap:10px; align-items:center; margin-top:10px}
+  .btn{border:2px solid var(--ink); background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
+  .btn.play{background:var(--ink); color:#fff}
+  .btn.alt{border-color:var(--accent); color:var(--accent)}
+
+  dialog#player{width:min(900px, 96vw); border:0; padding:0; border-radius:18px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.35)}
+  .player-head{padding:14px 16px; background:var(--parchment-2); border-bottom:2px solid rgba(0,0,0,.1); display:flex; gap:10px; align-items:center; justify-content:space-between}
+  .player-body{padding:16px; background:#fff}
+  .player-title{margin:0; font-size:1.1rem}
+  .close{border:2px solid rgba(0,0,0,.25); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer}
+  .media{width:100%; max-height:60vh}
+  footer{margin-top:40px; color:var(--stone); font-size:.92rem}
+  footer a{color:var(--ink)}
+
+  /* Tiny nod to Jamie & Claire — silhouette cameo corners */
+  .hero:before,.hero:after{content:""; position:absolute; width:60px; height:60px; top:14px; border-radius:50%; opacity:.07; background:radial-gradient(circle at 60% 40%, var(--ink) 0 35%, transparent 37%), conic-gradient(from 0deg, transparent 0 40%, var(--ink) 0 41%, transparent 43% 100%)}
+  .hero:before{left:14px}
+  .hero:after{right:14px; transform:scaleX(-1)}
+
+  @media (prefers-color-scheme: dark){
+    body{color:#f6f2e8; background:#111}
+    .actions a{border-color:#eee; color:#111; background:#f6f2e8}
+    .card{background:linear-gradient(#1a1a1a,#121212); border-color:rgba(255,255,255,.12)}
+    .meta .small{color:#c9c1af}
+    .btn{background:#111; color:#f6f2e8; border-color:#f6f2e8}
+    .btn.play{background:#f6f2e8; color:#111}
+    .hero .ribbon{background:rgba(17,17,17,.85); color:#f6f2e8}
+    dialog#player{background:#111}
+    .player-body{background:#000}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <h1>The Sassenach Studies <small>Where fandoms meet footnotes</small></h1>
+      </div>
+      <div class="actions">
+        <a id="toListed" href="https://listed.to/@SassenachStudies" target="_blank" rel="noopener">↗ Listed blog</a>
+      </div>
+    </header>
+
+    <!-- Hero poster for Season 1 -->
+    <section class="hero" id="seasonHero" hidden>
+      <img id="heroImg" alt="Season poster" />
+      <div class="ribbon">
+        <h2 id="heroTitle">Season 1 — Bloodlines &amp; Timelines</h2>
+        <p id="heroBlurb">A six‑part, Outlander‑themed analytical series on spiral (connection) and red thread (commitment).</p>
+      </div>
+    </section>
+
+    <section class="filters" aria-label="Filters">
+      <div class="seg" role="group" aria-label="Media type">
+        <button data-filter="all" aria-pressed="true">All</button>
+        <button data-filter="audio" aria-pressed="false">Audio</button>
+        <button data-filter="video" aria-pressed="false">Video</button>
+      </div>
+      <input id="q" type="search" placeholder="Search title, notes, tags…" aria-label="Search" />
+    </section>
+
+    <section class="grid" id="grid" aria-live="polite"></section>
+
+    <footer>
+      <p>Files stream from <strong>archive.org</strong> (direct links). This page is a static, privacy‑friendly player hosted on <strong>GitHub Pages</strong>.</p>
+    </footer>
+  </div>
+
+  <dialog id="player">
+    <div class="player-head">
+      <h3 class="player-title" id="playerTitle">Playing…</h3>
+      <button class="close" onclick="player.close()">Close ✕</button>
+    </div>
+    <div class="player-body" id="playerBody"></div>
+  </dialog>
+
+<script>
+// ======== Data model ========
+// Edit or replace this array with your real items.
+// Tip: keep filenames simple (no spaces/apostrophes) for tidy URLs.
+const LIB = {
+  season: {
+    id: "S01",
+    title: "Season 1 — Bloodlines & Timelines",
+    poster: "./season1_poster.jpg", // put your Season 1 poster image here
+    blurb: "A six‑part, Outlander‑themed analytical series on spiral (connection) and red thread (commitment)."
+  },
+  items: [
+    {
+      id:"S01E01-A",
+      season:"S01", type:"audio",
+      title:"The Spiral & the Red Thread — How Outlander’s Visual Grammar Creates an Ethical Stage for Time Travel",
+      date:"2025-11-05", duration:"36:12",
+      mediaUrl:"https://archive.org/download/the-spiral-and-the-red-thread-how-outlanders-visual-grammar-creates-an-ethical-s_202511/The_Spiral_and_the_Red_Thread_How_Outlander%27s_Visual_Grammar_Creates_an_Ethical_Stage_for_Time_Travel_Sassenach_Studies_S01E01.mp3",
+      thumb:"./thumbs/s01e01.jpg", // use your watercolor cover
+      listedUrl:"https://listed.to/@SassenachStudies/",
+      notes:"Pilot: spiral connects, red thread commits.", tags:["analysis","motifs","pilot","Jamie & Claire cameo"]
+    },
+    // Example video entry
+    {
+      id:"S01E01-V",
+      season:"S01", type:"video",
+      title:"Episode Companion — Visual Grammar Walkthrough (Video)",
+      date:"2025-11-05", duration:"08:45",
+      mediaUrl:"https://archive.org/download/example-video-placeholder/sassenach_s01e01_companion.mp4", // replace with your real mp4
+      thumb:"./thumbs/s01e01-video.jpg",
+      listedUrl:"https://listed.to/@SassenachStudies/",
+      notes:"Short visual companion. ", tags:["companion","visuals"]
+    },
+    // Pre-fill placeholders for remaining S01 episodes so you can swap URLs quickly
+    {id:"S01E02-A", season:"S01", type:"audio", title:"Botany & the Body — Claire’s Pharmacopeia", date:"2025-11-10", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode02.mp3", thumb:"./thumbs/s01e02.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Herbcraft between lore and medicine; competence as tenderness.", tags:["Claire","botany"]},
+    {id:"S01E03-A", season:"S01", type:"audio", title:"Culloden Afterlives — Memory, Mourning & Myth", date:"2025-11-15", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode03.mp3", thumb:"./thumbs/s01e03.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Sites of remembrance and narrative work.", tags:["history","memory"]},
+    {id:"S01E04-A", season:"S01", type:"audio", title:"Language & Power — Gaelic, Oaths & Authority", date:"2025-11-20", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode04.mp3", thumb:"./thumbs/s01e04.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Speech acts & sovereignty.", tags:["language","power"]},
+    {id:"S01E05-A", season:"S01", type:"audio", title:"Cloth & Kin — Textiles, Tartan & Belonging", date:"2025-11-25", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode05.mp3", thumb:"./thumbs/s01e05.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Dress, clan, and care.", tags:["tartan","kinship"]},
+    {id:"S01E06-A", season:"S01", type:"audio", title:"Ethics of Time — Choice Over Fate", date:"2025-11-30", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode06.mp3", thumb:"./thumbs/s01e06.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Against predestination: an ethical stage.", tags:["ethics","time"]}
+  ]
+};
+
+// ======== Render ========
+const grid = document.getElementById('grid');
+const q = document.getElementById('q');
+const player = document.getElementById('player');
+const playerBody = document.getElementById('playerBody');
+const playerTitle = document.getElementById('playerTitle');
+const hero = document.getElementById('seasonHero');
+
+(function initHero(){
+  if(!LIB.season) return;
+  const img = document.getElementById('heroImg');
+  const title = document.getElementById('heroTitle');
+  const blurb = document.getElementById('heroBlurb');
+  if(LIB.season.poster){ img.src = LIB.season.poster; hero.hidden = false; }
+  if(LIB.season.title) title.textContent = LIB.season.title;
+  if(LIB.season.blurb) blurb.textContent = LIB.season.blurb;
+})();
+
+let filter = 'all';
+const segBtns = document.querySelectorAll('.filters .seg button');
+segBtns.forEach(btn=>btn.addEventListener('click', ()=>{
+  segBtns.forEach(b=>b.setAttribute('aria-pressed','false'));
+  btn.setAttribute('aria-pressed','true');
+  filter = btn.dataset.filter;
+  render();
+}))
+q.addEventListener('input', render);
+
+function render(){
+  const term = q.value.trim().toLowerCase();
+  const items = LIB.items.filter(item=>{
+    const matchesType = (filter==='all') || item.type===filter;
+    const hay = (item.title+ ' ' + (item.notes||'') + ' ' + (item.tags||[]).join(' ')).toLowerCase();
+    const matchesTerm = !term || hay.includes(term);
+    return matchesType && matchesTerm;
+  });
+
+  grid.innerHTML = items.map(toCard).join('');
+  grid.querySelectorAll('button[data-play]').forEach(b=>{
+    b.addEventListener('click', ()=> playItem(b.dataset.play))
+  })
+}
+
+function toCard(item){
+  const tagEls = (item.tags||[]).slice(0,4).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
+  const badge = item.type==='audio' ? 'AUDIO' : 'VIDEO';
+  return `
+  <article class="card" aria-labelledby="t-${item.id}">
+    <div class="thumb">
+      ${item.thumb ? `<img src="${esc(item.thumb)}" alt="Thumbnail for ${esc(item.title)}">` : ''}
+      <span class="badge">${badge}</span>
+    </div>
+    <div class="meta">
+      <h3 id="t-${item.id}" class="title">${esc(item.title)}</h3>
+      <div class="small">${item.date || ''} ${item.duration? ' • '+item.duration:''}</div>
+      <div class="small">${esc(item.notes||'')}</div>
+      <div class="tags">${tagEls}</div>
+      <div class="row">
+        <button class="btn play" data-play="${item.id}">Play</button>
+        ${item.listedUrl ? `<a class="btn alt" href="${esc(item.listedUrl)}" target="_blank" rel="noopener">Read</a>`: ''}
+      </div>
+    </div>
+  </article>`
+}
+
+function playItem(id){
+  const item = LIB.items.find(x=>x.id===id);
+  if(!item) return;
+  playerTitle.textContent = item.title;
+  const isAudio = item.type==='audio';
+  playerBody.innerHTML = isAudio
+    ? `<audio class="media" controls preload="metadata" src="${esc(item.mediaUrl)}"></audio>`
+    : `<video class="media" controls preload="metadata" playsinline poster="${esc(item.thumb||'')}" src="${esc(item.mediaUrl)}"></video>`;
+  player.showModal();
+}
+
+function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
+
+render();
+</script>
+</body>
+</html>
