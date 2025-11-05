@@ -131,7 +131,23 @@
       <input id="q" type="search" placeholder="Search title, notes, tags…" aria-label="Search" />
     </section>
 
-    <section class="grid" id="grid" aria-live="polite"></section>
+    <!-- New 3-column media grid -->
+<div class="ss-grid-wrap">
+  <div class="ss-grid" id="ss-media-grid" role="table" aria-label="Episodes media grid">
+    <div class="ss-head" role="rowgroup">
+      <div class="ss-row ss-row--head" role="row">
+        <div class="ss-cell ss-col-a" role="columnheader">Audio</div>
+        <div class="ss-cell ss-col-v" role="columnheader">Video</div>
+        <div class="ss-cell ss-col-c" role="columnheader">Summary</div>
+      </div>
+    </div>
+    <div class="ss-body" id="ss-media-body" role="rowgroup"></div>
+  </div>
+</div>
+
+<!-- One shared audio element for Play buttons -->
+<audio id="ss-audio" preload="none" aria-hidden="true"></audio>
+
 
     <footer>
       <p>Files stream from <strong>archive.org</strong> (direct links). This page is a static, privacy‑friendly player hosted on <strong>GitHub Pages</strong>.</p>
