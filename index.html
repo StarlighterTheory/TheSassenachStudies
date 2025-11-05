@@ -51,6 +51,13 @@
   .filters input[type="search"]{flex:1 1 240px; padding:10px 12px; border-radius:10px; border:2px solid rgba(0,0,0,.12); background:#fff}
 
   .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:22px; margin-top:12px}
+  /* Fixed column counts for cohesion */
+@media (min-width: 720px){
+  .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1200px){
+  .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
   .card{background:linear-gradient(#fff, #faf7ee); border:2px solid rgba(0,0,0,.18); border-radius:16px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.10); transition:transform .12s ease, box-shadow .12s ease}
   .thumb{aspect-ratio:16/9; background:#ddd; position:relative}
   .thumb img{width:100%; height:100%; object-fit:cover; display:block}
@@ -210,20 +217,16 @@ q.addEventListener('input', render);
 function render(){
   const term = q.value.trim().toLowerCase();
   const items = LIB.items.filter(item=>{
-    // Auto-hide placeholders: missing/blank URL or obvious placeholder tokens
-    const looksPlaceholder = !item.mediaUrl || /REPLACE|example-video-placeholder|placeholder|^\s*$/.test(item.mediaUrl);
-    if (looksPlaceholder) return false;
-
     const matchesType = (filter==='all') || item.type===filter;
-    const hay = (item.title + ' ' + (item.notes||'') + ' ' + (item.tags||[]).join(' ')).toLowerCase();
+    const hay = (item.title+ ' ' + (item.notes||'') + ' ' + (item.tags||[]).join(' ')).toLowerCase();
     const matchesTerm = !term || hay.includes(term);
     return matchesType && matchesTerm;
   });
 
   grid.innerHTML = items.map(toCard).join('');
   grid.querySelectorAll('button[data-play]').forEach(b=>{
-    b.addEventListener('click', ()=> playItem(b.dataset.play));
-  });
+    b.addEventListener('click', ()=> playItem(b.dataset.play))
+  })
 }
 
 function toCard(item){
