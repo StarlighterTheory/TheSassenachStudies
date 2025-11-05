@@ -147,145 +147,166 @@
   </dialog>
 
 <script>
-// ======== Data model ========
-// Edit or replace this array with your real items.
-// Tip: keep filenames simple (no spaces/apostrophes) for tidy URLs.
-const LIB = {
-  season: {
-    id: "S01",
-    title: "Season 1 — Bloodlines & Timelines",
-    poster: "./season1_poster.jpg", // put your Season 1 poster image here
-    blurb: "A six‑part, Outlander‑themed analytical series on spiral (connection) and red thread (commitment)."
-  },
-  items: [
-    {
-      id:"S01E01-A",
-      season:"S01", type:"audio",
-      title:"The Spiral & the Red Thread — How Outlander’s Visual Grammar Creates an Ethical Stage for Time Travel",
-      date:"2025-11-05", duration:"36:12",
-      mediaUrl:"https://archive.org/download/the-spiral-and-the-red-thread-how-outlanders-visual-grammar-creates-an-ethical-s_202511/The_Spiral_and_the_Red_Thread_How_Outlander%27s_Visual_Grammar_Creates_an_Ethical_Stage_for_Time_Travel_Sassenach_Studies_S01E01.mp3",
-      thumb:"./thumbs/s01e01.jpg", // use your watercolor cover
-      listedUrl:"https://listed.to/@SassenachStudies/",
-      notes:"Pilot: spiral connects, red thread commits.", tags:["analysis","motifs","pilot","Jamie & Claire cameo"]
-    },
-    // Example video entry
-    {
-      id:"S01E01-V",
-      season:"S01", type:"video",
-      title:"Outlander's Secret Language: Fate & Choice - Episode Companion (Video)",
-      date:"2025-11-05", duration:"08:45",
-      mediaUrl:"Epsisode Companion_Outlander_s_Secret_Lanugae_Fate_&_Choice.mp4", // replace with your real mp4
-      thumb:"./thumbs/s01e01-video_parchment_toned.png",
-      listedUrl:"https://listed.to/@SassenachStudies/",
-      notes:"Short visual companion. ", tags:["companion","visuals"]
-    },
-    // Pre-fill placeholders for remaining S01 episodes so you can swap URLs quickly
-    {id:"S01E02-A", season:"S01", type:"audio", title:"Botany & the Body — Claire’s Pharmacopeia", date:"2025-11-10", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode02.mp3", thumb:"./thumbs/s01e02.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Herbcraft between lore and medicine; competence as tenderness.", tags:["Claire","botany"]},
-    {id:"S01E03-A", season:"S01", type:"audio", title:"Culloden Afterlives — Memory, Mourning & Myth", date:"2025-11-15", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode03.mp3", thumb:"./thumbs/s01e03.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Sites of remembrance and narrative work.", tags:["history","memory"]},
-    {id:"S01E04-A", season:"S01", type:"audio", title:"Language & Power — Gaelic, Oaths & Authority", date:"2025-11-20", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode04.mp3", thumb:"./thumbs/s01e04.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Speech acts & sovereignty.", tags:["language","power"]},
-    {id:"S01E05-A", season:"S01", type:"audio", title:"Cloth & Kin — Textiles, Tartan & Belonging", date:"2025-11-25", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode05.mp3", thumb:"./thumbs/s01e05.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Dress, clan, and care.", tags:["tartan","kinship"]},
-    {id:"S01E06-A", season:"S01", type:"audio", title:"Ethics of Time — Choice Over Fate", date:"2025-11-30", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode06.mp3", thumb:"./thumbs/s01e06.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Against predestination: an ethical stage.", tags:["ethics","time"]}
-  ]
-};
+(async function(){
+  // If your site uses a subpath (e.g., /sassenach-studies), set it here:
+  // const CARDS_JSON = '/sassenach-studies/cards/cards.json';
+  const CARDS_JSON = '/cards/cards.json';
 
-// ======== Render ========
-const grid = document.getElementById('grid');
-const q = document.getElementById('q');
-const player = document.getElementById('player');
-const playerBody = document.getElementById('playerBody');
-const playerTitle = document.getElementById('playerTitle');
-const hero = document.getElementById('seasonHero');
+  const USE_FALLBACKS = false; // keep placeholders empty
 
-(function initHero(){
-  if(!LIB.season) return;
-  const img = document.getElementById('heroImg');
-  const title = document.getElementById('heroTitle');
-  const blurb = document.getElementById('heroBlurb');
-  if(LIB.season.poster){ img.src = LIB.season.poster; hero.hidden = false; }
-  if(LIB.season.title) title.textContent = LIB.season.title;
-  if(LIB.season.blurb) blurb.textContent = LIB.season.blurb;
-})();
+  const $body = document.getElementById('ss-media-body');
+  const $player = document.getElementById('ss-audio');
+  let currentBtn = null;
+  let rafId = null;
+  let lastKnownSrc = "";
 
-let filter = 'all';
-const segBtns = document.querySelectorAll('.filters .seg button');
-segBtns.forEach(btn=>btn.addEventListener('click', ()=>{
-  segBtns.forEach(b=>b.setAttribute('aria-pressed','false'));
-  btn.setAttribute('aria-pressed','true');
-  filter = btn.dataset.filter;
-  render();
-}))
-q.addEventListener('input', render);
-
-function render(){
-  const term = q.value.trim().toLowerCase();
-  const items = LIB.items.filter(item=>{
-    const matchesType = (filter==='all') || item.type===filter;
-    const hay = (item.title+ ' ' + (item.notes||'') + ' ' + (item.tags||[]).join(' ')).toLowerCase();
-    const matchesTerm = !term || hay.includes(term);
-    return matchesType && matchesTerm;
-  });
-
-  grid.innerHTML = items.map(toCard).join('');
-  grid.querySelectorAll('button[data-play]').forEach(b=>{
-    b.addEventListener('click', ()=> playItem(b.dataset.play))
-  })
-}
-
-function toCard(item){
-  const tagEls = (item.tags||[]).slice(0,4).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
-  const badge = item.type==='audio' ? 'AUDIO' : 'VIDEO';
-  return `
-  <article class="card" aria-labelledby="t-${item.id}">
-    <div class="thumb">
-      ${item.thumb ? `<img src="${esc(item.thumb)}" alt="Thumbnail for ${esc(item.title)}">` : ''}
-      <span class="badge">${badge}</span>
-    </div>
-    <div class="meta">
-      <h3 id="t-${item.id}" class="title">${esc(item.title)}</h3>
-      <div class="small">${item.date || ''} ${item.duration? ' • '+item.duration:''}</div>
-      <div class="small">${esc(item.notes||'')}</div>
-      <div class="tags">${tagEls}</div>
-      <div class="row">
-        <button class="btn play" data-play="${item.id}">Play</button>
-        ${item.listedUrl ? `<a class="btn alt" href="${esc(item.listedUrl)}" target="_blank" rel="noopener">Read</a>`: ''}
-      </div>
-    </div>
-  </article>`
-}
-
-function playItem(id){
-  const item = LIB.items.find(x=>x.id===id);
-  if(!item) return;
-
-  // AUDIO → sticky footer player
-  if(item.type === 'audio'){
-    const bar   = document.getElementById('sticky');
-    const sTitle= document.getElementById('sTitle');
-    const sSub  = document.getElementById('sSub');
-    const sThumb= document.getElementById('sThumb');
-    const sLink = document.getElementById('sLink');
-    const sAudio= document.getElementById('sAudio');
-
-    sTitle.textContent = item.title;
-    sSub.textContent   = (item.date || '') + (item.duration ? ' • ' + item.duration : '');
-    if (sThumb && item.thumb) sThumb.src = item.thumb;
-    if (sLink) sLink.href = item.listedUrl || '#';
-    sAudio.src = item.mediaUrl;
-
-    bar.hidden = false;
-    const p = sAudio.play(); if (p && p.catch) p.catch(()=>{});
-    return;
+  function fmt(t){
+    if (!isFinite(t) || t < 0) t = 0;
+    const m = Math.floor(t/60);
+    const s = Math.floor(t%60);
+    return `${m}:${s.toString().padStart(2,'0')}`;
   }
 
-  // VIDEO → modal dialog player
-  playerTitle.textContent = item.title;
-  playerBody.innerHTML = `<video class="media" controls preload="metadata" playsinline poster="${esc(item.thumb||'')}" src="${esc(item.mediaUrl)}"></video>`;
-  player.showModal();
- }
+  function setLabel(btn, playing){
+    const cur = (isFinite($player.currentTime) ? fmt($player.currentTime) : '0:00');
+    const dur = (isFinite($player.duration) && $player.duration > 0) ? fmt($player.duration) : '—:—';
+    const time = ` ${cur} / ${dur}`;
+    btn.innerHTML = playing ? `❚❚ Pause${time}` : '▶ Play';
+    btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+  }
 
-function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
+  function startTicker(){
+    stopTicker();
+    const tick = () => {
+      if (currentBtn && !$player.paused) setLabel(currentBtn, true);
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+  }
+  function stopTicker(){
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+  }
 
-render();
+  // Event delegation for all play buttons
+  document.addEventListener('click', async (ev) => {
+    const btn = ev.target.closest('.ss-btn');
+    if (!btn) return;
+
+    const src = btn.dataset.audio;
+    if (!src) return;
+
+    // If clicking the same track, toggle
+    if (lastKnownSrc === new URL(src, location.href).href) {
+      if ($player.paused) {
+        try { await $player.play(); } catch(e){}
+        currentBtn = btn;
+        setLabel(btn, true);
+        startTicker();
+      } else {
+        $player.pause();
+        setLabel(btn, false);
+        stopTicker();
+      }
+      return;
+    }
+
+    // Switch to a new track
+    $player.src = src;
+    lastKnownSrc = $player.src;
+    try { await $player.play(); } catch(e){}
+    if (currentBtn && currentBtn !== btn) setLabel(currentBtn, false);
+    currentBtn = btn;
+    // While metadata is loading, show 0:00 / —:—
+    setLabel(currentBtn, true);
+    startTicker();
+  });
+
+  // Keep labels honest on player events
+  $player.addEventListener('loadedmetadata', () => {
+    if (currentBtn) setLabel(currentBtn, !$player.paused);
+  });
+  $player.addEventListener('durationchange', () => {
+    if (currentBtn) setLabel(currentBtn, !$player.paused);
+  });
+  $player.addEventListener('timeupdate', () => {
+    if (currentBtn && !$player.paused) setLabel(currentBtn, true);
+  });
+  $player.addEventListener('play', () => {
+    if (currentBtn) { setLabel(currentBtn, true); startTicker(); }
+  });
+  $player.addEventListener('pause', () => {
+    if (currentBtn) setLabel(currentBtn, false);
+    stopTicker();
+  });
+  $player.addEventListener('ended', () => {
+    if (currentBtn) setLabel(currentBtn, false);
+    stopTicker();
+  });
+
+  try {
+    const res = await fetch(CARDS_JSON, {cache:'no-store'});
+    const list = await res.json();
+    list.sort((a,b)=> (a.ep||'').localeCompare(b.ep||''));
+
+    $body.innerHTML = list.map(c => {
+      const ep = (c.ep||'').trim();
+      const audio = c.audio || (USE_FALLBACKS ? `/media/${ep}.mp3` : "");
+      const video = c.video || (USE_FALLBACKS ? `/media/${ep}.mp4` : "");
+      const cardUrl = `/cards/${ep}.md`;
+
+      const links = [
+        audio ? `<a class="ss-link" href="${audio}">Download</a>` : "",
+        c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
+        `<a class="ss-link" href="${cardUrl}">Card (.md)</a>`
+      ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
+
+      return `
+      <div class="ss-row" role="row" aria-label="${ep} row">
+        <!-- Audio -->
+        <div class="ss-cell ss-col-a" role="cell">
+          ${audio ? `
+            <button class="ss-btn" data-audio="${audio}" aria-label="Play ${ep} audio" aria-pressed="false">▶ Play</button>
+            <div class="ss-links">${links}</div>
+          ` : ``}
+        </div>
+
+        <!-- Video -->
+        <div class="ss-cell ss-col-v" role="cell">
+          ${video ? `
+            <a class="ss-vid" href="${video}" aria-label="${ep} video">
+              <span class="ss-play" aria-hidden="true">▶</span>
+              <span class="ss-vidtxt">${ep} — Video</span>
+            </a>
+          ` : ``}
+        </div>
+
+        <!-- Card / Summary -->
+        <div class="ss-cell ss-col-c" role="cell">
+          <article class="ss-card" aria-labelledby="${ep}-h">
+            <header class="ss-card-head">
+              <span class="ss-ep">${ep}</span>
+              <h3 id="${ep}-h" class="ss-title">${c.title || ''}</h3>
+            </header>
+            ${c.logline ? `<p class="ss-logline">${c.logline}</p>` : ``}
+            ${c.quote ? `<blockquote class="ss-quote">“${c.quote}”</blockquote>` : ``}
+            <p class="ss-links">
+              ${[
+                audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
+                c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
+                `<a class="ss-link" href="${cardUrl}">Card (.md)</a>`
+              ].filter(Boolean).join(`<span class="ss-dot">·</span>`)}
+            </p>
+          </article>
+        </div>
+      </div>`;
+    }).join('');
+  } catch (e) {
+    $body.innerHTML = `<div class="ss-row"><div class="ss-cell" role="cell">
+      <p>Couldn’t load episode cards. Make sure <code>${CARDS_JSON}</code> is published.</p>
+    </div></div>`;
+  }
+})();
 </script>
   <!-- Sticky footer mini-player (audio) -->
   <div id="sticky" class="sticky" hidden>
