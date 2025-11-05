@@ -256,32 +256,32 @@ function toCard(item){
 function playItem(id){
   const item = LIB.items.find(x=>x.id===id);
   if(!item) return;
-  // For audio: use sticky footer; for video: open dialog as before
+
+  // AUDIO → sticky footer player
   if(item.type === 'audio'){
-    const bar = document.getElementById('sticky');
-    const sTitle = document.getElementById('sTitle');
-    const sSub = document.getElementById('sSub');
-    const sThumb = document.getElementById('sThumb');
+    const bar   = document.getElementById('sticky');
+    const sTitle= document.getElementById('sTitle');
+    const sSub  = document.getElementById('sSub');
+    const sThumb= document.getElementById('sThumb');
     const sLink = document.getElementById('sLink');
-    const sAudio = document.getElementById('sAudio');
+    const sAudio= document.getElementById('sAudio');
+
     sTitle.textContent = item.title;
-    sSub.textContent = (item.date || '') + (item.duration ? ' • ' + item.duration : '');
+    sSub.textContent   = (item.date || '') + (item.duration ? ' • ' + item.duration : '');
     if (sThumb && item.thumb) sThumb.src = item.thumb;
     if (sLink) sLink.href = item.listedUrl || '#';
     sAudio.src = item.mediaUrl;
+
     bar.hidden = false;
-    // Play immediately; catch to avoid autoplay errors
     const p = sAudio.play(); if (p && p.catch) p.catch(()=>{});
     return;
   }
-  // Video fallback: dialog modal
+
+  // VIDEO → modal dialog player
   playerTitle.textContent = item.title;
   playerBody.innerHTML = `<video class="media" controls preload="metadata" playsinline poster="${esc(item.thumb||'')}" src="${esc(item.mediaUrl)}"></video>`;
   player.showModal();
-}"></audio>`
-    : `<video class="media" controls preload="metadata" playsinline poster="${esc(item.thumb||'')}" src="${esc(item.mediaUrl)}"></video>`;
-  player.showModal();
-}
+ }
 
 function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
 
