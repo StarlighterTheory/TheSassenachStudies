@@ -308,5 +308,39 @@ render();
       window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !bar.hidden){ audio.pause(); bar.hidden = true; } });
     })();
   </script>
+  <script>
+(function(){
+  // Optional: add ?drafts to your URL to temporarily show placeholders
+  const SHOW_DRAFTS = new URLSearchParams(location.search).has('drafts');
+
+  // Override render() to hide draft/placeholder items
+  render = function(){
+    const term = q.value.trim().toLowerCase();
+
+    const items = LIB.items.filter(item=>{
+      const looksPlaceholder =
+        !item.mediaUrl ||
+        /REPLACE|example-video-placeholder|placeholder|^\s*$/.test(item.mediaUrl);
+      if (!SHOW_DRAFTS && looksPlaceholder) return false;
+
+      const matchesType = (filter === 'all') || item.type === filter;
+      const hay = (item.title + ' ' + (item.notes || '') + ' ' + (item.tags || []).join(' ')).toLowerCase();
+      const matchesTerm = !term || hay.includes(term);
+      return matchesType && matchesTerm;
+    });
+
+    grid.innerHTML = items.map(toCard).join('');
+
+    // Re-wire play buttons after each render
+    grid.querySelectorAll('button[data-play]').forEach(b=>{
+      b.addEventListener('click', ()=> playItem(b.dataset.play));
+    });
+  };
+
+  // Initial draw with new logic
+  render();
+})();
+</script>
+
 </body>
 </html>
