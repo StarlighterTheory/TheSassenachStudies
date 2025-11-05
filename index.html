@@ -51,13 +51,6 @@
   .filters input[type="search"]{flex:1 1 240px; padding:10px 12px; border-radius:10px; border:2px solid rgba(0,0,0,.12); background:#fff}
 
   .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:22px; margin-top:12px}
-  /* Fixed column counts for cohesion */
-@media (min-width: 720px){
-  .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (min-width: 1200px){
-  .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
   .card{background:linear-gradient(#fff, #faf7ee); border:2px solid rgba(0,0,0,.18); border-radius:16px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.10); transition:transform .12s ease, box-shadow .12s ease}
   .thumb{aspect-ratio:16/9; background:#ddd; position:relative}
   .thumb img{width:100%; height:100%; object-fit:cover; display:block}
@@ -97,6 +90,15 @@
     dialog#player{background:#111}
     .player-body{background:#000}
   }
+  /* Sticky footer mini-player */
+  .sticky{position:fixed; left:0; right:0; bottom:0; z-index:9999; display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:10px 14px; border-top:2px solid rgba(0,0,0,.18); background:linear-gradient(var(--parchment-2), var(--parchment)); box-shadow:0 -8px 24px rgba(0,0,0,.12)}
+  .sticky[hidden]{display:none}
+  .sticky img{width:56px; height:56px; object-fit:cover; border-radius:10px; border:2px solid rgba(0,0,0,.18)}
+  .sticky .s-meta{min-width:0}
+  .sticky .s-title{font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .sticky .s-sub{font-size:.9rem; color:var(--stone); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .sticky .s-audio{width:min(520px, 50vw)}
+  .sticky .s-close{border:2px solid rgba(0,0,0,.25); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer}
 </style>
 </head>
 <body>
@@ -107,7 +109,7 @@
         <h1>The Sassenach Studies <small>Where fandoms meet footnotes</small></h1>
       </div>
       <div class="actions">
-        <a id="to Blog" href="https://listed.to/@SassenachStudies" target="_blank" rel="noopener">↗ Listed blog</a>
+        <a id="toListed" href="https://listed.to/@SassenachStudies" target="_blank" rel="noopener">↗ Listed blog</a>
       </div>
     </header>
 
@@ -254,10 +256,29 @@ function toCard(item){
 function playItem(id){
   const item = LIB.items.find(x=>x.id===id);
   if(!item) return;
+  // For audio: use sticky footer; for video: open dialog as before
+  if(item.type === 'audio'){
+    const bar = document.getElementById('sticky');
+    const sTitle = document.getElementById('sTitle');
+    const sSub = document.getElementById('sSub');
+    const sThumb = document.getElementById('sThumb');
+    const sLink = document.getElementById('sLink');
+    const sAudio = document.getElementById('sAudio');
+    sTitle.textContent = item.title;
+    sSub.textContent = (item.date || '') + (item.duration ? ' • ' + item.duration : '');
+    if (sThumb && item.thumb) sThumb.src = item.thumb;
+    if (sLink) sLink.href = item.listedUrl || '#';
+    sAudio.src = item.mediaUrl;
+    bar.hidden = false;
+    // Play immediately; catch to avoid autoplay errors
+    const p = sAudio.play(); if (p && p.catch) p.catch(()=>{});
+    return;
+  }
+  // Video fallback: dialog modal
   playerTitle.textContent = item.title;
-  const isAudio = item.type==='audio';
-  playerBody.innerHTML = isAudio
-    ? `<audio class="media" controls preload="metadata" src="${esc(item.mediaUrl)}"></audio>`
+  playerBody.innerHTML = `<video class="media" controls preload="metadata" playsinline poster="${esc(item.thumb||'')}" src="${esc(item.mediaUrl)}"></video>`;
+  player.showModal();
+}"></audio>`
     : `<video class="media" controls preload="metadata" playsinline poster="${esc(item.thumb||'')}" src="${esc(item.mediaUrl)}"></video>`;
   player.showModal();
 }
@@ -266,5 +287,26 @@ function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;
 
 render();
 </script>
+  <!-- Sticky footer mini-player (audio) -->
+  <div id="sticky" class="sticky" hidden>
+    <img id="sThumb" alt="" src="" />
+    <div class="s-meta">
+      <div class="s-title" id="sTitle">Now playing…</div>
+      <div class="s-sub" id="sSub"></div>
+      <a id="sLink" href="#" target="_blank" rel="noopener">Read on Listed ↗</a>
+    </div>
+    <audio id="sAudio" class="s-audio" controls preload="metadata"></audio>
+    <button id="sClose" class="s-close" aria-label="Close player">Close ✕</button>
+  </div>
+  <script>
+    // Sticky player close & ESC handling
+    (function(){
+      const bar = document.getElementById('sticky');
+      const btn = document.getElementById('sClose');
+      const audio = document.getElementById('sAudio');
+      if(btn){ btn.addEventListener('click', ()=>{ audio.pause(); bar.hidden = true; }); }
+      window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !bar.hidden){ audio.pause(); bar.hidden = true; } });
+    })();
+  </script>
 </body>
 </html>
