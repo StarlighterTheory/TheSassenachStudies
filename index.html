@@ -29,7 +29,7 @@
     margin:0; font:16px/1.5 "Georgia", ui-serif, Cambria, "Times New Roman", serif; color:var(--ink);
     background: radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)) , var(--parchment);
   }
-  .wrap{max-width:1100px; margin:0 auto; padding:28px 16px 64px}
+  .wrap{max-width:none; margin:0; padding:28px 24px 64px}
   header{display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; margin-bottom:22px}
   .brand{display:flex; gap:14px; align-items:center}
   .brand .logo{width:54px; height:54px; border-radius:12px; background: conic-gradient(from 0deg, var(--sky), var(--parchment) 35%, var(--thread) 36%, var(--thread) 64%, var(--parchment) 65%, var(--sky)); box-shadow:0 2px 0 rgba(0,0,0,.05) inset, 0 2px 6px rgba(0,0,0,.15)}
@@ -100,6 +100,14 @@
   box-shadow:0 6px 18px rgba(0,0,0,.12);
   transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
 }
+.card{
+  background:linear-gradient(#fff, #faf7ee);
+  border:2px solid rgba(0,0,0,.28);      /* darker frame */
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.12); /* deeper shadow */
+  transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
 .card:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 28px rgba(0,0,0,.18);
@@ -108,6 +116,11 @@
 /* Slightly stronger frames on hero + filter group to match */
 .hero{border:2px solid rgba(0,0,0,.20)}
 .filters .seg{border:2px solid rgba(0,0,0,.18)}
+}
+/* stronger frames */
+.hero{border:2px solid rgba(0,0,0,.20)}
+.filters .seg{border:2px solid rgba(0,0,0,.18)}
+    
 }   
 </style>
 </head>
