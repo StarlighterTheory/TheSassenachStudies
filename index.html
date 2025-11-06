@@ -11,6 +11,31 @@
   /* =============================
      Sassenach Studies — clean 3×6 grid
      ============================= */
+/* Hero poster */
+.hero{
+  position:relative; border-radius:18px; overflow:hidden;
+  margin:10px 0 22px; border:2px solid rgba(0,0,0,.1);
+  background:var(--parchment-2)
+}
+.hero img{display:block; width:100%; height:auto}
+.hero .ribbon{
+  position:absolute; left:16px; bottom:16px;
+  background:rgba(255,255,255,.85);
+  border:2px solid rgba(0,0,0,.15);
+  padding:10px 14px; border-radius:10px
+}
+.hero .ribbon h2{margin:0; font-size:clamp(18px, 2.2vw, 26px)}
+.hero .ribbon p{margin:4px 0 0; font-size:.95rem; color:var(--stone)}
+
+/* optional tiny cameo corners */
+.hero:before,.hero:after{
+  content:""; position:absolute; width:60px; height:60px; top:14px; border-radius:50%; opacity:.07;
+  background:
+    radial-gradient(circle at 60% 40%, var(--ink) 0 35%, transparent 37%),
+    conic-gradient(from 0deg, transparent 0 40%, var(--ink) 0 41%, transparent 43% 100%)
+}
+.hero:before{left:14px}
+.hero:after{right:14px; transform:scaleX(-1)}
 
   :root{
     --ink:#2a2a2a;
