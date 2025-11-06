@@ -91,110 +91,65 @@
     dialog#player{background:#111}
     .player-body{background:#000}
   }
-  /* Sticky footer mini-player */
-  .sticky{position:fixed; left:0; right:0; bottom:0; z-index:9999; display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:10px 14px; border-top:2px solid rgba(0,0,0,.18); background:linear-gradient(var(--parchment-2), var(--parchment)); box-shadow:0 -8px 24px rgba(0,0,0,.12)}
-  .sticky[hidden]{display:none}
-  .sticky img{width:56px; height:56px; object-fit:cover; border-radius:10px; border:2px solid rgba(0,0,0,.18)}
-  .sticky .s-meta{min-width:0}
-  .sticky .s-title{font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .sticky .s-sub{font-size:.9rem; color:var(--stone); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .sticky .s-audio{width:min(520px, 50vw)}
-  .sticky .s-close{border:2px solid rgba(0,0,0,.25); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer}
-/* ======= Sassenach 3-col media grid ======= */
-.ss-grid-wrap{ margin:1.25rem 0; }
-.ss-grid{ display:block; border:1px solid var(--ink-2, #3a3a3a20); border-radius:14px; overflow:hidden; }
-.ss-row--head{ background:var(--parchment-2); border-bottom:1px solid var(--ink-2, #3a3a3a20); }
-.ss-row{ display:grid; grid-template-columns: 1fr 1fr 2fr; gap:0; border-top:1px solid var(--ink-2, #3a3a3a20); }
-.ss-cell{ padding:.85rem .9rem; min-height:64px; }
+  /* ======= Sassenach 3×6 card grid (tight) ======= */
+.ss-wrap{ margin:1.25rem 0; }
+.ss-table{ display:grid; grid-template-columns: 1fr 1fr 1.15fr; gap:14px; }
+.ss-head, .ss-row{ display:contents; }  /* allow full-row cards without extra wrappers */
 
-.ss-row--head .ss-cell{
-  font-weight:600; color:var(--ink);
+/* Column headers */
+.ss-colhead{
   font:600 .9rem/1.2 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-}
-
-/* Audio play button + links */
-.ss-btn{
-  appearance:none; border:1px solid var(--ink-2, #3a3a3a30); background:#fff;
-  color:var(--ink); font:600 .92rem/1 system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  padding:.5rem .7rem; border-radius:10px; cursor:pointer;
-}
-.ss-btn:hover{ border-color:var(--stone); }
-.ss-btn:focus{ outline:2px solid var(--fern); outline-offset:2px; }
-
-.ss-links{ margin-top:.35rem; color:var(--stone); }
-.ss-link{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
-.ss-link:hover{ text-decoration:none; }
-.ss-dot{ margin:0 .35rem; opacity:.7; }
-
-/* Video chip */
-.ss-vid{
-  display:inline-flex; align-items:center; gap:.5rem;
-  border:1px solid var(--ink-2, #3a3a3a20); border-radius:10px; padding:.5rem .7rem;
-  text-decoration:none; color:var(--ink); background:#fff;
-}
-.ss-vid:hover{ border-color:var(--stone); }
-.ss-play{ display:inline-grid; place-items:center; width:1.6rem; height:1.6rem;
-  border-radius:50%; border:1px solid var(--ink-2, #3a3a3a20); }
-.ss-vidtxt{ font-weight:600; }
-
-/* Card column */
-.ss-card{ background:#fff; border:1px solid var(--ink-2, #3a3a3a20); border-radius:12px; padding:.8rem .9rem; }
-.ss-card-head{ display:flex; align-items:baseline; gap:.55rem; margin:0 0 .25rem 0; }
-.ss-ep{ font:600 .78rem/1 system-ui; color:var(--fern); text-transform:uppercase; letter-spacing:.02em; }
-.ss-title{ font:600 1.02rem/1.2 ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; color:var(--ink); margin:0; }
-.ss-logline{ color:var(--ink-2); margin:.4rem 0 .6rem 0; }
-.ss-quote{ margin:.25rem 0 .5rem 0; padding-left:.8rem; border-left:3px solid var(--ink-2, #3a3a3a20); color:var(--stone); font-style:italic; }
-
-/* Dark mode polish */
-@media (prefers-color-scheme: dark){
-  .ss-grid{ border-color:#2e2e2e; }
-  .ss-row--head{ background:#141414; border-bottom-color:#2e2e2e; }
-  .ss-row{ border-top-color:#2e2e2e; }
-  .ss-cell{ }
-  .ss-btn, .ss-vid, .ss-card{ background:#121212; border-color:#2e2e2e; color:#f6f2e8; }
-  .ss-links, .ss-logline, .ss-vidtxt{ color:#c9c1af; }
-  .ss-quote{ border-left-color:#2e2e2e; color:#a9a39a; }
-}
-
-/* Stack on small screens */
-@media (max-width:860px){
-  .ss-row{ grid-template-columns: 1fr; }
-  .ss-row--head{ display:none; }
-  .ss-cell{ border-top:1px solid var(--ink-2, #3a3a3a20); }
-}
-.ss-thumb{
-  width:100%;
-  height:auto;
-  display:block;
-  margin:.35rem 0 .6rem;
+  color:var(--ink);
+  background:var(--parchment-2);
+  border:1px solid rgba(0,0,0,.1);
   border-radius:10px;
-  border:1px solid var(--ink-2, #3a3a3a20);
-  object-fit:cover;
+  padding:.6rem .7rem;
 }
-@media (prefers-color-scheme: dark){
-  .ss-thumb{ border-color:#2e2e2e; }
-}
-/* ---- Force parchment (light) theme, even if system is dark ---- */
-:root{ color-scheme: only light; }
 
-/* Neutralize any dark-mode rules */
-@media (prefers-color-scheme: dark){
-  body{
-    color: var(--ink) !important;
-    background: radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)) , var(--parchment) !important;
-  }
-  .card, .ss-card, .ss-vid, .ss-btn{
-    background:#fff !important;
-    color: var(--ink) !important;
-    border-color: rgba(0,0,0,.18) !important;
-  }
-  .meta .small, .ss-links, .ss-logline, .ss-vidtxt{ color: var(--stone) !important; }
-  .ss-grid{ border-color: var(--ink-2, #3a3a3a20) !important; }
-  .ss-row--head{ background: var(--parchment-2) !important; border-bottom-color: var(--ink-2, #3a3a3a20) !important; }
-  .ss-row{ border-top-color: var(--ink-2, #3a3a3a20) !important; }
-  .hero .ribbon{ background: rgba(255,255,255,.85) !important; color: var(--ink) !important; }
-  .ss-quote{ border-left-color: var(--ink-2, #3a3a3a20) !important; color: var(--stone) !important; }
+/* Cells = cards with equal height */
+.ss-cell{
+  background:#fff;
+  border:1px solid rgba(0,0,0,.14);
+  border-radius:12px;
+  display:flex; flex-direction:column;
+  padding:.75rem .85rem;
+  min-height:160px;  /* uniform rows; tweak if you like */
 }
+
+/* Card parts */
+.ss-top{ display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; }
+.ss-ep{ font:700 .75rem/1 system-ui; color:var(--fern); text-transform:uppercase; letter-spacing:.02em; }
+.ss-title{ font:700 1rem/1.15 ui-serif,Georgia,serif; margin:0; color:var(--ink); }
+.ss-thumb{
+  width:100%; height:140px; object-fit:cover; border-radius:10px;
+  border:1px solid rgba(0,0,0,.12); display:block; margin:.35rem 0 .6rem;
+}
+.ss-meta{ margin-top:auto; } /* push links to bottom */
+.ss-links{ display:flex; gap:.55rem; flex-wrap:wrap; font-size:.92rem; color:var(--stone); }
+.ss-links a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
+.ss-links a:hover{ text-decoration:none; }
+
+.ss-quote{ margin:.25rem 0 .4rem; padding-left:.7rem; border-left:3px solid rgba(0,0,0,.12); color:var(--stone); font-style:italic; }
+.ss-log{ color:var(--ink-2); margin:.1rem 0 .4rem; }
+
+/* Controls */
+.ss-btn{
+  appearance:none; border:1px solid rgba(0,0,0,.2); background:#fff; color:var(--ink);
+  font:700 .92rem/1 system-ui; padding:.5rem .7rem; border-radius:10px; cursor:pointer;
+}
+.ss-btn[aria-pressed="true"]{ background:var(--ink); color:#fff; }
+.ss-chip{
+  display:inline-flex; align-items:center; gap:.45rem;
+  border:1px solid rgba(0,0,0,.18); padding:.42rem .6rem; border-radius:10px; text-decoration:none; color:var(--ink);
+}
+.ss-chip .dot{ width:1.2rem; height:1.2rem; display:grid; place-items:center; border:1px solid rgba(0,0,0,.18); border-radius:50%; }
+
+/* Dark override kept light */
+@media (prefers-color-scheme: dark){
+  .ss-colhead, .ss-cell, .ss-btn, .ss-chip{ background:#fff; color:var(--ink); border-color:rgba(0,0,0,.18); }
+  .ss-quote{ border-left-color:rgba(0,0,0,.18); }
+}
+
 </style>
 </head>
 <body>
@@ -227,143 +182,120 @@
       <input id="q" type="search" placeholder="Search title, notes, tags…" aria-label="Search" />
     </section>
 
-    <!-- New 3-column media grid -->
-<div class="ss-grid-wrap">
-  <div class="ss-grid" id="ss-media-grid" role="table" aria-label="Episodes media grid">
-    <div class="ss-head" role="rowgroup">
-      <div class="ss-row ss-row--head" role="row">
-        <div class="ss-cell ss-col-a" role="columnheader">Audio</div>
-        <div class="ss-cell ss-col-v" role="columnheader">Video</div>
-        <div class="ss-cell ss-col-c" role="columnheader">Summary</div>
-      </div>
-    </div>
-    <div class="ss-body" id="ss-media-body" role="rowgroup"></div>
+   <!-- 3×6 grid -->
+<div class="ss-wrap">
+  <div class="ss-table" id="ss-table" role="table" aria-label="Episodes">
+    <!-- headers -->
+    <div class="ss-colhead" role="columnheader">Audio</div>
+    <div class="ss-colhead" role="columnheader">Video</div>
+    <div class="ss-colhead" role="columnheader">Summary</div>
+    <!-- rows will be injected -->
   </div>
 </div>
 
-<!-- One shared audio element for Play buttons -->
 <audio id="ss-audio" preload="none" aria-hidden="true"></audio>
 
-    <footer>
-      <p>Files stream from <strong>archive.org</strong> (direct links). This page is a static, privacy‑friendly player hosted on <strong>GitHub Pages</strong>.</p>
-    </footer>
-  </div>
-
-  <dialog id="player">
-    <div class="player-head">
-      <h3 class="player-title" id="playerTitle">Playing…</h3>
-      <button class="close" onclick="player.close()">Close ✕</button>
-    </div>
-    <div class="player-body" id="playerBody"></div>
-  </dialog>
 <script>
 (async function(){
-  // Your Pages site lives under /TheSassenachStudies
   const CARDS_JSON = '/TheSassenachStudies/cards/cards.json';
+  const table  = document.getElementById('ss-table');
+  const player = document.getElementById('ss-audio');
 
-  const USE_FALLBACKS = false; // keep placeholders empty
+  let currentBtn=null, rafId=null, lastSrc='';
 
-  const $body = document.getElementById('ss-media-body');
-  const $player = document.getElementById('ss-audio');
-  let currentBtn = null, rafId = null, lastKnownSrc = "";
+  const fmt=t=>{ if(!isFinite(t)||t<0) t=0; const m=Math.floor(t/60), s=Math.floor(t%60); return m+':'+String(s).padStart(2,'0'); };
+  const setLabel=(btn,play)=>{
+    const cur = isFinite(player.currentTime) ? fmt(player.currentTime) : '0:00';
+    const dur = (isFinite(player.duration)&&player.duration>0) ? fmt(player.duration) : '—:—';
+    btn.innerHTML = play ? `❚❚ Pause ${cur}/${dur}` : '▶ Play';
+    btn.setAttribute('aria-pressed', play?'true':'false');
+  };
+  const tick=()=>{ if(currentBtn && !player.paused) setLabel(currentBtn,true); rafId=requestAnimationFrame(tick); };
+  const start=()=>{ cancelAnimationFrame(rafId); rafId=requestAnimationFrame(tick); };
+  const stop =()=>{ cancelAnimationFrame(rafId); };
 
-  function fmt(t){ if(!isFinite(t)||t<0) t=0; const m=Math.floor(t/60), s=Math.floor(t%60); return `${m}:${s.toString().padStart(2,'0')}`; }
-  function setLabel(btn, playing){
-    const cur = isFinite($player.currentTime) ? fmt($player.currentTime) : '0:00';
-    const dur = (isFinite($player.duration) && $player.duration>0) ? fmt($player.duration) : '—:—';
-    const time = ` ${cur} / ${dur}`;
-    btn.innerHTML = playing ? `❚❚ Pause${time}` : '▶ Play';
-    btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
-  }
-  function startTicker(){ stopTicker(); const tick=()=>{ if(currentBtn && !$player.paused) setLabel(currentBtn,true); rafId=requestAnimationFrame(tick); }; rafId=requestAnimationFrame(tick); }
-  function stopTicker(){ if(rafId) cancelAnimationFrame(rafId); rafId=null; }
+  document.addEventListener('click', async (e)=>{
+    const btn = e.target.closest('.ss-btn');
+    if(!btn) return;
+    const src = btn.dataset.audio || '';
+    if(!src) return;
 
-  document.addEventListener('click', async (ev)=>{
-    const btn = ev.target.closest('.ss-btn'); if(!btn) return;
-    const src = btn.dataset.audio; if(!src) return;
-    if (lastKnownSrc === new URL(src, location.href).href) {
-      if ($player.paused) { try{ await $player.play(); }catch{} currentBtn=btn; setLabel(btn,true); startTicker(); }
-      else { $player.pause(); setLabel(btn,false); stopTicker(); }
+    if(lastSrc === new URL(src, location.href).href){
+      if(player.paused){ try{await player.play();}catch{} currentBtn=btn; setLabel(btn,true); start(); }
+      else { player.pause(); setLabel(btn,false); stop(); }
       return;
     }
-    $player.src = src; lastKnownSrc = $player.src;
-    try{ await $player.play(); }catch{}
-    if (currentBtn && currentBtn!==btn) setLabel(currentBtn,false);
-    currentBtn = btn; setLabel(currentBtn,true); startTicker();
+    player.src = src; lastSrc = player.src;
+    try{ await player.play(); }catch{}
+    if(currentBtn && currentBtn!==btn) setLabel(currentBtn,false);
+    currentBtn = btn; setLabel(btn,true); start();
   });
 
-  $player.addEventListener('loadedmetadata', ()=>{ if(currentBtn) setLabel(currentBtn,!$player.paused); });
-  $player.addEventListener('durationchange', ()=>{ if(currentBtn) setLabel(currentBtn,!$player.paused); });
-  $player.addEventListener('timeupdate', ()=>{ if(currentBtn && !$player.paused) setLabel(currentBtn,true); });
-  $player.addEventListener('play', ()=>{ if(currentBtn){ setLabel(currentBtn,true); startTicker(); } });
-  $player.addEventListener('pause', ()=>{ if(currentBtn) setLabel(currentBtn,false); stopTicker(); });
-  $player.addEventListener('ended', ()=>{ if(currentBtn) setLabel(currentBtn,false); stopTicker(); });
+  ['loadedmetadata','durationchange','timeupdate','play','pause','ended'].forEach(ev=>{
+    player.addEventListener(ev, ()=>{
+      if(!currentBtn) return;
+      if(ev==='pause' || ev==='ended'){ setLabel(currentBtn,false); stop(); }
+      else { setLabel(currentBtn,!player.paused); }
+    });
+  });
 
-  try{
-    const res = await fetch(CARDS_JSON, {cache:'no-store'});
-    const list = await res.json();
-    list.sort((a,b)=> (a.ep||'').localeCompare(b.ep||''));
+  // ---- data → rows ---------------------------------------------------------
+  const res  = await fetch(CARDS_JSON, {cache:'no-store'});
+  const data = await res.json();  // [{ep,title,logline,quote,audio,video,transcript,thumb}, ...]
+  data.sort((a,b)=>(a.ep||'').localeCompare(b.ep||''));
 
-   $body.innerHTML = list.map(c => {
-  const ep = (c.ep || '').trim();
+  // build exactly 6 rows (pad if fewer)
+  const rows = Array.from({length:6}, (_,i)=> data[i] || {ep:`S01E0${i+1}`});
+  const cell = (html)=>`<div class="ss-cell">${html}</div>`;
+  const stub = '—';
 
-  const audio = c.audio || (USE_FALLBACKS ? `/media/${ep}.mp3` : "");
-  const video = c.video || (USE_FALLBACKS ? `/media/${ep}.mp4` : "");
+  table.insertAdjacentHTML('beforeend',
+    rows.map(c=>{
+      const ep = (c.ep||'').trim();
+      const title = c.title || '';
+      const log = c.logline || '';
+      const quote = c.quote ? `\u201C${c.quote}\u201D` : '';
+      const audio = c.audio || '';
+      const video = c.video || '';
+      const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+      const thumb = (c.thumb && c.thumb.trim()) ? c.thumb.trim() : `/TheSassenachStudies/thumbs/${ep}.jpg`;
 
-  // prefer c.thumb; else guess /thumbs/S01EXX.jpg
-  const thumb = (c.thumb && c.thumb.trim())
-    ? c.thumb.trim()
-    : `/TheSassenachStudies/thumbs/${ep}.jpg`;
+      // AUDIO CELL
+      const audioCell = audio ? `
+        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Audio</h3></div>
+        <button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>
+        <div class="ss-meta"><div class="ss-links">
+          <a href="${audio}">Download</a>
+          <a href="${cardUrl}">Card</a>
+        </div></div>` : stub;
 
-  const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+      // VIDEO CELL
+      const videoCell = video ? `
+        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Video</h3></div>
+        <a class="ss-chip" href="${video}">
+          <span class="dot">▶</span><span>Open video</span>
+        </a>
+        <div class="ss-meta"><div class="ss-links">
+          <a href="${video}">Direct link</a>
+          <a href="${cardUrl}">Card</a>
+        </div></div>` : stub;
 
-  const links = [
-    audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
-    c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
-    `<a class="ss-link" href="${cardUrl}">Card</a>`
-  ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
+      // SUMMARY CELL
+      const sumCell = `
+        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">${title||'Summary'}</h3></div>
+        <img class="ss-thumb" src="${thumb}" alt="" onerror="this.remove()">
+        ${log ? `<p class="ss-log">${log}</p>` : ``}
+        ${quote ? `<blockquote class="ss-quote">${quote}</blockquote>` : ``}
+        <div class="ss-meta"><div class="ss-links">
+          ${c.transcript ? `<a href="${c.transcript}">Post/Transcript</a>` : `<a href="${cardUrl}">Card</a>`}
+        </div></div>`;
 
-  return `
-    <div class="ss-row" role="row" aria-label="${ep} row">
-      <!-- Audio -->
-      <div class="ss-cell ss-col-a" role="cell">
-        ${audio ? `
-          <button class="ss-btn" data-audio="${audio}" aria-label="Play ${ep} audio" aria-pressed="false">▶ Play</button>
-          <div class="ss-links">${links}</div>
-        ` : ``}
-      </div>
-
-      <!-- Video -->
-      <div class="ss-cell ss-col-v" role="cell">
-        ${video ? `
-          <a class="ss-vid" href="${video}" aria-label="${ep} video">
-            <span class="ss-play" aria-hidden="true">▶</span>
-            <span class="ss-vidtxt">${ep} — Video</span>
-          </a>
-        ` : ``}
-      </div>
-
-      <!-- Summary -->
-      <div class="ss-cell ss-col-c" role="cell">
-        <article class="ss-card" aria-labelledby="${ep}-h">
-          <header class="ss-card-head">
-            <span class="ss-ep">${ep}</span>
-            <h3 id="${ep}-h" class="ss-title">${c.title || ''}</h3>
-          </header>
-          ${thumb ? `<img class="ss-thumb" src="${thumb}" alt="" onerror="this.remove()">` : ``}
-          ${c.logline ? `<p class="ss-logline">${c.logline}</p>` : ``}
-          ${c.quote ? `<blockquote class="ss-quote">“${c.quote}”</blockquote>` : ``}
-          <p class="ss-links">${links}</p>
-        </article>
-      </div>
-    </div>`;
-}).join('');
-  }catch(e){
-    $body.innerHTML = `<div class="ss-row"><div class="ss-cell" role="cell">
-      <p>Couldn’t load episode cards. Make sure <code>${CARDS_JSON}</code> is published.</p>
-    </div></div>`;
-  }
+      return cell(audioCell) + cell(videoCell) + cell(sumCell);
+    }).join('')
+  );
 })();
+</script>
+
 </script>
 <script>
 (function(){
