@@ -3,252 +3,151 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="color-scheme" content="light">  
+<meta name="color-scheme" content="light">
 <title>The Sassenach Studies — Media Library</title>
 <meta name="description" content="Audio & video library for The Sassenach Studies — Bloodlines & Timelines (Season 1)." />
 <link rel="preconnect" href="https://archive.org" />
 <style>
   /* =============================
-     The Sassenach Studies — parchment & ink skin
-     Single-file GitHub Pages site
+     Sassenach Studies — clean 3×6 grid
      ============================= */
+
   :root{
-    /* Watercolor/ink palette to match your artwork */
-    --ink: #2a2a2a;
-    --ink-2: #3a3a3a;
-    --parchment: #f3ecd8;
+    --ink:#2a2a2a;
+    --ink-2:#3a3a3a;
+    --parchment:#f3ecd8;
     --parchment-2:#efe6cf;
     --stone:#6c7a86;
     --fern:#6c8a6b;
-    --heather:#8b6f9d;
-    --thread:#c64a3a; /* red thread */
-    --sky:#4a6b8a;    /* spiral blue */
-    --accent:#274C56; /* deep teal */
+    --thread:#c64a3a;
+    --sky:#4a6b8a;
+    --accent:#274C56;
   }
+
   html,body{height:100%}
   body{
-    margin:0; font:16px/1.5 "Georgia", ui-serif, Cambria, "Times New Roman", serif; color:var(--ink);
-    background: radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)) , var(--parchment);
+    margin:0;
+    font:16px/1.5 "Georgia", ui-serif, Cambria, "Times New Roman", serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)),
+      var(--parchment);
   }
+
   .wrap{max-width:clamp(960px, 90vw, 1320px); margin:0 auto; padding:28px 24px 72px}
-  header{display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; margin-bottom:22px}
+
+  header{display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; margin-bottom:18px}
   .brand{display:flex; gap:14px; align-items:center}
-  .brand .logo{width:54px; height:54px; border-radius:12px; background: conic-gradient(from 0deg, var(--sky), var(--parchment) 35%, var(--thread) 36%, var(--thread) 64%, var(--parchment) 65%, var(--sky)); box-shadow:0 2px 0 rgba(0,0,0,.05) inset, 0 2px 6px rgba(0,0,0,.15)}
-  .brand h1{font-size: clamp(20px, 3vw, 30px); margin:0}
-  .brand h1 small{display:block; font-size:.6em; color:var(--stone); letter-spacing:.5px}
+  .logo{width:54px; height:54px; border-radius:12px;
+        background: conic-gradient(from 0deg, var(--sky), var(--parchment) 35%, var(--thread) 36% 64%, var(--parchment) 65%, var(--sky));
+        box-shadow:0 2px 0 rgba(0,0,0,.05) inset, 0 2px 6px rgba(0,0,0,.15)}
+  h1{font-size: clamp(20px, 3vw, 30px); margin:0}
+  h1 small{display:block; font-size:.6em; color:var(--stone); letter-spacing:.5px}
   .actions a{display:inline-block; padding:8px 12px; border:2px solid var(--ink); border-radius:10px; text-decoration:none; color:var(--ink); background:linear-gradient(var(--parchment-2), var(--parchment)); box-shadow:0 2px 0 rgba(0,0,0,.08)}
   .actions a:hover{transform:translateY(-1px)}
 
-  .hero{position:relative; border-radius:18px; overflow:hidden; margin:10px 0 22px; border:2px solid rgba(0,0,0,.1); background:var(--parchment-2)}
-  .hero img{display:block; width:100%; height:auto}
-  .hero .ribbon{position:absolute; left:16px; bottom:16px; background:rgba(255,255,255,.85); border:2px solid rgba(0,0,0,.15); padding:10px 14px; border-radius:10px}
-  .hero .ribbon h2{margin:0; font-size:clamp(18px, 2.2vw, 26px)}
-  .hero .ribbon p{margin:4px 0 0; font-size:.95rem; color:var(--stone)}
-
-  .filters{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:18px 0 10px}
-  .filters .seg{display:flex; gap:6px; padding:6px; background:var(--parchment-2); border:2px solid rgba(0,0,0,.08); border-radius:12px}
-  .filters .seg button{border:0; padding:8px 12px; border-radius:8px; background:transparent; cursor:pointer; font-weight:600}
-  .filters .seg button[aria-pressed="true"]{background:var(--ink); color:#fff}
-  .filters input[type="search"]{flex:1 1 240px; padding:10px 12px; border-radius:10px; border:2px solid rgba(0,0,0,.12); background:#fff}
-
-  .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:22px; margin-top:12px}
-  .card{background:linear-gradient(#fff, #faf7ee); border:2px solid rgba(0,0,0,.18); border-radius:16px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.10); transition:transform .12s ease, box-shadow .12s ease}
-  .thumb{aspect-ratio:16/9; background:#ddd; position:relative}
-  .thumb img{width:100%; height:100%; object-fit:cover; display:block}
-  .badge{position:absolute; top:10px; left:10px; background:#fff; color:var(--ink); border:2px solid rgba(0,0,0,.12); padding:3px 8px; border-radius:999px; font-size:.8rem; font-weight:700}
-  .meta{padding:12px 14px}
-  .title{margin:0 0 4px; font-size:1.05rem}
-  .small{color:var(--stone); font-size:.92rem}
-  .meta .tags{margin-top:8px; display:flex; gap:8px; flex-wrap:wrap}
-  .tag{font-size:.8rem; background:rgba(198,74,58,.08); color:var(--thread); border:1px solid rgba(198,74,58,.25); padding:2px 8px; border-radius:999px}
-  .row{display:flex; gap:10px; align-items:center; margin-top:10px}
-  .btn{border:2px solid var(--ink); background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
-  .btn.play{background:var(--ink); color:#fff}
-  .btn.alt{border-color:var(--accent); color:var(--accent)}
-
-  dialog#player{width:min(900px, 96vw); border:0; padding:0; border-radius:18px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.35)}
-  .player-head{padding:14px 16px; background:var(--parchment-2); border-bottom:2px solid rgba(0,0,0,.1); display:flex; gap:10px; align-items:center; justify-content:space-between}
-  .player-body{padding:16px; background:#fff}
-  .player-title{margin:0; font-size:1.1rem}
-  .close{border:2px solid rgba(0,0,0,.25); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer}
-  .media{width:100%; max-height:60vh}
-  footer{margin-top:40px; color:var(--stone); font-size:.92rem}
-  footer a{color:var(--ink)}
-
-  /* Tiny nod to Jamie & Claire — silhouette cameo corners */
-  .hero:before,.hero:after{content:""; position:absolute; width:60px; height:60px; top:14px; border-radius:50%; opacity:.07; background:radial-gradient(circle at 60% 40%, var(--ink) 0 35%, transparent 37%), conic-gradient(from 0deg, transparent 0 40%, var(--ink) 0 41%, transparent 43% 100%)}
-  .hero:before{left:14px}
-  .hero:after{right:14px; transform:scaleX(-1)}
-
-  /* ======= Sassenach 3×6 card grid (tight) ======= */
-  .ss-wrap{ margin:1.25rem 0; }
-  .ss-table{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
-  .ss-head, .ss-row{ display:contents; }  /* allow full-row cards without extra wrappers */
-
-  /* Column headers (we hide them below, but keep styles for a11y) */
-  .ss-colhead{
-    font:600 .9rem/1.2 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    color:var(--ink);
-    background:var(--parchment-2);
-    border:1px solid rgba(0,0,0,.1);
-    border-radius:10px;
-    padding:.6rem .7rem;
+  /* ===== Grid (3 equal columns, 6 rows) ===== */
+  .ss-wrap{ margin:10px 0 0 }
+  .ss-table{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);   /* equal columns */
+    gap:14px;
+  }
+  @media (max-width:980px){
+    .ss-table{ grid-template-columns: 1fr; } /* stack on narrow screens */
   }
 
-  /* Cells = cards with equal height */
+  /* ===== Cards (image-first) ===== */
   .ss-cell{
     background:#fff;
     border:1px solid rgba(0,0,0,.14);
     border-radius:12px;
-    display:flex; flex-direction:column;
-    padding:0;                 /* image-first = no inner padding on the card */
-    min-height:160px;
-    position:relative;
     overflow:hidden;
+    display:flex; flex-direction:column;
   }
 
-  /* Card parts */
-  .ss-top{ display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; }
+  /* Global image default to avoid weird scaling */
+  img{ max-width:100%; height:auto; }
+
+  /* Full, uncropped thumbs with a consistent max-height */
+  .ss-thumb{
+    display:block;
+    width:100%;
+    max-height:240px;    /* tweak 200–300 if you want */
+    object-fit:contain;  /* show full image */
+    background:var(--parchment);
+    border:0;
+    border-radius:12px 12px 0 0;
+    margin:0;
+  }
+
+  .ss-inner{ padding:.9rem .95rem; display:flex; flex-direction:column; min-height:160px; }
+  .ss-top{ display:flex; align-items:center; gap:.55rem; margin:0 0 .55rem 0; }
   .ss-ep{ font:700 .75rem/1 system-ui; color:var(--fern); text-transform:uppercase; letter-spacing:.02em; }
   .ss-title{ font:700 1rem/1.15 ui-serif,Georgia,serif; margin:0; color:var(--ink); }
-  .ss-meta{ margin-top:auto; } /* push links to bottom */
-  .ss-links{ display:flex; gap:.55rem; flex-wrap:wrap; font-size:.92rem; color:var(--stone); }
+  .ss-log{ color:var(--ink-2); margin:.1rem 0 .5rem; }
+  .ss-quote{ margin:.25rem 0 .5rem; padding-left:.7rem; border-left:3px solid rgba(0,0,0,.12); color:var(--stone); font-style:italic; }
+
+  .ss-meta{ margin-top:auto; }
+  .ss-links{ display:flex; gap:.6rem; flex-wrap:wrap; font-size:.92rem; color:var(--stone); }
   .ss-links a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
   .ss-links a:hover{ text-decoration:none; }
-  .ss-quote{ margin:.25rem 0 .4rem; padding-left:.7rem; border-left:3px solid rgba(0,0,0,.12); color:var(--stone); font-style:italic; }
-  .ss-log{ color:var(--ink-2); margin:.1rem 0 .4rem; }
 
-  /* Controls */
   .ss-btn{
     appearance:none; border:1px solid rgba(0,0,0,.2); background:#fff; color:var(--ink);
-    font:700 .92rem/1 system-ui; padding:.5rem .7rem; border-radius:10px; cursor:pointer;
+    font:700 .92rem/1 system-ui; padding:.55rem .75rem; border-radius:10px; cursor:pointer;
   }
   .ss-btn[aria-pressed="true"]{ background:var(--ink); color:#fff; }
+
   .ss-chip{
     display:inline-flex; align-items:center; gap:.45rem;
-    border:1px solid rgba(0,0,0,.18); padding:.42rem .6rem; border-radius:10px; text-decoration:none; color:var(--ink);
+    border:1px solid rgba(0,0,0,.18); padding:.45rem .65rem; border-radius:10px; text-decoration:none; color:var(--ink);
   }
   .ss-chip .dot{ width:1.2rem; height:1.2rem; display:grid; place-items:center; border:1px solid rgba(0,0,0,.18); border-radius:50%; }
-  
-  .ss-inner{
-    padding:.85rem .9rem;
-    display:flex;
-    flex-direction:column;
-    min-height:160px;
-  }
 
-  /* Tiny column labels (visual only, subtle) */
-  .ss-cell::before{
-    content: attr(data-col);
-    position:absolute; top:.45rem; left:.55rem;
-    font:600 .68rem/1 system-ui; letter-spacing:.04em; text-transform:uppercase;
-    color:var(--stone); opacity:.85;
-  }
-
-  /* Hide column headings row entirely (visual) */
-  .ss-colhead{ display:none !important; }
-  /* Pull grid up a bit since headers are gone */
-  .ss-wrap{ margin-top:.5rem; }
-  /* Give content a bit of breathing room so the label doesn't overlap */
-  .ss-cell .ss-top{ padding-top:.75rem; }
-
-  /* ---- Force parchment (light) even if OS is dark ---- */
-  :root { color-scheme: only light; }
-  @media (prefers-color-scheme: dark){
-    html, body{
-      color: var(--ink) !important;
-      background:
-        radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)),
-        var(--parchment) !important;
-    }
-    /* keep all cards/controls light */
-    .card, .ss-card, .ss-cell, .ss-colhead, .ss-vid, .ss-btn, .ss-chip{
-      background:#fff !important;
-      color:var(--ink) !important;
-      border-color: rgba(0,0,0,.18) !important;
-    }
-    .meta .small, .ss-links, .ss-logline, .ss-vidtxt { color: var(--stone) !important; }
-    .ss-row--head { background: var(--parchment-2) !important; border-bottom-color: rgba(0,0,0,.12) !important; }
-    .ss-row       { border-top-color: rgba(0,0,0,.12) !important; }
-    .hero .ribbon { background: rgba(255,255,255,.85) !important; color: var(--ink) !important; }
-    .ss-quote     { border-left-color: rgba(0,0,0,.12) !important; color: var(--stone) !important; }
-  }
-
-/* Global image default */
-img{ max-width:100%; height:auto; }
-
-/* Image-first cards: thumb on top, full image, no crop */
-.ss-thumb{
-  display:block;
-  width:100%;
-  max-height:240px;     /* tweak 200–300 to taste */
-  height:auto;
-  object-fit:contain;   /* show full image */
-  border:0;
-  border-radius:12px 12px 0 0;
-  margin:0;
-  background:var(--parchment);
-}
-
+  /* Force parchment even if user prefers dark */
+  :root{ color-scheme: only light; }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1>The Sassenach Studies <small>Where fandoms meet footnotes</small></h1>
-      </div>
-      <div class="actions">
-        <a id="toListed" href="https://listed.to/@SassenachStudies" target="_blank" rel="noopener">↗ To blog</a>
-      </div>
-    </header>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <h1>The Sassenach Studies <small>Where fandoms meet footnotes</small></h1>
+    </div>
+    <div class="actions">
+      <a href="https://listed.to/@SassenachStudies" target="_blank" rel="noopener">↗ To blog</a>
+    </div>
+  </header>
 
-    <!-- Hero poster for Season 1 -->
-    <section class="hero" id="seasonHero" hidden>
-      <img id="heroImg" alt="Season poster" />
-      <div class="ribbon">
-        <h2 id="heroTitle">Season 1 — Bloodlines &amp; Timelines</h2>
-        <p id="heroBlurb">A six‑part, Outlander‑themed analytical series on spiral (connection) and red thread (commitment).</p>
-      </div>
-    </section>
-
-    <section class="filters" aria-label="Filters">
-      <div class="seg" role="group" aria-label="Media type">
-        <button data-filter="all" aria-pressed="true">All</button>
-        <button data-filter="audio" aria-pressed="false">Audio</button>
-        <button data-filter="video" aria-pressed="false">Video</button>
-      </div>
-      <input id="q" type="search" placeholder="Search title, notes, tags…" aria-label="Search" />
-    </section>
-
-   <!-- 3×6 grid -->
-<div class="ss-wrap">
-  <div class="ss-table" id="ss-table" role="table" aria-label="Episodes">
-    <!-- headers -->
-    <div class="ss-colhead" role="columnheader">Audio</div>
-    <div class="ss-colhead" role="columnheader">Video</div>
-    <div class="ss-colhead" role="columnheader">Summary</div>
-    <!-- rows will be injected -->
+  <!-- 3×6 grid -->
+  <div class="ss-wrap">
+    <div class="ss-table" id="ss-table" role="table" aria-label="Episodes"></div>
   </div>
-</div>
 
-<audio id="ss-audio" preload="none" aria-hidden="true"></audio>
+  <audio id="ss-audio" preload="none" aria-hidden="true"></audio>
+</div>
 
 <script>
 (async function(){
-  const CARDS_JSON = '/TheSassenachStudies/cards/cards.json';
+  // TODO: If your repo path differs, adjust these two lines:
+  const CARDS_JSON_BASE = '/TheSassenachStudies/cards/';
+  const THUMBS_BASE    = '/TheSassenachStudies/thumbs/';
+
+  const CARDS_JSON = CARDS_JSON_BASE + 'cards.json';
+
   const table  = document.getElementById('ss-table');
   const player = document.getElementById('ss-audio');
 
-  let currentBtn=null, rafId=null, lastSrc='';
-
+  /* ---------- tiny audio button label helpers ---------- */
   const fmt=t=>{ if(!isFinite(t)||t<0) t=0; const m=Math.floor(t/60), s=Math.floor(t%60); return m+':'+String(s).padStart(2,'0'); };
-  const setLabel=(btn,play)=>{
+  let currentBtn=null, rafId=null, lastSrc='';
+  const setLabel=(btn,playing)=>{
     const cur = isFinite(player.currentTime) ? fmt(player.currentTime) : '0:00';
     const dur = (isFinite(player.duration)&&player.duration>0) ? fmt(player.duration) : '—:—';
-    btn.innerHTML = play ? `❚❚ Pause ${cur}/${dur}` : '▶ Play';
-    btn.setAttribute('aria-pressed', play?'true':'false');
+    btn.textContent = playing ? `❚❚ Pause ${cur}/${dur}` : '▶ Play';
+    btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
   };
   const tick=()=>{ if(currentBtn && !player.paused) setLabel(currentBtn,true); rafId=requestAnimationFrame(tick); };
   const start=()=>{ cancelAnimationFrame(rafId); rafId=requestAnimationFrame(tick); };
@@ -260,12 +159,15 @@ img{ max-width:100%; height:auto; }
     const src = btn.dataset.audio || '';
     if(!src) return;
 
-    if(lastSrc === new URL(src, location.href).href){
+    // same source: toggle pause/play
+    const abs = new URL(src, location.href).href;
+    if(lastSrc === abs){
       if(player.paused){ try{await player.play();}catch{} currentBtn=btn; setLabel(btn,true); start(); }
       else { player.pause(); setLabel(btn,false); stop(); }
       return;
     }
-    player.src = src; lastSrc = player.src;
+    // new source
+    player.src = src; lastSrc = abs;
     try{ await player.play(); }catch{}
     if(currentBtn && currentBtn!==btn) setLabel(currentBtn,false);
     currentBtn = btn; setLabel(btn,true); start();
@@ -279,130 +181,101 @@ img{ max-width:100%; height:auto; }
     });
   });
 
-  <script>
-// ---- data → rows ---------------------------------------------------------
-const res  = await fetch(CARDS_JSON, {cache:'no-store'});
-const data = await res.json();  // [{ep,title,logline,quote,audio,video,transcript,thumb,thumb_audio,thumb_video,thumb_summary}, ...]
-data.sort((a,b)=>(a.ep||'').localeCompare(b.ep||''));
+  /* ---------- load data safely ---------- */
+  let data=[];
+  try{
+    const res = await fetch(CARDS_JSON, {cache:'no-store'});
+    data = await res.json();
+    if(!Array.isArray(data)) data = [];
+  }catch(_){
+    data = [];
+  }
+  data.sort((a,b)=>(a.ep||'').localeCompare(b.ep||''));
 
-// build exactly 6 rows (pad if fewer)
-const rows = Array.from({length:6}, (_,i)=> data[i] || {ep:`S01E0${i+1}`});
+  // Always render 6 rows (pad if fewer)
+  const rows = Array.from({length:6}, (_,i)=> data[i] || {ep:`S01E0${i+1}`});
 
-// helper to pick a per-column thumb with fallbacks
-const thumbPath = (ep, c, kind) => {
-  const k1 = `thumb_${kind}`;                               // thumb_audio
-  const k2 = `thumb${kind[0].toUpperCase()+kind.slice(1)}`; // thumbAudio
-  return (c[k1] || c[k2] || c.thumb || `/TheSassenachStudies/thumbs/${ep}-${kind}.jpg`);
-};
+  // Pick per-column thumb with fallbacks:
+  // 1) thumb_audio / thumbAudio / thumb (generic)
+  // 2) /thumbs/S01E01-audio.jpg
+  // 3) /thumbs/S01E01.jpg
+  const thumbPath = (ep, c, kind) => {
+    const k1 = `thumb_${kind}`;
+    const k2 = `thumb${kind[0].toUpperCase()+kind.slice(1)}`;
+    return (
+      (c[k1] && String(c[k1]).trim()) ||
+      (c[k2] && String(c[k2]).trim()) ||
+      (c.thumb && String(c.thumb).trim()) ||
+      `${THUMBS_BASE}${ep}-${kind}.jpg`
+    );
+  };
+  const fallbackThumb = (ep)=> `${THUMBS_BASE}${ep}.jpg`;
 
-// helper creates a full card cell; `col` is "Audio" | "Video" | "Summary"
-const cell = (innerHtml, col) => `<div class="ss-cell" role="cell" data-col="${col}">${innerHtml}</div>`;
+  const cell = (innerHtml, col) => `<div class="ss-cell" role="cell" data-col="${col}">${innerHtml}</div>`;
 
-table.insertAdjacentHTML('beforeend',
-  rows.map(c=>{
-    const ep      = (c.ep||'').trim();
-    const title   = c.title || '';
-    const log     = c.logline || '';
-    const quote   = c.quote ? `\u201C${c.quote}\u201D` : '';
-    const audio   = c.audio || '';
-    const video   = c.video || '';
-    const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+  table.insertAdjacentHTML('beforeend',
+    rows.map(c=>{
+      const ep      = (c.ep||'').trim();
+      const title   = c.title || '';
+      const log     = c.logline || '';
+      const quote   = c.quote ? `\u201C${c.quote}\u201D` : '';
+      const audio   = c.audio || '';
+      const video   = c.video || '';
+      const cardUrl = `${CARDS_JSON_BASE}${ep}.html`;
 
-    // per-column thumbs
-    const tAudio   = thumbPath(ep, c, 'audio');
-    const tVideo   = thumbPath(ep, c, 'video');
-    const tSummary = thumbPath(ep, c, 'summary');
+      const tAudio   = thumbPath(ep, c, 'audio');
+      const tVideo   = thumbPath(ep, c, 'video');
+      const tSummary = thumbPath(ep, c, 'summary');
 
-    const links = [
-      audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
-      c.transcript ? `<a class="ss-link" href="${c.transcript}">Post/Transcript</a>` : `<a class="ss-link" href="${cardUrl}">Card</a>`
-    ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
+      const imgTag = (src, fb)=>`
+        <img class="ss-thumb"
+             src="${src}"
+             alt=""
+             onerror="this.onerror=null; this.src='${fb}'">
+      `;
 
-    const imgTag = (src, fb)=>`
-      <img class="ss-thumb"
-           src="${src}"
-           alt=""
-           onerror="this.onerror=null; this.src='${fb}'">
-    `;
+      const links = [
+        audio ? `<a class="ss-link" href="${audio}">Audio</a>` : '',
+        c.transcript ? `<a class="ss-link" href="${c.transcript}">Post/Transcript</a>` : `<a class="ss-link" href="${cardUrl}">Card</a>`
+      ].filter(Boolean).join('<span class="ss-dot">·</span>');
 
-    // AUDIO CELL
-    const audioCell = `
-      ${imgTag(tAudio, `/TheSassenachStudies/thumbs/${ep}.jpg`)}
-      <div class="ss-inner">
-        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Audio</h3></div>
-        ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>` : `<div class="ss-log">—</div>`}
-        <div class="ss-meta"><div class="ss-links">${links}</div></div>
-      </div>
-    `;
+      const audioCell = `
+        ${imgTag(tAudio, fallbackThumb(ep))}
+        <div class="ss-inner">
+          <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Audio</h3></div>
+          ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>` : `<div class="ss-log">—</div>`}
+          <div class="ss-meta"><div class="ss-links">${links}</div></div>
+        </div>
+      `;
 
-    // VIDEO CELL
-    const videoCell = `
-      ${imgTag(tVideo, `/TheSassenachStudies/thumbs/${ep}.jpg`)}
-      <div class="ss-inner">
-        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Video</h3></div>
-        ${video ? `<a class="ss-chip" href="${video}"><span class="dot">▶</span><span>Open video</span></a>` : `<div class="ss-log">—</div>`}
-        <div class="ss-meta"><div class="ss-links">
-          ${video ? `<a href="${video}">Direct link</a><span class="ss-dot">·</span>` : ``}
-          <a href="${cardUrl}">Card</a>
-        </div></div>
-      </div>
-    `;
+      const videoCell = `
+        ${imgTag(tVideo, fallbackThumb(ep))}
+        <div class="ss-inner">
+          <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Video</h3></div>
+          ${video ? `<a class="ss-chip" href="${video}"><span class="dot">▶</span><span>Open video</span></a>` : `<div class="ss-log">—</div>`}
+          <div class="ss-meta"><div class="ss-links">
+            ${video ? `<a href="${video}">Direct link</a><span class="ss-dot">·</span>` : ``}
+            <a href="${cardUrl}">Card</a>
+          </div></div>
+        </div>
+      `;
 
-    // SUMMARY CELL
-    const sumCell = `
-      ${imgTag(tSummary, `/TheSassenachStudies/thumbs/${ep}.jpg`)}
-      <div class="ss-inner">
-        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">${title||'Summary'}</h3></div>
-        ${log ? `<p class="ss-log">${log}</p>` : ``}
-        ${quote ? `<blockquote class="ss-quote">${quote}</blockquote>` : ``}
-        <div class="ss-meta"><div class="ss-links">
-          ${c.transcript ? `<a href="${c.transcript}">Post/Transcript</a>` : `<a href="${cardUrl}">Card</a>`}
-        </div></div>
-      </div>
-    `;
+      const sumCell = `
+        ${imgTag(tSummary, fallbackThumb(ep))}
+        <div class="ss-inner">
+          <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">${title||'Summary'}</h3></div>
+          ${log ? `<p class="ss-log">${log}</p>` : ``}
+          ${quote ? `<blockquote class="ss-quote">${quote}</blockquote>` : ``}
+          <div class="ss-meta"><div class="ss-links">
+            ${c.transcript ? `<a href="${c.transcript}">Post/Transcript</a>` : `<a href="${cardUrl}">Card</a>`}
+          </div></div>
+        </div>
+      `;
 
-    return cell(audioCell,'Audio') + cell(videoCell,'Video') + cell(sumCell,'Summary');
-  }).join('')
-);
-</script>
-    
-<script>
-(function(){
-  const hero  = document.getElementById('seasonHero');
-  const img   = document.getElementById('heroImg');
-  const title = document.getElementById('heroTitle');
-  const blurb = document.getElementById('heroBlurb');
-
-  // Your poster lives at repo root as "season1_poster.jpg"
-  img.src = '/TheSassenachStudies/season1_poster.jpg';
-  img.onload = ()=> { hero.hidden = false; };
-
-  // Optional: tweak copy here if you want
-  title.textContent = 'Season 1 — Bloodlines & Timelines';
-  blurb.textContent = 'A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment).';
+      return cell(audioCell,'Audio') + cell(videoCell,'Video') + cell(sumCell,'Summary');
+    }).join('')
+  );
 })();
 </script>
-
-  <!-- Sticky footer mini-player (audio) -->
-  <div id="sticky" class="sticky" hidden>
-    <img id="sThumb" alt="" src="" />
-    <div class="s-meta">
-      <div class="s-title" id="sTitle">Now playing…</div>
-      <div class="s-sub" id="sSub"></div>
-      <a id="sLink" href="#" target="_blank" rel="noopener">Read on Listed ↗</a>
-    </div>
-    <audio id="sAudio" class="s-audio" controls preload="metadata"></audio>
-    <button id="sClose" class="s-close" aria-label="Close player">Close ✕</button>
-  </div>
-  <script>
-    // Sticky player close & ESC handling
-    (function(){
-      const bar = document.getElementById('sticky');
-      const btn = document.getElementById('sClose');
-      const audio = document.getElementById('sAudio');
-      if(btn){ btn.addEventListener('click', ()=>{ audio.pause(); bar.hidden = true; }); }
-      window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !bar.hidden){ audio.pause(); bar.hidden = true; } });
-    })();
-  </script>
 </body>
 </html>
