@@ -135,6 +135,14 @@
 </style>
 </head>
 <body>
+  <section class="hero" id="seasonHero" hidden>
+  <img id="heroImg" alt="Season poster" />
+  <div class="ribbon">
+    <h2 id="heroTitle">Season 1 — Bloodlines &amp; Timelines</h2>
+    <p id="heroBlurb">A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment).</p>
+  </div>
+</section>
+
 <div class="wrap">
   <header>
     <div class="brand">
@@ -155,6 +163,20 @@
 </div>
 
 <script>
+(function(){
+  // Adjust this path if your repo root differs:
+  const HERO_SRC = '/TheSassenachStudies/season1_poster.jpg';
+
+  const hero  = document.getElementById('seasonHero');
+  const img   = document.getElementById('heroImg');
+
+  if(hero && img){
+    img.src = HERO_SRC;
+    img.onload = ()=>{ hero.hidden = false; };
+    img.onerror = ()=>{ hero.hidden = true; }; // stays hidden if missing
+  }
+})();
+  
 (async function(){
   // TODO: If your repo path differs, adjust these two lines:
   const CARDS_JSON_BASE = '/TheSassenachStudies/cards/';
