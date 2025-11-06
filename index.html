@@ -190,16 +190,17 @@
 
 /* Give content a bit of breathing room so the label doesn't overlap */
 .ss-cell .ss-top{ padding-top:.75rem; }
-/* Make thumbnails bleed to the card edges */
-.ss-cell{ overflow:hidden; }                 /* clip corners cleanly */
+/* Full image, no crop (letterbox if aspect differs) */
+.ss-cell{ overflow:hidden; }
 .ss-thumb{
   display:block;
-  width: calc(100% + 1.7rem);                /* 1.7rem = left+right card padding (.85 + .85) */
-  margin: -.75rem 0 .6rem -.85rem;           /* lift into the padding area */
-  height: 180px;                             /* tweak to taste */
-  object-fit: cover;                         /* cinematic crop */
-  border-radius: 12px 12px 10px 10px;        /* match card rounding at top */
-  border: 0;                                 /* no border line */
+  width: calc(100% + 1.7rem);
+  margin: -.75rem 0 .6rem -.85rem;
+  height: auto;               /* let image decide height */
+  object-fit: contain;        /* no cropping */
+  background: var(--parchment);
+  border-radius: 12px 12px 10px 10px;
+  border: 0;
 }
 
 </style>
