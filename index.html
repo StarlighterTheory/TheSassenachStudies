@@ -10,7 +10,7 @@
 <style>
   /* =============================
      The Sassenach Studies — parchment & ink skin
-     Single‑file GitHub Pages site
+     Single-file GitHub Pages site
      ============================= */
   :root{
     /* Watercolor/ink palette to match your artwork */
@@ -80,175 +80,114 @@
   .hero:before{left:14px}
   .hero:after{right:14px; transform:scaleX(-1)}
 
-  @media (prefers-color-scheme: dark){
-    body{color:#f6f2e8; background:#111}
-    .actions a{border-color:#eee; color:#111; background:#f6f2e8}
-    .card{background:linear-gradient(#1a1a1a,#121212); border-color:rgba(255,255,255,.12)}
-    .meta .small{color:#c9c1af}
-    .btn{background:#111; color:#f6f2e8; border-color:#f6f2e8}
-    .btn.play{background:#f6f2e8; color:#111}
-    .hero .ribbon{background:rgba(17,17,17,.85); color:#f6f2e8}
-    dialog#player{background:#111}
-    .player-body{background:#000}
-  }
   /* ======= Sassenach 3×6 card grid (tight) ======= */
-.ss-wrap{ margin:1.25rem 0; }
-.ss-table{ display:grid; grid-template-columns: 1fr 1fr 1.15fr; gap:14px; }
-.ss-head, .ss-row{ display:contents; }  /* allow full-row cards without extra wrappers */
+  .ss-wrap{ margin:1.25rem 0; }
+  .ss-table{ display:grid; grid-template-columns: 1fr 1fr 1.15fr; gap:14px; }
+  .ss-head, .ss-row{ display:contents; }  /* allow full-row cards without extra wrappers */
 
-/* Column headers */
-.ss-colhead{
-  font:600 .9rem/1.2 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  color:var(--ink);
-  background:var(--parchment-2);
-  border:1px solid rgba(0,0,0,.1);
-  border-radius:10px;
-  padding:.6rem .7rem;
-}
-
-/* Cells = cards with equal height */
-.ss-cell{
-  background:#fff;
-  border:1px solid rgba(0,0,0,.14);
-  border-radius:12px;
-  display:flex; flex-direction:column;
-  padding:.75rem .85rem;
-  min-height:160px;  /* uniform rows; tweak if you like */
-}
-
-/* Card parts */
-.ss-top{ display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; }
-.ss-ep{ font:700 .75rem/1 system-ui; color:var(--fern); text-transform:uppercase; letter-spacing:.02em; }
-.ss-title{ font:700 1rem/1.15 ui-serif,Georgia,serif; margin:0; color:var(--ink); }
-.ss-thumb{
-  width:100%; height:140px; object-fit:cover; border-radius:10px;
-  border:1px solid rgba(0,0,0,.12); display:block; margin:.35rem 0 .6rem;
-}
-.ss-meta{ margin-top:auto; } /* push links to bottom */
-.ss-links{ display:flex; gap:.55rem; flex-wrap:wrap; font-size:.92rem; color:var(--stone); }
-.ss-links a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
-.ss-links a:hover{ text-decoration:none; }
-
-.ss-quote{ margin:.25rem 0 .4rem; padding-left:.7rem; border-left:3px solid rgba(0,0,0,.12); color:var(--stone); font-style:italic; }
-.ss-log{ color:var(--ink-2); margin:.1rem 0 .4rem; }
-
-/* Controls */
-.ss-btn{
-  appearance:none; border:1px solid rgba(0,0,0,.2); background:#fff; color:var(--ink);
-  font:700 .92rem/1 system-ui; padding:.5rem .7rem; border-radius:10px; cursor:pointer;
-}
-.ss-btn[aria-pressed="true"]{ background:var(--ink); color:#fff; }
-.ss-chip{
-  display:inline-flex; align-items:center; gap:.45rem;
-  border:1px solid rgba(0,0,0,.18); padding:.42rem .6rem; border-radius:10px; text-decoration:none; color:var(--ink);
-}
-.ss-chip .dot{ width:1.2rem; height:1.2rem; display:grid; place-items:center; border:1px solid rgba(0,0,0,.18); border-radius:50%; }
-
-/* Dark override kept light */
-@media (prefers-color-scheme: dark){
-  .ss-colhead, .ss-cell, .ss-btn, .ss-chip{ background:#fff; color:var(--ink); border-color:rgba(0,0,0,.18); }
-  .ss-quote{ border-left-color:rgba(0,0,0,.18); }
-}
-/* ---- Force parchment (light) even if OS is dark ---- */
-:root { color-scheme: only light; }
-
-@media (prefers-color-scheme: dark){
-  html, body{
-    color: var(--ink) !important;
-    background:
-      radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)),
-      var(--parchment) !important;
+  /* Column headers (we hide them below, but keep styles for a11y) */
+  .ss-colhead{
+    font:600 .9rem/1.2 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    color:var(--ink);
+    background:var(--parchment-2);
+    border:1px solid rgba(0,0,0,.1);
+    border-radius:10px;
+    padding:.6rem .7rem;
   }
-  /* keep all cards/controls light */
-  .card, .ss-card, .ss-cell, .ss-colhead, .ss-vid, .ss-btn, .ss-chip{
-    background:#fff !important;
-    color:var(--ink) !important;
-    border-color: rgba(0,0,0,.18) !important;
+
+  /* Cells = cards with equal height */
+  .ss-cell{
+    background:#fff;
+    border:1px solid rgba(0,0,0,.14);
+    border-radius:12px;
+    display:flex; flex-direction:column;
+    padding:0;                 /* image-first = no inner padding on the card */
+    min-height:160px;
+    position:relative;
+    overflow:hidden;
   }
-  .meta .small, .ss-links, .ss-logline, .ss-vidtxt { color: var(--stone) !important; }
-  .ss-row--head { background: var(--parchment-2) !important; border-bottom-color: rgba(0,0,0,.12) !important; }
-  .ss-row       { border-top-color: rgba(0,0,0,.12) !important; }
-  .hero .ribbon { background: rgba(255,255,255,.85) !important; color: var(--ink) !important; }
-  .ss-quote     { border-left-color: rgba(0,0,0,.12) !important; color: var(--stone) !important; }
-}
-/* Hide column headings row entirely */
-.ss-colhead{ display:none !important; }
-/* Pull grid up a bit since headers are gone */
-.ss-wrap{ margin-top:.5rem; }
-/* Tiny corner labels per column (visual only) */
-.ss-cell{ position:relative; }
-.ss-cell::before{
-  position:absolute; top:.45rem; left:.55rem;
-  font:600 .68rem/1 system-ui; letter-spacing:.04em;
-  text-transform:uppercase; color:var(--stone); opacity:.85;
-}
 
-/* Map columns (3 columns, repeating every row) */
-.ss-table > .ss-cell:nth-child(3n+1)::before { content:"Audio"; }
-.ss-table > .ss-cell:nth-child(3n+2)::before { content:"Video"; }
-.ss-table > .ss-cell:nth-child(3n+3)::before { content:"Summary"; }
+  /* Card parts */
+  .ss-top{ display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; }
+  .ss-ep{ font:700 .75rem/1 system-ui; color:var(--fern); text-transform:uppercase; letter-spacing:.02em; }
+  .ss-title{ font:700 1rem/1.15 ui-serif,Georgia,serif; margin:0; color:var(--ink); }
+  .ss-meta{ margin-top:auto; } /* push links to bottom */
+  .ss-links{ display:flex; gap:.55rem; flex-wrap:wrap; font-size:.92rem; color:var(--stone); }
+  .ss-links a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
+  .ss-links a:hover{ text-decoration:none; }
+  .ss-quote{ margin:.25rem 0 .4rem; padding-left:.7rem; border-left:3px solid rgba(0,0,0,.12); color:var(--stone); font-style:italic; }
+  .ss-log{ color:var(--ink-2); margin:.1rem 0 .4rem; }
 
-/* Give content a bit of breathing room so the label doesn't overlap */
-.ss-cell .ss-top{ padding-top:.75rem; }
-/* Full image, no crop (letterbox if aspect differs) */
-.ss-cell{ overflow:hidden; }
-.ss-thumb{
-  display:block;
-  width: calc(100% + 1.7rem);
-  margin: -.75rem 0 .6rem -.85rem;
-  height: auto;               /* let image decide height */
-  object-fit: contain;        /* no cropping */
-  background: var(--parchment);
-  border-radius: 12px 12px 10px 10px;
-  border: 0;
-}
-/* --- Card layout: image first, content below --- */
-.ss-cell{
-  position:relative;
-  padding:0;                 /* no inner padding on the card itself */
-  overflow:hidden;           /* clean rounded edges with image bleed */
-}
+  /* Controls */
+  .ss-btn{
+    appearance:none; border:1px solid rgba(0,0,0,.2); background:#fff; color:var(--ink);
+    font:700 .92rem/1 system-ui; padding:.5rem .7rem; border-radius:10px; cursor:pointer;
+  }
+  .ss-btn[aria-pressed="true"]{ background:var(--ink); color:#fff; }
+  .ss-chip{
+    display:inline-flex; align-items:center; gap:.45rem;
+    border:1px solid rgba(0,0,0,.18); padding:.42rem .6rem; border-radius:10px; text-decoration:none; color:var(--ink);
+  }
+  .ss-chip .dot{ width:1.2rem; height:1.2rem; display:grid; place-items:center; border:1px solid rgba(0,0,0,.18); border-radius:50%; }
 
-/* full-bleed thumb at top */
-.ss-thumb{
-  display:block;
-  width:100%;
-  height:190px;              /* tweak 160–220 to taste */
-  contain; height:auto;
-  border:0;
-  border-radius:12px 12px 0 0;
-  margin:0;
-}
+  /* --- Image-first cards: thumb on top, content below (single definitive rule) --- */
+  .ss-thumb{
+    display:block;
+    width:100%;
+    height:auto;         /* full image, no cropping */
+    object-fit:contain;
+    border:0;
+    border-radius:12px 12px 0 0;
+    margin:0;
+    background:var(--parchment);
+  }
+  .ss-inner{
+    padding:.85rem .9rem;
+    display:flex;
+    flex-direction:column;
+    min-height:160px;
+  }
 
-/* content wrapper lives under the image */
-.ss-inner{
-  padding:.85rem .9rem;
-  display:flex; flex-direction:column;
-  min-height:calc(160px - .85rem); /* keep rows even-ish */
-}
+  /* Tiny column labels (visual only, subtle) */
+  .ss-cell::before{
+    content: attr(data-col);
+    position:absolute; top:.45rem; left:.55rem;
+    font:600 .68rem/1 system-ui; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--stone); opacity:.85;
+  }
 
-/* keep your existing pieces */
-.ss-top{ display:flex; align-items:center; gap:.5rem; margin:0 0 .5rem 0; }
-.ss-meta{ margin-top:auto; }
+  /* Hide column headings row entirely (visual) */
+  .ss-colhead{ display:none !important; }
+  /* Pull grid up a bit since headers are gone */
+  .ss-wrap{ margin-top:.5rem; }
+  /* Give content a bit of breathing room so the label doesn't overlap */
+  .ss-cell .ss-top{ padding-top:.75rem; }
 
-/* tiny in-card labels still show, positioned over the image */
-.ss-cell::before{
-  position:absolute; top:.45rem; left:.55rem;
-  font:600 .68rem/1 system-ui; letter-spacing:.04em; text-transform:uppercase;
-  color:rgba(255,255,255,.95); text-shadow:0 1px 2px rgba(0,0,0,.45);
-}
-.ss-table > .ss-cell:nth-child(3n+1)::before { content:"Audio"; }
-.ss-table > .ss-cell:nth-child(3n+2)::before { content:"Video"; }
-.ss-table > .ss-cell:nth-child(3n+3)::before { content:"Summary"; }
+  /* ---- Force parchment (light) even if OS is dark ---- */
+  :root { color-scheme: only light; }
+  @media (prefers-color-scheme: dark){
+    html, body{
+      color: var(--ink) !important;
+      background:
+        radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)),
+        var(--parchment) !important;
+    }
+    /* keep all cards/controls light */
+    .card, .ss-card, .ss-cell, .ss-colhead, .ss-vid, .ss-btn, .ss-chip{
+      background:#fff !important;
+      color:var(--ink) !important;
+      border-color: rgba(0,0,0,.18) !important;
+    }
+    .meta .small, .ss-links, .ss-logline, .ss-vidtxt { color: var(--stone) !important; }
+    .ss-row--head { background: var(--parchment-2) !important; border-bottom-color: rgba(0,0,0,.12) !important; }
+    .ss-row       { border-top-color: rgba(0,0,0,.12) !important; }
+    .hero .ribbon { background: rgba(255,255,255,.85) !important; color: var(--ink) !important; }
+    .ss-quote     { border-left-color: rgba(0,0,0,.12) !important; color: var(--stone) !important; }
+  }
 
-/* (optional) lighter label in light images */
-@media (prefers-color-scheme: dark){
-  /* we already force light theme, this is harmless */
-}
-/* Image-first cards: thumb on top, everything else below */
-.ss-cell{ position:relative; padding:0; overflow:hidden; }
-.ss-thumb{ display:block; width:100%; height:190px; object-fit:cover; border:0; border-radius:12px 12px 0 0; margin:0; }
-.ss-inner{ padding:.85rem .9rem; display:flex; flex-direction:column; min-height:calc(160px - .85rem); }
+  /* Global image safety (optional but handy) */
+  img{ max-width:100%; height:auto; }
+</style>
 
 </style>
 </head>
@@ -413,6 +352,8 @@ table.insertAdjacentHTML('beforeend',
     return cell(audioCell,'Audio') + cell(videoCell,'Video') + cell(sumCell,'Summary');
   }).join('')
 );
+})();
+
 
 </script>
     
