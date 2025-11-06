@@ -194,6 +194,8 @@ img{ max-width:100%; height:auto; }
   object-fit:contain; /* show full image, no cropping */
   height:auto;        /* ensure natural aspect */
 }
+img{max-width:100%; height:100%;}
+.ss-thumb{ max-height:240px; object-fit:contain; }
 
 </style>
 
@@ -303,15 +305,21 @@ const thumbPath = (ep, c, kind) => {
   return (c[k1] || c[k2] || c.thumb || `/TheSassenachStudies/thumbs/${ep}-${kind}.jpg`);
 };
 
-table.insertAdjacentHTML('beforeend',
-  rows.map(c=>{
-    const ep      = (c.ep||'').trim();
-    const title   = c.title || '';
-    const log     = c.logline || '';
-    const quote   = c.quote ? `\u201C${c.quote}\u201D` : '';
-    const audio   = c.audio || '';
-    const video   = c.video || '';
-    const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+const ep      = (c.ep||'').trim();
+const title   = c.title || '';
+const log     = c.logline || '';
+const quote   = c.quote ? `\u201C${c.quote}\u201D` : '';
+const audio   = c.audio || '';
+const video   = c.video || '';
+const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+
+// helper: first non-empty string
+const pick = (v, fb) => (v && String(v).trim()) || fb;
+
+// per-column thumbs with fallbacks
+const tAudio   = pick(c.thumb_audio,   `/TheSassenachStudies/thumbs/${ep}.jpg`);
+const tVideo   = pick(c.thumb_video,   `/TheSassenachStudies/thumbs/${ep}.jpg`);
+const tSummary = pick(c.thumb_summary, `/TheSassenachStudies/thumbs/${ep}.jpg`);
 
     // type-specific thumbs (with generic fallback)
     const tAudio   = thumbPath(ep, c, 'audio');
@@ -324,19 +332,20 @@ table.insertAdjacentHTML('beforeend',
     ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
 
     // AUDIO CELL
-    const audioCell = `
-      <img class="ss-thumb" src="${tAudio}"
-           onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
+   const audioCell = `
+  <img class="ss-thumb" src="${tAudio}" alt="" onerror="this.remove()">
+  ...
+`;       onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
       <div class="ss-inner">
         <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Audio</h3></div>
         ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>` : `<div class="ss-log">—</div>`}
         <div class="ss-meta"><div class="ss-links">${links}</div></div>
       </div>
     `;
-
-    // VIDEO CELL
-    const videoCell = `
-      <img class="ss-thumb" src="${tVideo}"
+const videoCell = `
+  <img class="ss-thumb" src="${tVideo}" alt="" onerror="this.remove()">
+  ...
+`;
            onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
       <div class="ss-inner">
         <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Video</h3></div>
@@ -352,9 +361,10 @@ table.insertAdjacentHTML('beforeend',
     `;
 
     // SUMMARY CELL
-    const sumCell = `
-      <img class="ss-thumb" src="${tSummary}"
-           onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
+  const sumCell = `
+  <img class="ss-thumb" src="${tSummary}" alt="" onerror="this.remove()">
+  ...
+`;           onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
       <div class="ss-inner">
         <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">${title||'Summary'}</h3></div>
         ${log ? `<p class="ss-log">${log}</p>` : ``}
