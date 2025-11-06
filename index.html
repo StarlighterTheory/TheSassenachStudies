@@ -161,6 +161,18 @@
   .ss-row--head{ display:none; }
   .ss-cell{ border-top:1px solid var(--ink-2, #3a3a3a20); }
 }
+.ss-thumb{
+  width:100%;
+  height:auto;
+  display:block;
+  margin:.35rem 0 .6rem;
+  border-radius:10px;
+  border:1px solid var(--ink-2, #3a3a3a20);
+  object-fit:cover;
+}
+@media (prefers-color-scheme: dark){
+  .ss-thumb{ border-color:#2e2e2e; }
+}
 
 </style>
 </head>
@@ -271,17 +283,25 @@
     const list = await res.json();
     list.sort((a,b)=> (a.ep||'').localeCompare(b.ep||''));
 
-    $body.innerHTML = list.map(c=>{
-      const ep=(c.ep||'').trim();
-      const audio = c.audio || (USE_FALLBACKS ? `/media/${ep}.mp3` : "");
-      const video = c.video || (USE_FALLBACKS ? `/media/${ep}.mp4` : "");
-      const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
-      const links = [
-        audio ? `<a class="ss-link" href="${audio}">Download</a>` : "",
-        c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
-        `<a class="ss-link" href="${cardUrl}">Card (.md)</a>`
-      ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
-      return `
+    $body.innerHTML = list.map(c => {
+  const ep = (c.ep || '').trim();
+
+  const audio = c.audio || (USE_FALLBACKS ? `/media/${ep}.mp3` : "");
+  const video = c.video || (USE_FALLBACKS ? `/media/${ep}.mp4` : "");
+
+  // thumbnail: prefer JSON field; otherwise try /thumbs/S01EXX.jpg
+  const thumb = (c.thumb && c.thumb.trim())
+    ? c.thumb.trim()
+    : `/TheSassenachStudies/thumbs/${ep}.jpg`;
+
+  const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+
+  const links = [
+    audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
+    c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
+    `<a class="ss-link" href="${cardUrl}">Card</a>`
+  ].filter(Boolean).
+
       <div class="ss-row" role="row" aria-label="${ep} row">
         <div class="ss-cell ss-col-a" role="cell">
           ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-label="Play ${ep} audio" aria-pressed="false">▶ Play</button>
@@ -311,6 +331,22 @@
       <p>Couldn’t load episode cards. Make sure <code>${CARDS_JSON}</code> is published.</p>
     </div></div>`;
   }
+})();
+</script>
+<script>
+(function(){
+  const hero  = document.getElementById('seasonHero');
+  const img   = document.getElementById('heroImg');
+  const title = document.getElementById('heroTitle');
+  const blurb = document.getElementById('heroBlurb');
+
+  // Your poster lives at repo root as "season1_poster.jpg"
+  img.src = '/TheSassenachStudies/season1_poster.jpg';
+  img.onload = ()=> { hero.hidden = false; };
+
+  // Optional: tweak copy here if you want
+  title.textContent = 'Season 1 — Bloodlines & Timelines';
+  blurb.textContent = 'A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment).';
 })();
 </script>
 
