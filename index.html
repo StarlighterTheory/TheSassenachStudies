@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light">  
 <title>The Sassenach Studies — Media Library</title>
 <meta name="description" content="Audio & video library for The Sassenach Studies — Bloodlines & Timelines (Season 1)." />
 <link rel="preconnect" href="https://archive.org" />
@@ -173,7 +174,27 @@
 @media (prefers-color-scheme: dark){
   .ss-thumb{ border-color:#2e2e2e; }
 }
+/* ---- Force parchment (light) theme, even if system is dark ---- */
+:root{ color-scheme: only light; }
 
+/* Neutralize any dark-mode rules */
+@media (prefers-color-scheme: dark){
+  body{
+    color: var(--ink) !important;
+    background: radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)) , var(--parchment) !important;
+  }
+  .card, .ss-card, .ss-vid, .ss-btn{
+    background:#fff !important;
+    color: var(--ink) !important;
+    border-color: rgba(0,0,0,.18) !important;
+  }
+  .meta .small, .ss-links, .ss-logline, .ss-vidtxt{ color: var(--stone) !important; }
+  .ss-grid{ border-color: var(--ink-2, #3a3a3a20) !important; }
+  .ss-row--head{ background: var(--parchment-2) !important; border-bottom-color: var(--ink-2, #3a3a3a20) !important; }
+  .ss-row{ border-top-color: var(--ink-2, #3a3a3a20) !important; }
+  .hero .ribbon{ background: rgba(255,255,255,.85) !important; color: var(--ink) !important; }
+  .ss-quote{ border-left-color: var(--ink-2, #3a3a3a20) !important; color: var(--stone) !important; }
+}
 </style>
 </head>
 <body>
