@@ -275,7 +275,7 @@
       const ep=(c.ep||'').trim();
       const audio = c.audio || (USE_FALLBACKS ? `/media/${ep}.mp3` : "");
       const video = c.video || (USE_FALLBACKS ? `/media/${ep}.mp4` : "");
-      const cardUrl = `/TheSassenachStudies/cards/${ep}.md`;
+      const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
       const links = [
         audio ? `<a class="ss-link" href="${audio}">Download</a>` : "",
         c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
