@@ -245,6 +245,10 @@
 @media (prefers-color-scheme: dark){
   /* we already force light theme, this is harmless */
 }
+/* Image-first cards: thumb on top, everything else below */
+.ss-cell{ position:relative; padding:0; overflow:hidden; }
+.ss-thumb{ display:block; width:100%; height:190px; object-fit:cover; border:0; border-radius:12px 12px 0 0; margin:0; }
+.ss-inner{ padding:.85rem .9rem; display:flex; flex-direction:column; min-height:calc(160px - .85rem); }
 
 </style>
 </head>
@@ -340,56 +344,76 @@
   const data = await res.json();  // [{ep,title,logline,quote,audio,video,transcript,thumb}, ...]
   data.sort((a,b)=>(a.ep||'').localeCompare(b.ep||''));
 
-  // build exactly 6 rows (pad if fewer)
-  const rows = Array.from({length:6}, (_,i)=> data[i] || {ep:`S01E0${i+1}`});
-  const cell = (html)=>`<div class="ss-cell">${html}</div>`;
-  const stub = '—';
+ // build exactly 6 rows (pad if fewer)
+const rows = Array.from({length:6}, (_,i)=> data[i] || {ep:`S01E0${i+1}`});
 
-  table.insertAdjacentHTML('beforeend',
-    rows.map(c=>{
-      const ep = (c.ep||'').trim();
-      const title = c.title || '';
-      const log = c.logline || '';
-      const quote = c.quote ? `\u201C${c.quote}\u201D` : '';
-      const audio = c.audio || '';
-      const video = c.video || '';
-      const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
-      const thumb = (c.thumb && c.thumb.trim()) ? c.thumb.trim() : `/TheSassenachStudies/thumbs/${ep}.jpg`;
+// helper creates a full card cell; `col` is "Audio" | "Video" | "Summary"
+const cell = (innerHtml, col) => `
+  <div class="ss-cell" role="cell" data-col="${col}">
+    ${innerHtml}
+  </div>
+`;
 
-      // AUDIO CELL
-      const audioCell = audio ? `
+table.insertAdjacentHTML('beforeend',
+  rows.map(c=>{
+    const ep      = (c.ep||'').trim();
+    const title   = c.title || '';
+    const log     = c.logline || '';
+    const quote   = c.quote ? `\u201C${c.quote}\u201D` : '';
+    const audio   = c.audio || '';
+    const video   = c.video || '';
+    const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+    const thumb   = (c.thumb && c.thumb.trim()) ? c.thumb.trim()
+                   : `/TheSassenachStudies/thumbs/${ep}.jpg`;
+
+    const links = [
+      audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
+      c.transcript ? `<a class="ss-link" href="${c.transcript}">Post/Transcript</a>` : `<a class="ss-link" href="${cardUrl}">Card</a>`
+    ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
+
+    // AUDIO CELL (thumb first, then content)
+    const audioCell = `
+      <img class="ss-thumb" src="${thumb}" alt="" onerror="this.remove()">
+      <div class="ss-inner">
         <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Audio</h3></div>
-        <button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>
-        <div class="ss-meta"><div class="ss-links">
-          <a href="${audio}">Download</a>
-          <a href="${cardUrl}">Card</a>
-        </div></div>` : stub;
+        ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>` : `<div class="ss-log">—</div>`}
+        <div class="ss-meta"><div class="ss-links">${links}</div></div>
+      </div>
+    `;
 
-      // VIDEO CELL
-      const videoCell = video ? `
+    // VIDEO CELL (thumb first, then content)
+    const videoCell = `
+      <img class="ss-thumb" src="${thumb}" alt="" onerror="this.remove()">
+      <div class="ss-inner">
         <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Video</h3></div>
-        <a class="ss-chip" href="${video}">
-          <span class="dot">▶</span><span>Open video</span>
-        </a>
+        ${video ? `
+          <a class="ss-chip" href="${video}">
+            <span class="dot">▶</span><span>Open video</span>
+          </a>` : `<div class="ss-log">—</div>`}
         <div class="ss-meta"><div class="ss-links">
-          <a href="${video}">Direct link</a>
+          ${video ? `<a href="${video}">Direct link</a><span class="ss-dot">·</span>` : ``}
           <a href="${cardUrl}">Card</a>
-        </div></div>` : stub;
+        </div></div>
+      </div>
+    `;
 
-      // SUMMARY CELL
-      const sumCell = `
+    // SUMMARY CELL (thumb first, then content)
+    const sumCell = `
+      <img class="ss-thumb" src="${thumb}" alt="" onerror="this.remove()">
+      <div class="ss-inner">
         <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">${title||'Summary'}</h3></div>
-        <img class="ss-thumb" src="${thumb}" alt="" onerror="this.remove()">
         ${log ? `<p class="ss-log">${log}</p>` : ``}
         ${quote ? `<blockquote class="ss-quote">${quote}</blockquote>` : ``}
         <div class="ss-meta"><div class="ss-links">
           ${c.transcript ? `<a href="${c.transcript}">Post/Transcript</a>` : `<a href="${cardUrl}">Card</a>`}
-        </div></div>`;
+        </div></div>
+      </div>
+    `;
 
-      return cell(audioCell) + cell(videoCell) + cell(sumCell);
-    }).join('')
-  );
-})();
+    return cell(audioCell,'Audio') + cell(videoCell,'Video') + cell(sumCell,'Summary');
+  }).join('')
+);
+
 </script>
     
 <script>
