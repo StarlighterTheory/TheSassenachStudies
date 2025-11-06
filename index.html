@@ -202,6 +202,49 @@
   border-radius: 12px 12px 10px 10px;
   border: 0;
 }
+/* --- Card layout: image first, content below --- */
+.ss-cell{
+  position:relative;
+  padding:0;                 /* no inner padding on the card itself */
+  overflow:hidden;           /* clean rounded edges with image bleed */
+}
+
+/* full-bleed thumb at top */
+.ss-thumb{
+  display:block;
+  width:100%;
+  height:190px;              /* tweak 160–220 to taste */
+  contain; height:auto;
+  border:0;
+  border-radius:12px 12px 0 0;
+  margin:0;
+}
+
+/* content wrapper lives under the image */
+.ss-inner{
+  padding:.85rem .9rem;
+  display:flex; flex-direction:column;
+  min-height:calc(160px - .85rem); /* keep rows even-ish */
+}
+
+/* keep your existing pieces */
+.ss-top{ display:flex; align-items:center; gap:.5rem; margin:0 0 .5rem 0; }
+.ss-meta{ margin-top:auto; }
+
+/* tiny in-card labels still show, positioned over the image */
+.ss-cell::before{
+  position:absolute; top:.45rem; left:.55rem;
+  font:600 .68rem/1 system-ui; letter-spacing:.04em; text-transform:uppercase;
+  color:rgba(255,255,255,.95); text-shadow:0 1px 2px rgba(0,0,0,.45);
+}
+.ss-table > .ss-cell:nth-child(3n+1)::before { content:"Audio"; }
+.ss-table > .ss-cell:nth-child(3n+2)::before { content:"Video"; }
+.ss-table > .ss-cell:nth-child(3n+3)::before { content:"Summary"; }
+
+/* (optional) lighter label in light images */
+@media (prefers-color-scheme: dark){
+  /* we already force light theme, this is harmless */
+}
 
 </style>
 </head>
