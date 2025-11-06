@@ -175,6 +175,21 @@
 .ss-colhead{ display:none !important; }
 /* Pull grid up a bit since headers are gone */
 .ss-wrap{ margin-top:.5rem; }
+/* Tiny corner labels per column (visual only) */
+.ss-cell{ position:relative; }
+.ss-cell::before{
+  position:absolute; top:.45rem; left:.55rem;
+  font:600 .68rem/1 system-ui; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--stone); opacity:.85;
+}
+
+/* Map columns (3 columns, repeating every row) */
+.ss-table > .ss-cell:nth-child(3n+1)::before { content:"Audio"; }
+.ss-table > .ss-cell:nth-child(3n+2)::before { content:"Video"; }
+.ss-table > .ss-cell:nth-child(3n+3)::before { content:"Summary"; }
+
+/* Give content a bit of breathing room so the label doesn't overlap */
+.ss-cell .ss-top{ padding-top:.75rem; }
 
 </style>
 </head>
