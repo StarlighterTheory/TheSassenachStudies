@@ -1,13 +1,14 @@
 [
-  {
+ {
   "ep": "S01E01",
   "title": "The Spiral & the Red Thread",
   "logline": "Outlander’s visual grammar in two motifs: the spiral connects; the red thread commits.",
   "quote": "Patterns attract, but choices inscribe.",
-  "thumb": "/TheSassenachStudies/thumbs/s01e01.jpg",
+  "thumb": "/TheSassenachStudies/thumbs/s01e1.jpg",
   "audio": "https://archive.org/download/thesassenachstudies/S01E01.m4a",
   "transcript": "/TheSassenachStudies/cards/S01E01.html"
-  },
+}
+,
   {
     "ep": "S01E02",
     "title": "Botany & the Body",
