@@ -185,8 +185,16 @@
     .ss-quote     { border-left-color: rgba(0,0,0,.12) !important; color: var(--stone) !important; }
   }
 
-  /* Global image safety (optional but handy) */
-  img{ max-width:100%; height:auto; }
+  /* Global image default — avoids weird scaling everywhere */
+img{ max-width:100%; height:auto; }
+
+/* Even card heights while keeping full, uncropped thumbs */
+.ss-thumb{
+  max-height:240px;   /* adjust to taste: 200–300 works well */
+  object-fit:contain; /* show full image, no cropping */
+  height:auto;        /* ensure natural aspect */
+}
+
 </style>
 
 </style>
