@@ -149,6 +149,28 @@
   .ss-colhead, .ss-cell, .ss-btn, .ss-chip{ background:#fff; color:var(--ink); border-color:rgba(0,0,0,.18); }
   .ss-quote{ border-left-color:rgba(0,0,0,.18); }
 }
+/* ---- Force parchment (light) even if OS is dark ---- */
+:root { color-scheme: only light; }
+
+@media (prefers-color-scheme: dark){
+  html, body{
+    color: var(--ink) !important;
+    background:
+      radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)),
+      var(--parchment) !important;
+  }
+  /* keep all cards/controls light */
+  .card, .ss-card, .ss-cell, .ss-colhead, .ss-vid, .ss-btn, .ss-chip{
+    background:#fff !important;
+    color:var(--ink) !important;
+    border-color: rgba(0,0,0,.18) !important;
+  }
+  .meta .small, .ss-links, .ss-logline, .ss-vidtxt { color: var(--stone) !important; }
+  .ss-row--head { background: var(--parchment-2) !important; border-bottom-color: rgba(0,0,0,.12) !important; }
+  .ss-row       { border-top-color: rgba(0,0,0,.12) !important; }
+  .hero .ribbon { background: rgba(255,255,255,.85) !important; color: var(--ink) !important; }
+  .ss-quote     { border-left-color: rgba(0,0,0,.12) !important; color: var(--stone) !important; }
+}
 
 </style>
 </head>
@@ -295,8 +317,7 @@
   );
 })();
 </script>
-
-</script>
+    
 <script>
 (function(){
   const hero  = document.getElementById('seasonHero');
