@@ -82,7 +82,7 @@
 
   /* ======= Sassenach 3×6 card grid (tight) ======= */
   .ss-wrap{ margin:1.25rem 0; }
-  .ss-table{ display:grid; grid-template-columns: 1fr 1fr 1.15fr; gap:14px; }
+  .ss-table{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
   .ss-head, .ss-row{ display:contents; }  /* allow full-row cards without extra wrappers */
 
   /* Column headers (we hide them below, but keep styles for a11y) */
@@ -279,87 +279,92 @@ img{ max-width:100%; height:auto; }
     });
   });
 
-  // ---- data → rows ---------------------------------------------------------
-  const res  = await fetch(CARDS_JSON, {cache:'no-store'});
-  const data = await res.json();  // [{ep, title, logline, quote, audio, video, transcript, thumb_audio, thumb_video, thumb_summary}, ...]
-  data.sort((a,b)=>(a.ep||'').localeCompare(b.ep||''));
+  <script>
+// ---- data → rows ---------------------------------------------------------
+const res  = await fetch(CARDS_JSON, {cache:'no-store'});
+const data = await res.json();  // [{ep,title,logline,quote,audio,video,transcript,thumb,thumb_audio,thumb_video,thumb_summary}, ...]
+data.sort((a,b)=>(a.ep||'').localeCompare(b.ep||''));
 
-  // build exactly 6 rows (pad if fewer)
-  const rows = Array.from({length:6}, (_,i)=> data[i] || {ep:`S01E0${i+1}`});
+// build exactly 6 rows (pad if fewer)
+const rows = Array.from({length:6}, (_,i)=> data[i] || {ep:`S01E0${i+1}`});
 
-  // chooses c.thumb_audio / c.thumbAudio / c.thumb, then a file fallback
-  const thumbPath = (ep, c, kind) => {
-    const k1 = `thumb_${kind}`;
-    const k2 = `thumb${kind[0].toUpperCase()+kind.slice(1)}`;
-    return (c[k1] || c[k2] || c.thumb || `/TheSassenachStudies/thumbs/${ep}-${kind}.jpg`);
-  };
+// helper to pick a per-column thumb with fallbacks
+const thumbPath = (ep, c, kind) => {
+  const k1 = `thumb_${kind}`;                               // thumb_audio
+  const k2 = `thumb${kind[0].toUpperCase()+kind.slice(1)}`; // thumbAudio
+  return (c[k1] || c[k2] || c.thumb || `/TheSassenachStudies/thumbs/${ep}-${kind}.jpg`);
+};
 
-  const cell = (innerHtml, col) => `<div class="ss-cell" role="cell" data-col="${col}">${innerHtml}</div>`;
+// helper creates a full card cell; `col` is "Audio" | "Video" | "Summary"
+const cell = (innerHtml, col) => `<div class="ss-cell" role="cell" data-col="${col}">${innerHtml}</div>`;
 
-  table.insertAdjacentHTML('beforeend',
-    rows.map(c=>{
-      const ep      = (c.ep||'').trim();
-      const title   = c.title || '';
-      const log     = c.logline || '';
-      const quote   = c.quote ? `\u201C${c.quote}\u201D` : '';
-      const audio   = c.audio || '';
-      const video   = c.video || '';
-      const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
+table.insertAdjacentHTML('beforeend',
+  rows.map(c=>{
+    const ep      = (c.ep||'').trim();
+    const title   = c.title || '';
+    const log     = c.logline || '';
+    const quote   = c.quote ? `\u201C${c.quote}\u201D` : '';
+    const audio   = c.audio || '';
+    const video   = c.video || '';
+    const cardUrl = `/TheSassenachStudies/cards/${ep}.html`;
 
-      const tAudio   = thumbPath(ep, c, 'audio');
-      const tVideo   = thumbPath(ep, c, 'video');
-      const tSummary = thumbPath(ep, c, 'summary');
+    // per-column thumbs
+    const tAudio   = thumbPath(ep, c, 'audio');
+    const tVideo   = thumbPath(ep, c, 'video');
+    const tSummary = thumbPath(ep, c, 'summary');
 
-      const links = [
-        audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
-        c.transcript ? `<a class="ss-link" href="${c.transcript}">Post/Transcript</a>` : `<a class="ss-link" href="${cardUrl}">Card</a>`
-      ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
+    const links = [
+      audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
+      c.transcript ? `<a class="ss-link" href="${c.transcript}">Post/Transcript</a>` : `<a class="ss-link" href="${cardUrl}">Card</a>`
+    ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
 
-      // AUDIO CELL
-      const audioCell = `
-        <img class="ss-thumb" src="${tAudio}"
-             onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
-        <div class="ss-inner">
-          <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Audio</h3></div>
-          ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>` : `<div class="ss-log">—</div>`}
-          <div class="ss-meta"><div class="ss-links">${links}</div></div>
-        </div>
-      `;
+    const imgTag = (src, fb)=>`
+      <img class="ss-thumb"
+           src="${src}"
+           alt=""
+           onerror="this.onerror=null; this.src='${fb}'">
+    `;
 
-      // VIDEO CELL
-      const videoCell = `
-        <img class="ss-thumb" src="${tVideo}"
-             onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
-        <div class="ss-inner">
-          <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Video</h3></div>
-          ${video ? `<a class="ss-chip" href="${video}"><span class="dot">▶</span><span>Open video</span></a>` : `<div class="ss-log">—</div>`}
-          <div class="ss-meta"><div class="ss-links">
-            ${video ? `<a href="${video}">Direct link</a><span class="ss-dot">·</span>` : ``}
-            <a href="${cardUrl}">Card</a>
-          </div></div>
-        </div>
-      `;
+    // AUDIO CELL
+    const audioCell = `
+      ${imgTag(tAudio, `/TheSassenachStudies/thumbs/${ep}.jpg`)}
+      <div class="ss-inner">
+        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Audio</h3></div>
+        ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-pressed="false">▶ Play</button>` : `<div class="ss-log">—</div>`}
+        <div class="ss-meta"><div class="ss-links">${links}</div></div>
+      </div>
+    `;
 
-      // SUMMARY CELL
-      const sumCell = `
-        <img class="ss-thumb" src="${tSummary}"
-             onerror="this.onerror=null; this.src='/TheSassenachStudies/thumbs/${ep}.jpg';" alt="">
-        <div class="ss-inner">
-          <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">${title||'Summary'}</h3></div>
-          ${log ? `<p class="ss-log">${log}</p>` : ``}
-          ${quote ? `<blockquote class="ss-quote">${quote}</blockquote>` : ``}
-          <div class="ss-meta"><div class="ss-links">
-            ${c.transcript ? `<a href="${c.transcript}">Post/Transcript</a>` : `<a href="${cardUrl}">Card</a>`}
-          </div></div>
-        </div>
-      `;
+    // VIDEO CELL
+    const videoCell = `
+      ${imgTag(tVideo, `/TheSassenachStudies/thumbs/${ep}.jpg`)}
+      <div class="ss-inner">
+        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">Video</h3></div>
+        ${video ? `<a class="ss-chip" href="${video}"><span class="dot">▶</span><span>Open video</span></a>` : `<div class="ss-log">—</div>`}
+        <div class="ss-meta"><div class="ss-links">
+          ${video ? `<a href="${video}">Direct link</a><span class="ss-dot">·</span>` : ``}
+          <a href="${cardUrl}">Card</a>
+        </div></div>
+      </div>
+    `;
 
-      return cell(audioCell,'Audio') + cell(videoCell,'Video') + cell(sumCell,'Summary');
-    }).join('')
-  );
-})();
+    // SUMMARY CELL
+    const sumCell = `
+      ${imgTag(tSummary, `/TheSassenachStudies/thumbs/${ep}.jpg`)}
+      <div class="ss-inner">
+        <div class="ss-top"><span class="ss-ep">${ep}</span><h3 class="ss-title">${title||'Summary'}</h3></div>
+        ${log ? `<p class="ss-log">${log}</p>` : ``}
+        ${quote ? `<blockquote class="ss-quote">${quote}</blockquote>` : ``}
+        <div class="ss-meta"><div class="ss-links">
+          ${c.transcript ? `<a href="${c.transcript}">Post/Transcript</a>` : `<a href="${cardUrl}">Card</a>`}
+        </div></div>
+      </div>
+    `;
+
+    return cell(audioCell,'Audio') + cell(videoCell,'Video') + cell(sumCell,'Summary');
+  }).join('')
+);
 </script>
-
     
 <script>
 (function(){
