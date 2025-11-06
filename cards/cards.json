@@ -1,23 +1,22 @@
 [
- {
+  {
     "ep": "S01E01",
     "title": "The Spiral & the Red Thread",
     "logline": "Outlander’s visual grammar in two motifs...",
     "audio": "https://archive.org/download/thesassenachstudies/S01E01.m4a",
     "video": "https://archive.org/download/thesassenachstudies/S01E01.mp4",
-    "blog post": "https://listed.to/p/your-post",
+    "transcript": "https://listed.to/p/your-post",
     "thumb_audio": "/TheSassenachStudies/thumbs/S01E01.jpg",
     "thumb_video": "/TheSassenachStudies/thumbs/S01E01-video_parchment_tones.png",
     "thumb_summary": ""
-  }
+  },
   {
     "ep": "S01E02",
     "title": "Botany & the Body",
     "logline": "Claire’s herbcraft sits between lore and medicine; the show frames competence as tenderness.",
     "quote": "Botany isn’t backdrop—it’s a metronome for risk.",
     "audio": "/media/S01E02.mp3",
-    "transcript": "/notes/S01E02",
-    "tags": ["Outlander","Sassenach Studies","Season 1"]
+    "transcript": "/notes/S01E02"
   },
   {
     "ep": "S01E03",
@@ -25,8 +24,7 @@
     "logline": "Culloden operates as a memory technology: silence, costume, and ritual compact grief into meaning.",
     "quote": "Clothes index allegiance and loss—they’re wearable archives.",
     "audio": "/media/S01E03.mp3",
-    "transcript": "/notes/S01E03",
-    "tags": ["Outlander","Sassenach Studies","Season 1"]
+    "transcript": "/notes/S01E03"
   },
   {
     "ep": "S01E04",
@@ -34,8 +32,7 @@
     "logline": "Who speaks what, when, and to whom maps trust, hierarchy, and tenderness.",
     "quote": "On drama, performance is authenticity.",
     "audio": "/media/S01E04.mp3",
-    "transcript": "/notes/S01E04",
-    "tags": ["Outlander","Sassenach Studies","Season 1"]
+    "transcript": "/notes/S01E04"
   },
   {
     "ep": "S01E05",
@@ -43,8 +40,7 @@
     "logline": "Textiles argue—tartan and thread signal allegiance, memory, and vow.",
     "quote": "The show literalizes promise as material.",
     "audio": "/media/S01E05.mp3",
-    "transcript": "/notes/S01E05",
-    "tags": ["Outlander","Sassenach Studies","Season 1"]
+    "transcript": "/notes/S01E05"
   },
   {
     "ep": "S01E06",
@@ -52,7 +48,6 @@
     "logline": "Time travel as a moral amplifier—who consents, who decides, and how vows travel.",
     "quote": "Patterns attract, but choices inscribe.",
     "audio": "/media/S01E06.mp3",
-    "transcript": "/notes/S01E06",
-    "tags": ["Outlander","Sassenach Studies","Season 1"]
+    "transcript": "/notes/S01E06"
   }
 ]
