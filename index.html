@@ -163,146 +163,74 @@
   </dialog>
 <script>
 (async function(){
-  // If your site uses a subpath (e.g., /sassenach-studies), set it here:
-  // const CARDS_JSON = '/sassenach-studies/cards/cards.json';
-  const CARDS_JSON = '/cards/cards.json';
+  // Your Pages site lives under /TheSassenachStudies
+  const CARDS_JSON = '/TheSassenachStudies/cards/cards.json';
 
   const USE_FALLBACKS = false; // keep placeholders empty
 
   const $body = document.getElementById('ss-media-body');
   const $player = document.getElementById('ss-audio');
-  let currentBtn = null;
-  let rafId = null;
-  let lastKnownSrc = "";
+  let currentBtn = null, rafId = null, lastKnownSrc = "";
 
-  function fmt(t){
-    if (!isFinite(t) || t < 0) t = 0;
-    const m = Math.floor(t/60);
-    const s = Math.floor(t%60);
-    return `${m}:${s.toString().padStart(2,'0')}`;
-  }
-
+  function fmt(t){ if(!isFinite(t)||t<0) t=0; const m=Math.floor(t/60), s=Math.floor(t%60); return `${m}:${s.toString().padStart(2,'0')}`; }
   function setLabel(btn, playing){
-    const cur = (isFinite($player.currentTime) ? fmt($player.currentTime) : '0:00');
-    const dur = (isFinite($player.duration) && $player.duration > 0) ? fmt($player.duration) : '—:—';
+    const cur = isFinite($player.currentTime) ? fmt($player.currentTime) : '0:00';
+    const dur = (isFinite($player.duration) && $player.duration>0) ? fmt($player.duration) : '—:—';
     const time = ` ${cur} / ${dur}`;
     btn.innerHTML = playing ? `❚❚ Pause${time}` : '▶ Play';
     btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
   }
+  function startTicker(){ stopTicker(); const tick=()=>{ if(currentBtn && !$player.paused) setLabel(currentBtn,true); rafId=requestAnimationFrame(tick); }; rafId=requestAnimationFrame(tick); }
+  function stopTicker(){ if(rafId) cancelAnimationFrame(rafId); rafId=null; }
 
-  function startTicker(){
-    stopTicker();
-    const tick = () => {
-      if (currentBtn && !$player.paused) setLabel(currentBtn, true);
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-  }
-  function stopTicker(){
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = null;
-  }
-
-  // Event delegation for all play buttons
-  document.addEventListener('click', async (ev) => {
-    const btn = ev.target.closest('.ss-btn');
-    if (!btn) return;
-
-    const src = btn.dataset.audio;
-    if (!src) return;
-
-    // If clicking the same track, toggle
+  document.addEventListener('click', async (ev)=>{
+    const btn = ev.target.closest('.ss-btn'); if(!btn) return;
+    const src = btn.dataset.audio; if(!src) return;
     if (lastKnownSrc === new URL(src, location.href).href) {
-      if ($player.paused) {
-        try { await $player.play(); } catch(e){}
-        currentBtn = btn;
-        setLabel(btn, true);
-        startTicker();
-      } else {
-        $player.pause();
-        setLabel(btn, false);
-        stopTicker();
-      }
+      if ($player.paused) { try{ await $player.play(); }catch{} currentBtn=btn; setLabel(btn,true); startTicker(); }
+      else { $player.pause(); setLabel(btn,false); stopTicker(); }
       return;
     }
-
-    // Switch to a new track
-    $player.src = src;
-    lastKnownSrc = $player.src;
-    try { await $player.play(); } catch(e){}
-    if (currentBtn && currentBtn !== btn) setLabel(currentBtn, false);
-    currentBtn = btn;
-    // While metadata is loading, show 0:00 / —:—
-    setLabel(currentBtn, true);
-    startTicker();
+    $player.src = src; lastKnownSrc = $player.src;
+    try{ await $player.play(); }catch{}
+    if (currentBtn && currentBtn!==btn) setLabel(currentBtn,false);
+    currentBtn = btn; setLabel(currentBtn,true); startTicker();
   });
 
-  // Keep labels honest on player events
-  $player.addEventListener('loadedmetadata', () => {
-    if (currentBtn) setLabel(currentBtn, !$player.paused);
-  });
-  $player.addEventListener('durationchange', () => {
-    if (currentBtn) setLabel(currentBtn, !$player.paused);
-  });
-  $player.addEventListener('timeupdate', () => {
-    if (currentBtn && !$player.paused) setLabel(currentBtn, true);
-  });
-  $player.addEventListener('play', () => {
-    if (currentBtn) { setLabel(currentBtn, true); startTicker(); }
-  });
-  $player.addEventListener('pause', () => {
-    if (currentBtn) setLabel(currentBtn, false);
-    stopTicker();
-  });
-  $player.addEventListener('ended', () => {
-    if (currentBtn) setLabel(currentBtn, false);
-    stopTicker();
-  });
+  $player.addEventListener('loadedmetadata', ()=>{ if(currentBtn) setLabel(currentBtn,!$player.paused); });
+  $player.addEventListener('durationchange', ()=>{ if(currentBtn) setLabel(currentBtn,!$player.paused); });
+  $player.addEventListener('timeupdate', ()=>{ if(currentBtn && !$player.paused) setLabel(currentBtn,true); });
+  $player.addEventListener('play', ()=>{ if(currentBtn){ setLabel(currentBtn,true); startTicker(); } });
+  $player.addEventListener('pause', ()=>{ if(currentBtn) setLabel(currentBtn,false); stopTicker(); });
+  $player.addEventListener('ended', ()=>{ if(currentBtn) setLabel(currentBtn,false); stopTicker(); });
 
-  try {
+  try{
     const res = await fetch(CARDS_JSON, {cache:'no-store'});
     const list = await res.json();
     list.sort((a,b)=> (a.ep||'').localeCompare(b.ep||''));
 
-    $body.innerHTML = list.map(c => {
-      const ep = (c.ep||'').trim();
+    $body.innerHTML = list.map(c=>{
+      const ep=(c.ep||'').trim();
       const audio = c.audio || (USE_FALLBACKS ? `/media/${ep}.mp3` : "");
       const video = c.video || (USE_FALLBACKS ? `/media/${ep}.mp4` : "");
-      const cardUrl = `/cards/${ep}.md`;
-
+      const cardUrl = `/TheSassenachStudies/cards/${ep}.md`;
       const links = [
         audio ? `<a class="ss-link" href="${audio}">Download</a>` : "",
         c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
         `<a class="ss-link" href="${cardUrl}">Card (.md)</a>`
       ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
-
       return `
       <div class="ss-row" role="row" aria-label="${ep} row">
-        <!-- Audio -->
         <div class="ss-cell ss-col-a" role="cell">
-          ${audio ? `
-            <button class="ss-btn" data-audio="${audio}" aria-label="Play ${ep} audio" aria-pressed="false">▶ Play</button>
-            <div class="ss-links">${links}</div>
-          ` : ``}
+          ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-label="Play ${ep} audio" aria-pressed="false">▶ Play</button>
+                     <div class="ss-links">${links}</div>` : ``}
         </div>
-
-        <!-- Video -->
         <div class="ss-cell ss-col-v" role="cell">
-          ${video ? `
-            <a class="ss-vid" href="${video}" aria-label="${ep} video">
-              <span class="ss-play" aria-hidden="true">▶</span>
-              <span class="ss-vidtxt">${ep} — Video</span>
-            </a>
-          ` : ``}
+          ${video ? `<a class="ss-vid" href="${video}" aria-label="${ep} video"><span class="ss-play" aria-hidden="true">▶</span><span class="ss-vidtxt">${ep} — Video</span></a>` : ``}
         </div>
-
-        <!-- Card / Summary -->
         <div class="ss-cell ss-col-c" role="cell">
           <article class="ss-card" aria-labelledby="${ep}-h">
-            <header class="ss-card-head">
-              <span class="ss-ep">${ep}</span>
-              <h3 id="${ep}-h" class="ss-title">${c.title || ''}</h3>
-            </header>
+            <header class="ss-card-head"><span class="ss-ep">${ep}</span><h3 id="${ep}-h" class="ss-title">${c.title || ''}</h3></header>
             ${c.logline ? `<p class="ss-logline">${c.logline}</p>` : ``}
             ${c.quote ? `<blockquote class="ss-quote">“${c.quote}”</blockquote>` : ``}
             <p class="ss-links">
@@ -316,13 +244,14 @@
         </div>
       </div>`;
     }).join('');
-  } catch (e) {
+  }catch(e){
     $body.innerHTML = `<div class="ss-row"><div class="ss-cell" role="cell">
       <p>Couldn’t load episode cards. Make sure <code>${CARDS_JSON}</code> is published.</p>
     </div></div>`;
   }
 })();
 </script>
+
   <!-- Sticky footer mini-player (audio) -->
   <div id="sticky" class="sticky" hidden>
     <img id="sThumb" alt="" src="" />
