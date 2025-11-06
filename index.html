@@ -283,13 +283,13 @@
     const list = await res.json();
     list.sort((a,b)=> (a.ep||'').localeCompare(b.ep||''));
 
-    $body.innerHTML = list.map(c => {
+   $body.innerHTML = list.map(c => {
   const ep = (c.ep || '').trim();
 
   const audio = c.audio || (USE_FALLBACKS ? `/media/${ep}.mp3` : "");
   const video = c.video || (USE_FALLBACKS ? `/media/${ep}.mp4` : "");
 
-  // thumbnail: prefer JSON field; otherwise try /thumbs/S01EXX.jpg
+  // prefer c.thumb; else guess /thumbs/S01EXX.jpg
   const thumb = (c.thumb && c.thumb.trim())
     ? c.thumb.trim()
     : `/TheSassenachStudies/thumbs/${ep}.jpg`;
@@ -300,32 +300,43 @@
     audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
     c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
     `<a class="ss-link" href="${cardUrl}">Card</a>`
-  ].filter(Boolean).
+  ].filter(Boolean).join(`<span class="ss-dot">·</span>`);
 
-      <div class="ss-row" role="row" aria-label="${ep} row">
-        <div class="ss-cell ss-col-a" role="cell">
-          ${audio ? `<button class="ss-btn" data-audio="${audio}" aria-label="Play ${ep} audio" aria-pressed="false">▶ Play</button>
-                     <div class="ss-links">${links}</div>` : ``}
-        </div>
-        <div class="ss-cell ss-col-v" role="cell">
-          ${video ? `<a class="ss-vid" href="${video}" aria-label="${ep} video"><span class="ss-play" aria-hidden="true">▶</span><span class="ss-vidtxt">${ep} — Video</span></a>` : ``}
-        </div>
-        <div class="ss-cell ss-col-c" role="cell">
-          <article class="ss-card" aria-labelledby="${ep}-h">
-            <header class="ss-card-head"><span class="ss-ep">${ep}</span><h3 id="${ep}-h" class="ss-title">${c.title || ''}</h3></header>
-            ${c.logline ? `<p class="ss-logline">${c.logline}</p>` : ``}
-            ${c.quote ? `<blockquote class="ss-quote">“${c.quote}”</blockquote>` : ``}
-            <p class="ss-links">
-              ${[
-                audio ? `<a class="ss-link" href="${audio}">Audio</a>` : "",
-                c.transcript ? `<a class="ss-link" href="${c.transcript}">Transcript</a>` : "",
-                `<a class="ss-link" href="${cardUrl}">Card (.md)</a>`
-              ].filter(Boolean).join(`<span class="ss-dot">·</span>`)}
-            </p>
-          </article>
-        </div>
-      </div>`;
-    }).join('');
+  return `
+    <div class="ss-row" role="row" aria-label="${ep} row">
+      <!-- Audio -->
+      <div class="ss-cell ss-col-a" role="cell">
+        ${audio ? `
+          <button class="ss-btn" data-audio="${audio}" aria-label="Play ${ep} audio" aria-pressed="false">▶ Play</button>
+          <div class="ss-links">${links}</div>
+        ` : ``}
+      </div>
+
+      <!-- Video -->
+      <div class="ss-cell ss-col-v" role="cell">
+        ${video ? `
+          <a class="ss-vid" href="${video}" aria-label="${ep} video">
+            <span class="ss-play" aria-hidden="true">▶</span>
+            <span class="ss-vidtxt">${ep} — Video</span>
+          </a>
+        ` : ``}
+      </div>
+
+      <!-- Summary -->
+      <div class="ss-cell ss-col-c" role="cell">
+        <article class="ss-card" aria-labelledby="${ep}-h">
+          <header class="ss-card-head">
+            <span class="ss-ep">${ep}</span>
+            <h3 id="${ep}-h" class="ss-title">${c.title || ''}</h3>
+          </header>
+          ${thumb ? `<img class="ss-thumb" src="${thumb}" alt="" onerror="this.remove()">` : ``}
+          ${c.logline ? `<p class="ss-logline">${c.logline}</p>` : ``}
+          ${c.quote ? `<blockquote class="ss-quote">“${c.quote}”</blockquote>` : ``}
+          <p class="ss-links">${links}</p>
+        </article>
+      </div>
+    </div>`;
+}).join('');
   }catch(e){
     $body.innerHTML = `<div class="ss-row"><div class="ss-cell" role="cell">
       <p>Couldn’t load episode cards. Make sure <code>${CARDS_JSON}</code> is published.</p>
