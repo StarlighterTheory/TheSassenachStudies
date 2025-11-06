@@ -99,6 +99,69 @@
   .sticky .s-sub{font-size:.9rem; color:var(--stone); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
   .sticky .s-audio{width:min(520px, 50vw)}
   .sticky .s-close{border:2px solid rgba(0,0,0,.25); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer}
+/* ======= Sassenach 3-col media grid ======= */
+.ss-grid-wrap{ margin:1.25rem 0; }
+.ss-grid{ display:block; border:1px solid var(--ink-2, #3a3a3a20); border-radius:14px; overflow:hidden; }
+.ss-row--head{ background:var(--parchment-2); border-bottom:1px solid var(--ink-2, #3a3a3a20); }
+.ss-row{ display:grid; grid-template-columns: 1fr 1fr 2fr; gap:0; border-top:1px solid var(--ink-2, #3a3a3a20); }
+.ss-cell{ padding:.85rem .9rem; min-height:64px; }
+
+.ss-row--head .ss-cell{
+  font-weight:600; color:var(--ink);
+  font:600 .9rem/1.2 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+
+/* Audio play button + links */
+.ss-btn{
+  appearance:none; border:1px solid var(--ink-2, #3a3a3a30); background:#fff;
+  color:var(--ink); font:600 .92rem/1 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  padding:.5rem .7rem; border-radius:10px; cursor:pointer;
+}
+.ss-btn:hover{ border-color:var(--stone); }
+.ss-btn:focus{ outline:2px solid var(--fern); outline-offset:2px; }
+
+.ss-links{ margin-top:.35rem; color:var(--stone); }
+.ss-link{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
+.ss-link:hover{ text-decoration:none; }
+.ss-dot{ margin:0 .35rem; opacity:.7; }
+
+/* Video chip */
+.ss-vid{
+  display:inline-flex; align-items:center; gap:.5rem;
+  border:1px solid var(--ink-2, #3a3a3a20); border-radius:10px; padding:.5rem .7rem;
+  text-decoration:none; color:var(--ink); background:#fff;
+}
+.ss-vid:hover{ border-color:var(--stone); }
+.ss-play{ display:inline-grid; place-items:center; width:1.6rem; height:1.6rem;
+  border-radius:50%; border:1px solid var(--ink-2, #3a3a3a20); }
+.ss-vidtxt{ font-weight:600; }
+
+/* Card column */
+.ss-card{ background:#fff; border:1px solid var(--ink-2, #3a3a3a20); border-radius:12px; padding:.8rem .9rem; }
+.ss-card-head{ display:flex; align-items:baseline; gap:.55rem; margin:0 0 .25rem 0; }
+.ss-ep{ font:600 .78rem/1 system-ui; color:var(--fern); text-transform:uppercase; letter-spacing:.02em; }
+.ss-title{ font:600 1.02rem/1.2 ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; color:var(--ink); margin:0; }
+.ss-logline{ color:var(--ink-2); margin:.4rem 0 .6rem 0; }
+.ss-quote{ margin:.25rem 0 .5rem 0; padding-left:.8rem; border-left:3px solid var(--ink-2, #3a3a3a20); color:var(--stone); font-style:italic; }
+
+/* Dark mode polish */
+@media (prefers-color-scheme: dark){
+  .ss-grid{ border-color:#2e2e2e; }
+  .ss-row--head{ background:#141414; border-bottom-color:#2e2e2e; }
+  .ss-row{ border-top-color:#2e2e2e; }
+  .ss-cell{ }
+  .ss-btn, .ss-vid, .ss-card{ background:#121212; border-color:#2e2e2e; color:#f6f2e8; }
+  .ss-links, .ss-logline, .ss-vidtxt{ color:#c9c1af; }
+  .ss-quote{ border-left-color:#2e2e2e; color:#a9a39a; }
+}
+
+/* Stack on small screens */
+@media (max-width:860px){
+  .ss-row{ grid-template-columns: 1fr; }
+  .ss-row--head{ display:none; }
+  .ss-cell{ border-top:1px solid var(--ink-2, #3a3a3a20); }
+}
+
 </style>
 </head>
 <body>
@@ -147,7 +210,6 @@
 
 <!-- One shared audio element for Play buttons -->
 <audio id="ss-audio" preload="none" aria-hidden="true"></audio>
-
 
     <footer>
       <p>Files stream from <strong>archive.org</strong> (direct links). This page is a static, privacy‑friendly player hosted on <strong>GitHub Pages</strong>.</p>
