@@ -1,0 +1,100 @@
+/* =============================
+   The Sassenach Studies — Home
+   Clean white with ink + red-thread accents
+   ============================= */
+:root{
+  --ink-900:#111417;
+  --ink-700:#2a3035;
+  --ink-500:#505a64;
+  --paper:#ffffff;
+  --stone:#e9eef2;
+  --highlight:#b3262e; /* red thread */
+  --accent:#335c67;    /* cool ink */
+  --radius:1.1rem;
+  --shadow:0 10px 25px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font:16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans, "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--ink-900);
+  background:var(--paper);
+}
+
+/* Wrappers */
+.wrap{max-width:1100px;margin-inline:auto;padding:0 20px}
+
+/* Header */
+.site-header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--stone);z-index:20}
+.site-header .wrap{display:flex;align-items:center;gap:1rem;min-height:64px}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:inherit}
+.brand-mark{width:36px;height:36px;object-fit:contain}
+.brand-name{font-weight:700;letter-spacing:.2px}
+.top-nav{margin-left:auto;display:flex;gap:1rem;flex-wrap:wrap}
+.top-nav a{color:var(--ink-700);text-decoration:none;padding:.4rem .6rem;border-radius:.5rem}
+.top-nav a:hover{background:var(--stone)}
+
+/* Hero */
+.hero{padding:48px 0 28px;border-bottom:1px solid var(--stone)}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center}
+.hero-copy h1{font-size:clamp(28px,3.2vw,42px);line-height:1.15;margin:0 0 .5rem}
+.lede{color:var(--ink-700);max-width:52ch}
+.hero-art img{width:100%;height:auto;border-radius:var(--radius);box-shadow:var(--shadow)}
+.cta-row{display:flex;gap:.75rem;margin-top:1rem;flex-wrap:wrap}
+
+/* Buttons */
+.btn{display:inline-block;padding:.75rem 1rem;border-radius:.8rem;text-decoration:none;font-weight:600}
+.btn-primary{background:var(--highlight);color:#fff}
+.btn-primary:hover{filter:brightness(1.02)}
+.btn-ghost{border:1px solid var(--stone);color:var(--ink-900)}
+.btn-ghost:hover{background:var(--stone)}
+
+/* Sections */
+.section{padding:36px 0}
+.section-alt{background:linear-gradient(#fff, #fafbfc)}
+.section-head{margin-bottom:.75rem}
+.section-title{margin:0 0 .25rem}
+.section-subtitle{margin:0;color:var(--ink-700)}
+
+/* News */
+.news-list{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.news-item{
+  display:grid;
+  grid-template-columns:120px auto;
+  align-items:center;
+  gap:.75rem;
+  background:#fff;border:1px solid var(--stone);
+  padding:.7rem .9rem;border-radius:.75rem;
+}
+.news-date{font-variant-numeric:tabular-nums;color:var(--ink-500)}
+.news-link{color:var(--ink-900);text-decoration:none}
+.news-link:hover{text-decoration:underline}
+.tag{justify-self:end;background:var(--highlight);color:#fff;font-size:.7rem;padding:.2rem .5rem;border-radius:999px;margin-left:auto}
+.news-empty{color:var(--ink-500)}
+
+/* Features */
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.card{background:#fff;border:1px solid var(--stone);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card-media{width:100%;height:180px;object-fit:cover}
+.card-body{padding:1rem}
+.card-title{margin:.2rem 0 .4rem;font-size:1.1rem}
+.card-text{color:var(--ink-700)}
+.keypoints{margin:.6rem 0 0.2rem;padding-left:1.1rem}
+.keypoints li{margin:.2rem 0}
+.chip{display:inline-block;border:1px solid var(--stone);padding:.45rem .65rem;border-radius:999px;text-decoration:none;color:var(--ink-900);margin:.2rem .3rem 0 0}
+.chip:hover{background:var(--stone)}
+
+/* Footer */
+.site-footer{border-top:1px solid var(--stone);padding:28px 0;color:var(--ink-700);text-align:center}
+
+/* Responsive */
+@media (max-width: 940px){
+  .hero-grid{grid-template-columns:1fr}
+  .feature-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width: 620px){
+  .feature-grid{grid-template-columns:1fr}
+  .news-item{grid-template-columns:1fr;align-items:start}
+  .tag{justify-self:start;margin-left:0}
+}
