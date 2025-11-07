@@ -1,0 +1,44 @@
+[
+  {
+    "id": "s01e01",
+    "title": "The Red Thread & the Spiral (pilot)",
+    "blurb": "Outlander’s visual grammar in two motifs: spiral connects, thread commits.",
+    "art": "assets/cards/s01e01.jpg",
+    "url": "season-1.html#s01e01"
+  },
+  {
+    "id": "s01e02",
+    "title": "Botany & the Body",
+    "blurb": "Claire’s herbcraft between lore and medicine; competence as tenderness.",
+    "art": "assets/cards/s01e02.jpg",
+    "url": "season-1.html#s01e02"
+  },
+  {
+    "id": "s01e03",
+    "title": "Culloden Afterlives",
+    "blurb": "Memory, mourning dress, and political myth.",
+    "art": "assets/cards/s01e03.jpg",
+    "url": "season-1.html#s01e03"
+  },
+  {
+    "id": "s01e04",
+    "title": "Language & Power",
+    "blurb": "Gaelic, code-switching, intimacy.",
+    "art": "assets/cards/s01e04.jpg",
+    "url": "season-1.html#s01e04"
+  },
+  {
+    "id": "s01e05",
+    "title": "Cloth & Kin",
+    "blurb": "Tartan, thread, and identity.",
+    "art": "assets/cards/s01e05.jpg",
+    "url": "season-1.html#s01e05"
+  },
+  {
+    "id": "s01e06",
+    "title": "The Ethics of Time",
+    "blurb": "Consent, agency, and causality.",
+    "art": "assets/cards/s01e06.jpg",
+    "url": "season-1.html#s01e06"
+  }
+]
