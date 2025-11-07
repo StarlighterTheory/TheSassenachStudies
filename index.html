@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Sassenach Studies — Home</title>
+<meta name="description" content="The Sassenach Studies — where fandom meets footnotes. Outlander scholarship, season arcs, episode deep-dives." />
+<link rel="preconnect" href="https://archive.org" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="assets/favicon.png" sizes="any">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="assets/logo.svg" alt="The Sassenach Studies logo">
+      <span class="brand-name">The Sassenach Studies</span>
+    </a>
+
+    <nav class="top-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="season-1.html">Season 1</a>
+      <a href="#about">About</a>
+      <a href="#subscribe">Subscribe</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1>Where fandom meets footnotes</h1>
+        <p class="lede">
+          Readings of <em>Outlander</em> through its visual grammar — spiral connects, red thread commits.
+          Essays, transcripts, and seminar notes in one place.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="season-1.html">Explore Season 1: Bloodlines &amp; Timelines</a>
+          <a class="btn btn-ghost" href="#news">Latest updates</a>
+        </div>
+      </div>
+      <figure class="hero-art">
+        <img src="assets/hero-banner.jpg" alt="Watercolor ink collage: spiral motif, red thread, books, and a brain side-view">
+        <figcaption class="sr-only">Seasonal collage artwork</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- NEWS FEED -->
+  <section id="news" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">News &amp; Notes</h2>
+        <p class="section-subtitle">Announcements, episode drops, and site tweaks.</p>
+      </div>
+
+      <ul id="news-list" class="news-list" aria-live="polite">
+        <li class="news-empty">Loading news…</li>
+      </ul>
+
+      <!-- Editable JSON for your news items -->
+      <script type="application/json" id="news-data">
+      [
+        {
+          "date": "2025-11-06",
+          "title": "S01E01 page updated with playable media",
+          "url": "season-1.html#s01e01",
+          "tag": "update"
+        },
+        {
+          "date": "2025-11-05",
+          "title": "New header artwork & favicon refresh",
+          "url": "season-1.html#art",
+          "tag": "art"
+        },
+        {
+          "date": "2025-11-03",
+          "title": "Season 1 structure finalized: Bloodlines & Timelines (6 eps)",
+          "url": "season-1.html",
+          "tag": "season"
+        }
+      ]
+      </script>
+    </div>
+  </section>
+
+  <!-- FEATURED CONTENT -->
+  <section class="section section-alt">
+    <div class="wrap feature-grid">
+
+      <!-- Season 1 banner -->
+      <article class="card feature">
+        <img class="card-media" src="assets/season1-banner.jpg" alt="Season 1 banner: Bloodlines & Timelines">
+        <div class="card-body">
+          <h3 class="card-title">Season 1 — Bloodlines &amp; Timelines</h3>
+          <p class="card-text">
+            A six-part arc tracing the spiral (connection) and the red thread (commitment) across medicine, memory, language, cloth, and time.
+          </p>
+          <a class="btn btn-primary" href="season-1.html">Go to the Season page</a>
+        </div>
+      </article>
+
+      <!-- About -->
+      <article id="about" class="card feature">
+        <div class="card-body">
+          <h3 class="card-title">About the Project</h3>
+          <p class="card-text">
+            The Sassenach Studies is a scholarly-fan podcast and blog reading <em>Outlander</em> through motifs and craft choices.
+            We favor close reading over “gotcha” accuracy checks and pair scenes with historical sources when helpful.
+          </p>
+          <ul class="keypoints">
+            <li><strong>Method:</strong> pattern → source → function in the story</li>
+            <li><strong>Motifs:</strong> spiral (scope) &amp; red thread (shape)</li>
+            <li><strong>Formats:</strong> audio, transcripts, and seminar notes</li>
+          </ul>
+          <a class="btn btn-ghost" href="season-1.html#structure">Read the Season structure</a>
+        </div>
+      </article>
+
+      <!-- Subscribe -->
+      <article id="subscribe" class="card feature">
+        <div class="card-body">
+          <h3 class="card-title">Subscribe &amp; Follow</h3>
+          <p class="card-text">Get new episodes and notes as they land.</p>
+          <div class="subscribe-grid">
+            <a class="chip" href="#" aria-label="Subscribe via RSS">RSS</a>
+            <a class="chip" href="#" aria-label="Apple Podcasts">Apple</a>
+            <a class="chip" href="#" aria-label="Spotify">Spotify</a>
+            <a class="chip" href="#" aria-label="Archive.org collection">Archive</a>
+            <a class="chip" href="#" aria-label="Listed blog">Listed</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© <span id="y"></span> The Sassenach Studies. Spiral connects; thread commits.</p>
+  </div>
+</footer>
+
+<script>
+  // Footer year
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // Render news
+  (function () {
+    const list = document.getElementById('news-list');
+    const raw = document.getElementById('news-data');
+    if (!list || !raw) return;
+
+    let items = [];
+    try { items = JSON.parse(raw.textContent.trim()); } catch(e) { /* ignore */ }
+
+    // Sort newest first
+    items.sort((a,b)=> (a.date < b.date ? 1 : -1));
+
+    // Clear placeholder
+    list.innerHTML = '';
+
+    // Render
+    if (!items.length) {
+      list.innerHTML = '<li class="news-empty">No news yet—check back soon.</li>';
+      return;
+    }
+    const frag = document.createDocumentFragment();
+    items.forEach(n => {
+      const li = document.createElement('li');
+      li.className = 'news-item';
+      const tag = n.tag ? `<span class="tag">${n.tag}</span>` : '';
+      const date = new Date(n.date + 'T00:00:00').toLocaleDateString(undefined, { year:'numeric', month:'short', day:'2-digit' });
+      li.innerHTML = `
+        <time class="news-date" datetime="${n.date}">${date}</time>
+        ${tag}
+        ${n.url ? `<a class="news-link" href="${n.url}">${n.title}</a>` : `<span class="news-link">${n.title}</span>`}
+      `;
+      frag.appendChild(li);
+    });
+    list.appendChild(frag);
+  })();
+</script>
+
+<noscript>
+  <style>.news-empty{display:none}</style>
+  <div class="wrap"><p><em>JavaScript is off. News items will not render.</em></p></div>
+</noscript>
+
+</body>
+</html>
