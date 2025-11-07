@@ -61,29 +61,126 @@
         <li class="news-empty">Loading news…</li>
       </ul>
 
-      <!-- Editable JSON for your news items -->
-      <script type="application/json" id="news-data">
-      [
-        {
-          "date": "2025-11-06",
-          "title": "S01E01 page updated with playable media",
-          "url": "season-1.html#s01e01",
-          "tag": "update"
-        },
-        {
-          "date": "2025-11-05",
-          "title": "New header artwork & favicon refresh",
-          "url": "season-1.html#art",
-          "tag": "art"
-        },
-        {
-          "date": "2025-11-03",
-          "title": "Season 1 structure finalized: Bloodlines & Timelines (6 eps)",
-          "url": "season-1.html",
-          "tag": "season"
-        }
-      ]
-      </script>
+     <!-- FEATURED CONTENT -->
+<section class="section section-alt">
+  <div class="wrap feature-grid">
+    <!-- Season 1 banner (keep as-is) -->
+    <article class="card feature">
+      <img class="card-media" src="assets/season1-banner.jpg" alt="Season 1 banner: Bloodlines & Timelines">
+      <div class="card-body">
+        <h3 class="card-title">Season 1 — Bloodlines &amp; Timelines</h3>
+        <p class="card-text">A six-part arc tracing the spiral (connection) and the red thread (commitment)…</p>
+        <a class="btn btn-primary" href="season-1.html">Go to the Season page</a>
+      </div>
+    </article>
+
+    <!-- About (keep) -->
+    <article id="about" class="card feature"> … </article>
+
+    <!-- Subscribe (keep) -->
+    <article id="subscribe" class="card feature"> … </article>
+  </div>
+</section>
+
+<!-- EPISODE FEATURE CARDS (auto) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="section-title">Featured episodes</h2>
+      <p class="section-subtitle">Season 1 highlights</p>
+    </div>
+    <div id="episode-cards" class="episode-grid">
+      <p class="news-empty">Loading episodes…</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Footer year
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // Helpers
+  const byDateDesc = (a,b) => (a.date < b.date ? 1 : -1);
+  const sameOrigin = p => new URL(p, location.href).origin === location.origin;
+
+  // NEWS: fetch /data/news.json with graceful fallback
+  (async function(){
+    const list = document.getElementById('news-list');
+    if (!list) return;
+    list.innerHTML = '<li class="news-empty">Loading news…</li>';
+
+    const url = 'data/news.json';
+    if (!sameOrigin(url)) { list.innerHTML = '<li class="news-empty">News unavailable.</li>'; return; }
+
+    try {
+      const res = await fetch(url, {cache:'no-store'});
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const items = (await res.json()).sort(byDateDesc);
+
+      if (!items.length) { list.innerHTML = '<li class="news-empty">No news yet—check back soon.</li>'; return; }
+
+      list.innerHTML = '';
+      const frag = document.createDocumentFragment();
+      for (const n of items) {
+        const li = document.createElement('li');
+        li.className = 'news-item';
+        const tag = n.tag ? `<span class="tag">${n.tag}</span>` : '';
+        const date = new Date(n.date + 'T00:00:00').toLocaleDateString(undefined, {year:'numeric', month:'short', day:'2-digit'});
+        li.innerHTML = `
+          <time class="news-date" datetime="${n.date}">${date}</time>
+          ${tag}
+          ${n.url ? `<a class="news-link" href="${n.url}">${n.title}</a>` : `<span class="news-link">${n.title}</span>`}
+        `;
+        frag.appendChild(li);
+      }
+      list.appendChild(frag);
+    } catch (e) {
+      list.innerHTML = '<li class="news-empty">Couldn’t load news.</li>';
+    }
+  })();
+
+  // EPISODES: fetch /data/episodes.json and render cards
+  (async function(){
+    const wrap = document.getElementById('episode-cards');
+    if (!wrap) return;
+
+    const url = 'data/episodes.json';
+    if (!sameOrigin(url)) { wrap.innerHTML = '<p class="news-empty">Episodes unavailable.</p>'; return; }
+
+    try {
+      const res = await fetch(url, {cache:'no-store'});
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const eps = await res.json();
+
+      if (!Array.isArray(eps) || !eps.length) { wrap.innerHTML = '<p class="news-empty">No episodes yet.</p>'; return; }
+
+      wrap.innerHTML = '';
+      const frag = document.createDocumentFragment();
+      for (const ep of eps) {
+        const a = document.createElement('article');
+        a.className = 'card episode';
+        a.innerHTML = `
+          ${ep.art ? `<img class="card-media" src="${ep.art}" alt="${ep.title}">` : ''}
+          <div class="card-body">
+            <h3 class="card-title">${ep.title}</h3>
+            <p class="card-text">${ep.blurb ?? ''}</p>
+            <a class="btn btn-ghost" href="${ep.url}">Open</a>
+          </div>
+        `;
+        frag.appendChild(a);
+      }
+      wrap.appendChild(frag);
+    } catch (e) {
+      wrap.innerHTML = '<p class="news-empty">Couldn’t load episodes.</p>';
+    }
+  })();
+</script>
+
+<noscript>
+  <style>.news-empty{display:none}</style>
+  <div class="wrap"><p><em>JavaScript is off. Dynamic sections won’t render.</em></p></div>
+</noscript>
+
     </div>
   </section>
 
