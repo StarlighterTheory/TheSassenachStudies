@@ -151,6 +151,11 @@ body.skin-parchment .tag{
   border-color: rgba(179,38,46,.28);
 }
 
+body.skin-parchment .hero .ribbon{
+  background: rgba(255,255,255,.9);
+  border-color: rgba(0,0,0,.12);
+}
+
 /* Dark-mode override remains dark, even with parchment skin */
 @media (prefers-color-scheme: dark){
   body.skin-parchment{
