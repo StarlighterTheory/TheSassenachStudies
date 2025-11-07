@@ -107,3 +107,57 @@ footer{border-top:1px solid var(--stone);padding:28px 0;color:var(--ink-700);fon
   .player-head{background:#151515;border-color:#2a2a2a}
   .player-body{background:#000}
 }
+/* === Parchment skin (same vibe as season-1 page) === */
+:root{
+  --parchment:#f3ecd8;
+  --parchment-2:#efe6cf;
+}
+
+/* Turn on by adding class="skin-parchment" to <body> */
+body.skin-parchment{
+  /* soft parchment with a faint radial wash */
+  background:
+    radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.8), rgba(255,255,255,0)),
+    var(--parchment);
+  color: var(--ink-900);
+}
+
+/* keep sections/cards readable on parchment */
+body.skin-parchment .section-alt{ 
+  background: linear-gradient(var(--parchment), var(--parchment-2));
+}
+
+body.skin-parchment .card{
+  background: linear-gradient(#fff, #faf7ee);
+  border-color: rgba(0,0,0,.14);
+}
+
+body.skin-parchment header{
+  /* sticky header still sits on a light panel so text stays crisp */
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.12);
+}
+
+body.skin-parchment .filters .seg,
+body.skin-parchment .hero .ribbon{
+  background: #fff;
+  border-color: rgba(0,0,0,.12);
+}
+
+/* optional: slightly warmer ‘chip’ + tag edges on parchment */
+body.skin-parchment .chip{ border-color: rgba(0,0,0,.14) }
+body.skin-parchment .tag{
+  background: rgba(179,38,46,.08);
+  border-color: rgba(179,38,46,.28);
+}
+
+/* Dark-mode override remains dark, even with parchment skin */
+@media (prefers-color-scheme: dark){
+  body.skin-parchment{
+    background:#111; /* respect dark mode */
+    color:#f6f2e8;
+  }
+  body.skin-parchment .section-alt{
+    background: linear-gradient(#111,#151515);
+  }
+}
