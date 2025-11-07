@@ -11,6 +11,7 @@
 </head>
 <body>
 
+  <!-- Sticky header (Season-1 style) -->
   <header>
     <div class="wrap">
       <div class="brand">
@@ -23,266 +24,198 @@
     </div>
   </header>
 
-<main id="main">
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <h1>Where fandom meets footnotes</h1>
-        <p class="lede">
-          Readings of <em>Outlander</em> through its visual grammar — spiral connects, red thread commits.
-          Essays, transcripts, and seminar notes in one place.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="season-1.html">Explore Season 1: Bloodlines &amp; Timelines</a>
-          <a class="btn btn-ghost" href="#news">Latest updates</a>
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h1>Where fandom meets footnotes</h1>
+          <p class="lede">
+            Readings of <em>Outlander</em> through its visual grammar — spiral connects, red thread commits.
+            Essays, transcripts, and seminar notes in one place.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="season-1.html">Explore Season 1: Bloodlines &amp; Timelines</a>
+            <a class="btn btn-ghost" href="#news">Latest updates</a>
+          </div>
         </div>
+        <figure class="hero-art">
+          <img src="assets/hero-banner.jpg" alt="Watercolor ink collage: spiral motif, red thread, books, and a brain side-view">
+          <figcaption class="sr-only">Seasonal collage artwork</figcaption>
+        </figure>
       </div>
-      <figure class="hero-art">
-        <img src="assets/hero-banner.jpg" alt="Watercolor ink collage: spiral motif, red thread, books, and a brain side-view">
-        <figcaption class="sr-only">Seasonal collage artwork</figcaption>
-      </figure>
-    </div>
-  </section>
+    </section>
 
-  <!-- NEWS FEED -->
-  <section id="news" class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2 class="section-title">News &amp; Notes</h2>
-        <p class="section-subtitle">Announcements, episode drops, and site tweaks.</p>
+    <!-- NEWS FEED -->
+    <section id="news" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">News &amp; Notes</h2>
+          <p class="section-subtitle">Announcements, episode drops, and site tweaks.</p>
+        </div>
+
+        <ul id="news-list" class="news-list" aria-live="polite">
+          <li class="news-empty">Loading news…</li>
+        </ul>
       </div>
+    </section>
 
-      <ul id="news-list" class="news-list" aria-live="polite">
-        <li class="news-empty">Loading news…</li>
-      </ul>
+    <!-- FEATURED CONTENT -->
+    <section class="section section-alt">
+      <div class="wrap feature-grid">
 
-     <!-- FEATURED CONTENT -->
-<section class="section section-alt">
-  <div class="wrap feature-grid">
-    <!-- Season 1 banner (keep as-is) -->
-    <article class="card feature">
-      <img class="card-media" src="assets/season1-banner.jpg" alt="Season 1 banner: Bloodlines & Timelines">
-      <div class="card-body">
-        <h3 class="card-title">Season 1 — Bloodlines &amp; Timelines</h3>
-        <p class="card-text">A six-part arc tracing the spiral (connection) and the red thread (commitment)…</p>
-        <a class="btn btn-primary" href="season-1.html">Go to the Season page</a>
-      </div>
-    </article>
-
-    <!-- About (keep) -->
-    <article id="about" class="card feature"> … </article>
-
-    <!-- Subscribe (keep) -->
-    <article id="subscribe" class="card feature"> … </article>
-  </div>
-</section>
-
-<!-- EPISODE FEATURE CARDS (auto) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section-head">
-      <h2 class="section-title">Featured episodes</h2>
-      <p class="section-subtitle">Season 1 highlights</p>
-    </div>
-    <div id="episode-cards" class="episode-grid">
-      <p class="news-empty">Loading episodes…</p>
-    </div>
-  </div>
-</section>
-
-<script>
-  // Footer year
-  document.getElementById('y').textContent = new Date().getFullYear();
-
-  // Helpers
-  const byDateDesc = (a,b) => (a.date < b.date ? 1 : -1);
-  const sameOrigin = p => new URL(p, location.href).origin === location.origin;
-
-  // NEWS: fetch /data/news.json with graceful fallback
-  (async function(){
-    const list = document.getElementById('news-list');
-    if (!list) return;
-    list.innerHTML = '<li class="news-empty">Loading news…</li>';
-
-    const url = 'data/news.json';
-    if (!sameOrigin(url)) { list.innerHTML = '<li class="news-empty">News unavailable.</li>'; return; }
-
-    try {
-      const res = await fetch(url, {cache:'no-store'});
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const items = (await res.json()).sort(byDateDesc);
-
-      if (!items.length) { list.innerHTML = '<li class="news-empty">No news yet—check back soon.</li>'; return; }
-
-      list.innerHTML = '';
-      const frag = document.createDocumentFragment();
-      for (const n of items) {
-        const li = document.createElement('li');
-        li.className = 'news-item';
-        const tag = n.tag ? `<span class="tag">${n.tag}</span>` : '';
-        const date = new Date(n.date + 'T00:00:00').toLocaleDateString(undefined, {year:'numeric', month:'short', day:'2-digit'});
-        li.innerHTML = `
-          <time class="news-date" datetime="${n.date}">${date}</time>
-          ${tag}
-          ${n.url ? `<a class="news-link" href="${n.url}">${n.title}</a>` : `<span class="news-link">${n.title}</span>`}
-        `;
-        frag.appendChild(li);
-      }
-      list.appendChild(frag);
-    } catch (e) {
-      list.innerHTML = '<li class="news-empty">Couldn’t load news.</li>';
-    }
-  })();
-
-  // EPISODES: fetch /data/episodes.json and render cards
-  (async function(){
-    const wrap = document.getElementById('episode-cards');
-    if (!wrap) return;
-
-    const url = 'data/episodes.json';
-    if (!sameOrigin(url)) { wrap.innerHTML = '<p class="news-empty">Episodes unavailable.</p>'; return; }
-
-    try {
-      const res = await fetch(url, {cache:'no-store'});
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const eps = await res.json();
-
-      if (!Array.isArray(eps) || !eps.length) { wrap.innerHTML = '<p class="news-empty">No episodes yet.</p>'; return; }
-
-      wrap.innerHTML = '';
-      const frag = document.createDocumentFragment();
-      for (const ep of eps) {
-        const a = document.createElement('article');
-        a.className = 'card episode';
-        a.innerHTML = `
-          ${ep.art ? `<img class="card-media" src="${ep.art}" alt="${ep.title}">` : ''}
+        <!-- Season 1 banner -->
+        <article class="card feature">
+          <img class="card-media" src="assets/season1-banner.jpg" alt="Season 1 banner: Bloodlines & Timelines">
           <div class="card-body">
-            <h3 class="card-title">${ep.title}</h3>
-            <p class="card-text">${ep.blurb ?? ''}</p>
-            <a class="btn btn-ghost" href="${ep.url}">Open</a>
+            <h3 class="card-title">Season 1 — Bloodlines &amp; Timelines</h3>
+            <p class="card-text">
+              A six-part arc tracing the spiral (connection) and the red thread (commitment) across medicine, memory, language, cloth, and time.
+            </p>
+            <a class="btn btn-primary" href="season-1.html">Go to the Season page</a>
           </div>
-        `;
-        frag.appendChild(a);
+        </article>
+
+        <!-- About -->
+        <article id="about" class="card feature">
+          <div class="card-body">
+            <h3 class="card-title">About the Project</h3>
+            <p class="card-text">
+              The Sassenach Studies is a scholarly-fan podcast and blog reading <em>Outlander</em> through motifs and craft choices.
+              We favor close reading over “gotcha” accuracy checks and pair scenes with historical sources when helpful.
+            </p>
+            <ul class="keypoints">
+              <li><strong>Method:</strong> pattern → source → function in the story</li>
+              <li><strong>Motifs:</strong> spiral (scope) &amp; red thread (shape)</li>
+              <li><strong>Formats:</strong> audio, transcripts, and seminar notes</li>
+            </ul>
+            <a class="btn btn-ghost" href="season-1.html#structure">Read the Season structure</a>
+          </div>
+        </article>
+
+        <!-- Subscribe -->
+        <article id="subscribe" class="card feature">
+          <div class="card-body">
+            <h3 class="card-title">Subscribe &amp; Follow</h3>
+            <p class="card-text">Get new episodes and notes as they land.</p>
+            <div class="subscribe-grid">
+              <a class="chip" href="#" aria-label="Subscribe via RSS">RSS</a>
+              <a class="chip" href="#" aria-label="Apple Podcasts">Apple</a>
+              <a class="chip" href="#" aria-label="Spotify">Spotify</a>
+              <a class="chip" href="#" aria-label="Archive.org collection">Archive</a>
+              <a class="chip" href="#" aria-label="Listed blog">Listed</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- EPISODE FEATURE CARDS (auto) -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">Featured episodes</h2>
+          <p class="section-subtitle">Season 1 highlights</p>
+        </div>
+        <div id="episode-cards" class="episode-grid">
+          <p class="news-empty">Loading episodes…</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="y"></span> The Sassenach Studies. Spiral connects; thread commits.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Helpers
+    const byDateDesc = (a,b) => (a.date < b.date ? 1 : -1);
+    const sameOrigin = p => new URL(p, location.href).origin === location.origin;
+
+    // NEWS: fetch /data/news.json with graceful fallback
+    (async function(){
+      const list = document.getElementById('news-list');
+      if (!list) return;
+      list.innerHTML = '<li class="news-empty">Loading news…</li>';
+
+      const url = 'data/news.json';
+      if (!sameOrigin(url)) { list.innerHTML = '<li class="news-empty">News unavailable.</li>'; return; }
+
+      try {
+        const res = await fetch(url, {cache:'no-store'});
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const items = (await res.json()).sort(byDateDesc);
+
+        if (!items.length) { list.innerHTML = '<li class="news-empty">No news yet—check back soon.</li>'; return; }
+
+        list.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        for (const n of items) {
+          const li = document.createElement('li');
+          li.className = 'news-item';
+          const tag = n.tag ? `<span class="tag">${n.tag}</span>` : '';
+          const date = new Date(n.date + 'T00:00:00').toLocaleDateString(undefined, {year:'numeric', month:'short', day:'2-digit'});
+          li.innerHTML = `
+            <time class="news-date" datetime="${n.date}">${date}</time>
+            ${tag}
+            ${n.url ? `<a class="news-link" href="${n.url}">${n.title}</a>` : `<span class="news-link">${n.title}</span>`}
+          `;
+          frag.appendChild(li);
+        }
+        list.appendChild(frag);
+      } catch (e) {
+        list.innerHTML = '<li class="news-empty">Couldn’t load news.</li>';
       }
-      wrap.appendChild(frag);
-    } catch (e) {
-      wrap.innerHTML = '<p class="news-empty">Couldn’t load episodes.</p>';
-    }
-  })();
-</script>
+    })();
 
-<noscript>
-  <style>.news-empty{display:none}</style>
-  <div class="wrap"><p><em>JavaScript is off. Dynamic sections won’t render.</em></p></div>
-</noscript>
+    // EPISODES: fetch /data/episodes.json and render cards
+    (async function(){
+      const wrap = document.getElementById('episode-cards');
+      if (!wrap) return;
 
-    </div>
-  </section>
+      const url = 'data/episodes.json';
+      if (!sameOrigin(url)) { wrap.innerHTML = '<p class="news-empty">Episodes unavailable.</p>'; return; }
 
-  <!-- FEATURED CONTENT -->
-  <section class="section section-alt">
-    <div class="wrap feature-grid">
+      try {
+        const res = await fetch(url, {cache:'no-store'});
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const eps = await res.json();
 
-      <!-- Season 1 banner -->
-      <article class="card feature">
-        <img class="card-media" src="assets/season1-banner.jpg" alt="Season 1 banner: Bloodlines & Timelines">
-        <div class="card-body">
-          <h3 class="card-title">Season 1 — Bloodlines &amp; Timelines</h3>
-          <p class="card-text">
-            A six-part arc tracing the spiral (connection) and the red thread (commitment) across medicine, memory, language, cloth, and time.
-          </p>
-          <a class="btn btn-primary" href="season-1.html">Go to the Season page</a>
-        </div>
-      </article>
+        if (!Array.isArray(eps) || !eps.length) { wrap.innerHTML = '<p class="news-empty">No episodes yet.</p>'; return; }
 
-      <!-- About -->
-      <article id="about" class="card feature">
-        <div class="card-body">
-          <h3 class="card-title">About the Project</h3>
-          <p class="card-text">
-            The Sassenach Studies is a scholarly-fan podcast and blog reading <em>Outlander</em> through motifs and craft choices.
-            We favor close reading over “gotcha” accuracy checks and pair scenes with historical sources when helpful.
-          </p>
-          <ul class="keypoints">
-            <li><strong>Method:</strong> pattern → source → function in the story</li>
-            <li><strong>Motifs:</strong> spiral (scope) &amp; red thread (shape)</li>
-            <li><strong>Formats:</strong> audio, transcripts, and seminar notes</li>
-          </ul>
-          <a class="btn btn-ghost" href="season-1.html#structure">Read the Season structure</a>
-        </div>
-      </article>
+        wrap.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        for (const ep of eps) {
+          const a = document.createElement('article');
+          a.className = 'card episode';
+          a.innerHTML = `
+            ${ep.art ? `<img class="card-media" src="${ep.art}" alt="${ep.title}">` : ''}
+            <div class="card-body">
+              <h3 class="card-title">${ep.title}</h3>
+              <p class="card-text">${ep.blurb ?? ''}</p>
+              <a class="btn btn-ghost" href="${ep.url}">Open</a>
+            </div>
+          `;
+          frag.appendChild(a);
+        }
+        wrap.appendChild(frag);
+      } catch (e) {
+        wrap.innerHTML = '<p class="news-empty">Couldn’t load episodes.</p>';
+      }
+    })();
+  </script>
 
-      <!-- Subscribe -->
-      <article id="subscribe" class="card feature">
-        <div class="card-body">
-          <h3 class="card-title">Subscribe &amp; Follow</h3>
-          <p class="card-text">Get new episodes and notes as they land.</p>
-          <div class="subscribe-grid">
-            <a class="chip" href="#" aria-label="Subscribe via RSS">RSS</a>
-            <a class="chip" href="#" aria-label="Apple Podcasts">Apple</a>
-            <a class="chip" href="#" aria-label="Spotify">Spotify</a>
-            <a class="chip" href="#" aria-label="Archive.org collection">Archive</a>
-            <a class="chip" href="#" aria-label="Listed blog">Listed</a>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-</main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <p>© <span id="y"></span> The Sassenach Studies. Spiral connects; thread commits.</p>
-  </div>
-</footer>
-
-<script>
-  // Footer year
-  document.getElementById('y').textContent = new Date().getFullYear();
-
-  // Render news
-  (function () {
-    const list = document.getElementById('news-list');
-    const raw = document.getElementById('news-data');
-    if (!list || !raw) return;
-
-    let items = [];
-    try { items = JSON.parse(raw.textContent.trim()); } catch(e) { /* ignore */ }
-
-    // Sort newest first
-    items.sort((a,b)=> (a.date < b.date ? 1 : -1));
-
-    // Clear placeholder
-    list.innerHTML = '';
-
-    // Render
-    if (!items.length) {
-      list.innerHTML = '<li class="news-empty">No news yet—check back soon.</li>';
-      return;
-    }
-    const frag = document.createDocumentFragment();
-    items.forEach(n => {
-      const li = document.createElement('li');
-      li.className = 'news-item';
-      const tag = n.tag ? `<span class="tag">${n.tag}</span>` : '';
-      const date = new Date(n.date + 'T00:00:00').toLocaleDateString(undefined, { year:'numeric', month:'short', day:'2-digit' });
-      li.innerHTML = `
-        <time class="news-date" datetime="${n.date}">${date}</time>
-        ${tag}
-        ${n.url ? `<a class="news-link" href="${n.url}">${n.title}</a>` : `<span class="news-link">${n.title}</span>`}
-      `;
-      frag.appendChild(li);
-    });
-    list.appendChild(frag);
-  })();
-</script>
-
-<noscript>
-  <style>.news-empty{display:none}</style>
-  <div class="wrap"><p><em>JavaScript is off. News items will not render.</em></p></div>
-</noscript>
+  <noscript>
+    <style>.news-empty{display:none}</style>
+    <div class="wrap"><p><em>JavaScript is off. Dynamic sections won’t render.</em></p></div>
+  </noscript>
 
 </body>
 </html>
