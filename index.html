@@ -25,107 +25,133 @@
     </div>
   </header>
 
-  <main id="main">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
-          <h1>Where fandom meets footnotes</h1>
-          <p class="lede">
-            Readings of <em>Outlander</em> through its visual grammar — spiral connects, red thread commits.
-            Essays, transcripts, and seminar notes in one place.
+ <main id="main" class="mag">
+  <!-- LEAD FEATURE -->
+  <section class="lead">
+    <div class="wrap">
+      <article class="lead-card">
+        <figure class="lead-media">
+          <img src="assets/hero-banner.jpg" alt="Season collage: spiral, red thread, books, side-view brain">
+        </figure>
+        <div class="lead-body">
+          <span class="eyebrow">Feature</span>
+          <h1 class="lead-title">Where fandom meets footnotes</h1>
+          <p class="deck">
+            Readings of <em>Outlander</em> through its visual grammar—spiral connects, red thread commits.
           </p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href="season-1.html">Explore Season 1: Bloodlines &amp; Timelines</a>
+          <div class="meta-line">Season 1 · Bloodlines &amp; Timelines</div>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="season-1.html">Start Season 1</a>
             <a class="btn btn-ghost" href="#news">Latest updates</a>
           </div>
         </div>
-        <figure class="hero-art">
-          <img src="assets/hero-banner.jpg" alt="Watercolor ink collage: spiral motif, red thread, books, and a brain side-view">
-          <figcaption class="sr-only">Seasonal collage artwork</figcaption>
-        </figure>
-      </div>
-    </section>
+      </article>
 
-    <!-- NEWS FEED -->
-    <section id="news" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 class="section-title">News &amp; Notes</h2>
-          <p class="section-subtitle">Announcements, episode drops, and site tweaks.</p>
-        </div>
-
-        <ul id="news-list" class="news-list" aria-live="polite">
-          <li class="news-empty">Loading news…</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- FEATURED CONTENT -->
-    <section class="section section-alt">
-      <div class="wrap feature-grid">
-
-        <!-- Season 1 banner -->
-        <article class="card feature">
-          <img class="card-media" src="assets/season1-banner.jpg" alt="Season 1 banner: Bloodlines & Timelines">
+      <!-- TWO SECONDARY FEATURES -->
+      <div class="sec-grid">
+        <article class="feature-card">
+          <img class="card-media" src="assets/cards/s01e01.jpg" alt="">
           <div class="card-body">
-            <h3 class="card-title">Season 1 — Bloodlines &amp; Timelines</h3>
-            <p class="card-text">
-              A six-part arc tracing the spiral (connection) and the red thread (commitment) across medicine, memory, language, cloth, and time.
-            </p>
-            <a class="btn btn-primary" href="season-1.html">Go to the Season page</a>
+            <span class="eyebrow">S01E01</span>
+            <h3 class="card-title">The Red Thread &amp; the Spiral</h3>
+            <p class="card-text">Outlander’s visual grammar in two motifs: spiral connects, thread commits.</p>
+            <a class="btn btn-ghost" href="season-1.html#s01e01">Read / Listen</a>
           </div>
         </article>
 
-        <!-- About -->
-        <article id="about" class="card feature">
+        <article class="feature-card">
+          <img class="card-media" src="assets/season1-banner.jpg" alt="">
           <div class="card-body">
-            <h3 class="card-title">About the Project</h3>
-            <p class="card-text">
-              The Sassenach Studies is a scholarly-fan podcast and blog reading <em>Outlander</em> through motifs and craft choices.
-              We favor close reading over “gotcha” accuracy checks and pair scenes with historical sources when helpful.
-            </p>
-            <ul class="keypoints">
-              <li><strong>Method:</strong> pattern → source → function in the story</li>
-              <li><strong>Motifs:</strong> spiral (scope) &amp; red thread (shape)</li>
-              <li><strong>Formats:</strong> audio, transcripts, and seminar notes</li>
-            </ul>
-            <a class="btn btn-ghost" href="season-1.html#structure">Read the Season structure</a>
+            <span class="eyebrow">Season</span>
+            <h3 class="card-title">Bloodlines &amp; Timelines</h3>
+            <p class="card-text">A six-part arc across medicine, memory, language, cloth, and time.</p>
+            <a class="btn btn-ghost" href="season-1.html">Explore</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENT + RAIL -->
+  <section class="section mag-split">
+    <div class="wrap mag-split-grid">
+      <!-- LEFT: ARTICLE GRID -->
+      <div class="mag-grid" id="episode-cards">
+        <!-- Optional placeholder; JS will replace if you keep the fetch -->
+        <article class="card article card--tall">
+          <img class="card-media" src="assets/cards/s01e03.jpg" alt="">
+          <div class="card-body">
+            <span class="eyebrow">S01E03</span>
+            <h3 class="card-title">Culloden Afterlives</h3>
+            <p class="card-text">Memory, mourning dress, and political myth.</p>
+            <a class="btn btn-ghost" href="season-1.html#s01e03">Open</a>
           </div>
         </article>
 
-        <!-- Subscribe -->
-        <article id="subscribe" class="card feature">
+        <article class="card article">
+          <img class="card-media" src="assets/cards/s01e02.jpg" alt="">
           <div class="card-body">
-            <h3 class="card-title">Subscribe &amp; Follow</h3>
-            <p class="card-text">Get new episodes and notes as they land.</p>
-            <div class="subscribe-grid">
-              <a class="chip" href="#" aria-label="Subscribe via RSS">RSS</a>
-              <a class="chip" href="#" aria-label="Apple Podcasts">Apple</a>
-              <a class="chip" href="#" aria-label="Spotify">Spotify</a>
-              <a class="chip" href="#" aria-label="Archive.org collection">Archive</a>
-              <a class="chip" href="#" aria-label="Listed blog">Listed</a>
-            </div>
+            <span class="eyebrow">S01E02</span>
+            <h3 class="card-title">Botany &amp; the Body</h3>
+            <p class="card-text">Claire’s herbcraft between lore and medicine; competence as tenderness.</p>
+            <a class="btn btn-ghost" href="season-1.html#s01e02">Open</a>
           </div>
         </article>
 
-      </div>
-    </section>
+        <article class="card article card--wide">
+          <img class="card-media" src="assets/cards/s01e06.jpg" alt="">
+          <div class="card-body">
+            <span class="eyebrow">S01E06</span>
+            <h3 class="card-title">The Ethics of Time</h3>
+            <p class="card-text">Consent, agency, and causality—against predestination.</p>
+            <a class="btn btn-ghost" href="season-1.html#s01e06">Open</a>
+          </div>
+        </article>
 
-    <!-- EPISODE FEATURE CARDS (auto) -->
-    <section class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 class="section-title">Featured episodes</h2>
-          <p class="section-subtitle">Season 1 highlights</p>
-        </div>
-        <div id="episode-cards" class="episode-grid">
-          <p class="news-empty">Loading episodes…</p>
-        </div>
+        <article class="card article">
+          <img class="card-media" src="assets/cards/s01e05.jpg" alt="">
+          <div class="card-body">
+            <span class="eyebrow">S01E05</span>
+            <h3 class="card-title">Cloth &amp; Kin</h3>
+            <p class="card-text">Tartan, thread, and identity.</p>
+            <a class="btn btn-ghost" href="season-1.html#s01e05">Open</a>
+          </div>
+        </article>
       </div>
-    </section>
-  </main>
 
+      <!-- RIGHT: RAIL -->
+      <aside class="rail">
+        <div class="rail-block rail-news">
+          <h3 class="rail-title">News &amp; Notes</h3>
+          <ul id="news-list" class="news-list" aria-live="polite">
+            <li class="news-empty">Loading news…</li>
+          </ul>
+        </div>
+
+        <div class="rail-block">
+          <h3 class="rail-title">Subscribe</h3>
+          <p class="rail-text">Get episodes and notes as they land.</p>
+          <div class="subscribe-grid">
+            <a class="chip" href="#">RSS</a>
+            <a class="chip" href="#">Apple</a>
+            <a class="chip" href="#">Spotify</a>
+            <a class="chip" href="#">Archive</a>
+            <a class="chip" href="#">Listed</a>
+          </div>
+        </div>
+
+        <div class="rail-block about">
+          <h3 class="rail-title">About</h3>
+          <p class="rail-text">
+            Scholarly-fan readings of <em>Outlander</em> focusing on motifs and craft. Spiral = connection; red thread = commitment.
+          </p>
+          <a class="btn btn-ghost" href="season-1.html#structure">Season structure</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+  
   <footer class="site-footer">
     <div class="wrap">
       <p>© <span id="y"></span> The Sassenach Studies. Spiral connects; thread commits.</p>
