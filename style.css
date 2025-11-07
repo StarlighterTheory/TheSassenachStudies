@@ -98,3 +98,16 @@ body{
   .news-item{grid-template-columns:1fr;align-items:start}
   .tag{justify-self:start;margin-left:0}
 }
+/* Episode grid */
+.episode-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.2rem;
+}
+.card.episode .card-media{height:160px;object-fit:cover}
+@media (max-width: 940px){
+  .episode-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width: 620px){
+  .episode-grid{grid-template-columns:1fr}
+}
