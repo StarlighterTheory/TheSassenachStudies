@@ -252,45 +252,42 @@ body.skin-parchment .hero .ribbon{
   }
 }
 
-/* ===== Compact density toggle ===== */
-body.density-compact .wrap{ max-width:1080px; padding:0 14px }
-body.density-compact .section{ padding:22px 0 }
-body.density-compact .section-alt{ padding:22px 0 }
-body.density-compact .site-footer{ padding:22px 0 }
+/* ===== Roomy density toggle ===== */
+body.density-roomy .wrap{ max-width: 1280px; padding: 0 24px }
+body.density-roomy .section{ padding: 44px 0 }
+body.density-roomy .section-alt{ padding: 44px 0 }
+body.density-roomy .site-footer{ padding: 36px 0 }
 
-body.density-compact header .wrap{ min-height:56px; padding:0 14px }
-body.density-compact .top-nav a,
-body.density-compact .actions a{ padding:.35rem .55rem; border-radius:.55rem }
+body.density-roomy header .wrap{ min-height: 72px; padding: 0 24px }
 
-body.density-compact .hero{ padding:24px 0 }
-body.density-compact .hero-grid{ gap:1rem }
-body.density-compact .cta-row{ gap:.5rem; margin-top:.6rem }
-body.density-compact .hero .ribbon{ padding:10px 12px; border-radius:.6rem }
+body.density-roomy .hero{ padding: 48px 0 }
+body.density-roomy .hero-grid{ gap: 2rem; grid-template-columns: 1.2fr .8fr }
+body.density-roomy .cta-row{ gap: .9rem; margin-top: 1rem }
+body.density-roomy .hero .ribbon{ padding: 14px 16px; border-radius: 1rem }
 
-body.density-compact .feature-grid,
-body.density-compact .episode-grid,
-body.density-compact .mag-grid,
-body.density-compact .sec-grid{ gap:.9rem }
+body.density-roomy .feature-grid,
+body.density-roomy .episode-grid,
+body.density-roomy .mag-grid,
+body.density-roomy .sec-grid{ gap: 1.4rem }
 
-body.density-compact .card{ border-radius:.8rem }
-body.density-compact .card-body{ padding:.75rem .8rem }
-body.density-compact .card-media{ height:160px }           /* was 180–200px */
-body.density-compact .article.card--tall .card-media{ height:220px }
+body.density-roomy .card{ border-radius: 1.2rem }
+body.density-roomy .card-body{ padding: 1.1rem 1.2rem }
+body.density-roomy .card-media{ height: 220px }            /* was ~180–200 */
+body.density-roomy .article.card--tall .card-media{ height: 300px }
 
-body.density-compact .news-list{ gap:.45rem }
-body.density-compact .news-item{ padding:.5rem .6rem; grid-template-columns:100px auto }
-body.density-compact .tag{ padding:.12rem .4rem; font-size:.68rem }
+body.density-roomy .news-list{ gap: .8rem }
+body.density-roomy .news-item{ padding: .8rem 1rem; grid-template-columns: 140px auto }
+body.density-roomy .tag{ padding: .2rem .55rem; font-size: .76rem }
 
-body.density-compact .mag .lead{ padding:22px 0 }
-body.density-compact .lead-card{ gap:1rem }
-body.density-compact .lead-media img{ border-radius:.9rem }
-body.density-compact .btn{ padding:.5rem .7rem; border-radius:.6rem }
+body.density-roomy .mag .lead{ padding: 44px 0 }
+body.density-roomy .lead-card{ gap: 1.6rem; grid-template-columns: 1.3fr .9fr }
+body.density-roomy .mag-split-grid{ gap: 1.8rem }
+body.density-roomy .rail{ gap: 1.4rem }
+body.density-roomy .rail-block{ padding: 1.1rem }
 
-body.density-compact .mag-split-grid{ gap:1.1rem }
-body.density-compact .rail{ gap:1rem }
-body.density-compact .rail-block{ padding:.8rem }
-
-@media (max-width: 620px){
-  body.density-compact .wrap{ padding:0 12px }
-  body.density-compact .news-item{ grid-template-columns:1fr }
+/* widen the rail a touch so it feels balanced */
+@media (min-width: 1100px){
+  body.density-roomy .mag-split-grid{
+    grid-template-columns: minmax(0,1fr) 360px;
+  }
 }
