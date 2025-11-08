@@ -3,290 +3,380 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>The Sassenach Studies — Home</title>
-<meta name="description" content="The Sassenach Studies — where fandom meets footnotes. Outlander scholarship, season arcs, episode deep-dives." />
-<link rel="preconnect" href="https://archive.org" />
-<link rel="stylesheet" href="styles.css" />
-<link rel="icon" href="assets/favicon.png" sizes="any">
+<title>The Sassenach Studies — Magazine</title>
+<meta name="description" content="The Sassenach Studies — a parchment & ink magazine hub for podcasts, videos, and essays." />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ================================
+   Sassenach Studies — Parchment Magazine
+   ================================ */
+
+/* Tokens (Season 1 parchment & ink + red thread) */
+:root{
+  --ink-900:#111417;
+  --ink-700:#2a3035;
+  --ink-500:#4d5660;
+  --paper:#f5efde;           /* parchment base */
+  --paper-2:#efe6cf;         /* parchment mid */
+  --paper-3:#e7dcc1;         /* parchment light */
+  --stone:#d8cdb3;           /* borders / hairlines */
+  --highlight:#b3262e;       /* red thread */
+  --accent:#335c67;          /* cool ink accent */
+  --radius:16px;
+  --shadow:0 10px 25px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+}
+
+/* Parchment background (texture-lite, no external images) */
+html,body{height:100%}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font:16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans;
+  color:var(--ink-900);
+  background:
+    radial-gradient(1200px 600px at 10% 0%, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(1000px 500px at 90% 0%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 60%),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 50%, var(--paper-3) 100%);
+  background-attachment: fixed;
+}
+
+/* Layout shell */
+.container{max-width:1200px;margin:0 auto;padding:24px}
+.hr{height:1px;background:linear-gradient(90deg, transparent, var(--stone), transparent);margin:8px 0 24px}
+
+/* Header / Nav */
+.header{
+  position:sticky; top:0; z-index:9;
+  background:linear-gradient(180deg, rgba(245,239,222,.96), rgba(245,239,222,.90));
+  backdrop-filter:saturate(1.2) blur(6px);
+  border-bottom:1px solid var(--stone);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px}
+.brand{
+  font-family:"Playfair Display", Georgia, serif;
+  font-weight:800; letter-spacing:.2px; font-size:20px;
+  display:flex; align-items:center; gap:10px;
+}
+.brand::before{
+  content:"";
+  width:14px;height:14px;border-radius:99px;
+  background: radial-gradient(circle at 30% 30%, #e86a73, var(--highlight));
+  box-shadow: 0 0 0 2px #fff inset, 0 0 0 1px #00000012;
+}
+.menu{display:flex;gap:18px;flex-wrap:wrap}
+.menu a{
+  text-decoration:none;color:var(--ink-900);font-weight:600;
+  padding:8px 10px;border-radius:10px;
+}
+.menu a:hover{background:rgba(179,38,46,.08);color:var(--highlight)}
+
+/* Section headings */
+.section-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin:28px 0 12px;
+}
+.section-head h2{
+  margin:0;font-size:26px;letter-spacing:.2px;
+  font-family:"Playfair Display", Georgia, serif;
+}
+.section-head small{color:var(--ink-500)}
+.see-all{
+  font-weight:600;color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent)
+}
+.see-all:hover{color:var(--highlight);border-bottom-color:var(--highlight)}
+
+/* Grids */
+.grid{
+  display:grid; gap:18px;
+}
+.grid.cols-3{grid-template-columns:repeat(3, minmax(0,1fr))}
+.grid.cols-4{grid-template-columns:repeat(4, minmax(0,1fr))}
+@media (max-width:1000px){
+  .grid.cols-4{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+@media (max-width:800px){
+  .grid.cols-3,.grid.cols-4{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+@media (max-width:520px){
+  .grid.cols-3,.grid.cols-4{grid-template-columns:1fr}
+}
+
+/* Card */
+.card{
+  background:linear-gradient(180deg,#fff, #fff7);
+  border:1px solid var(--stone);
+  border-radius:var(--radius);
+  overflow:hidden; box-shadow:var(--shadow);
+  display:flex;flex-direction:column;min-height:100%;
+}
+.media{
+  aspect-ratio:16/9;background:#ddd;
+  background-size:cover;background-position:center;
+  border-bottom:1px solid var(--stone)
+}
+.badge{
+  position:absolute;margin:10px;padding:6px 10px;border-radius:999px;
+  font-size:12px;font-weight:700;letter-spacing:.3px;
+  color:#fff;background:linear-gradient(180deg, #bf3a42, var(--highlight));
+  box-shadow:0 6px 14px rgba(179,38,46,.35)
+}
+.meta{padding:14px 14px 8px}
+.kicker{font-size:12px;letter-spacing:.3px;color:var(--ink-500);text-transform:uppercase}
+.title{
+  margin:6px 0 4px;font-size:18px;line-height:1.35;font-weight:800;
+  font-family:"Playfair Display", Georgia, serif;
+}
+.desc{color:var(--ink-700);font-size:14px}
+.actions{margin-top:auto;padding:12px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.button{
+  text-decoration:none;font-weight:700;font-size:14px;
+  padding:8px 12px;border-radius:10px;border:1px solid var(--stone);
+  color:var(--ink-900); background:linear-gradient(180deg,#fff,#fff0)
+}
+.button[href*="listed.to"], .button.more{border-style:dashed}
+.button:hover{border-color:var(--highlight);color:var(--highlight)}
+
+/* Timeline (seasons) */
+.timeline{
+  background:linear-gradient(180deg, #fff8, #fff2);
+  border:1px solid var(--stone); border-radius:var(--radius); padding:12px;
+  display:flex;flex-wrap:wrap; gap:8px; align-items:center
+}
+.timeline .label{font-weight:700;margin-right:8px}
+.tab{
+  padding:8px 12px;border-radius:999px;border:1px solid var(--stone);
+  background:#fff;font-weight:700; cursor:pointer
+}
+.tab.active{border-color:var(--highlight);color:#fff;background:linear-gradient(180deg,#c54b51,var(--highlight))}
+
+/* Collage rows */
+.collage{
+  display:grid; gap:18px; grid-template-columns:2fr 1fr 1fr;
+}
+@media (max-width:900px){ .collage{grid-template-columns:1fr} }
+.collage .card .media{aspect-ratio:21/9}
+
+/* Footer */
+.footer{
+  margin-top:40px;padding:28px 0;border-top:1px solid var(--stone);
+  color:var(--ink-500);font-size:14px;text-align:center
+}
+</style>
 </head>
-<body class="skin-parchment density-roomy">
+<body>
 
-
-
-  <!-- Sticky header (Season-1 style) -->
-  <header>
-    <div class="wrap">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1>The Sassenach Studies <small>Where fandoms meet footnotes</small></h1>
-      </div>
-          <div class="actions">
-        <a id="toListed" href="https://listed.to/@SassenachStudies" target="_blank" rel="noopener">↗ Listed blog</a>
-      </div>
+<header class="header">
+  <nav class="nav">
+    <div class="brand">The Sassenach Studies</div>
+    <div class="menu" role="navigation" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="https://listed.to/@sassenachstudies" target="_blank" rel="noopener">Listed</a>
+      <a href="#contact">Contact Us</a>
     </div>
-  </header>
+  </nav>
+</header>
 
- <main id="main" class="mag">
-  <!-- LEAD FEATURE -->
-  <section class="lead full bleed">
-    <div class="wrap">
-      <article class="lead-card">
-        <figure class="lead-media">
-          <img src="assets/hero-banner.jpg" alt="Season collage: spiral, red thread, books, side-view brain">
-        </figure>
-        <div class="lead-body">
-          <span class="eyebrow">Feature</span>
-          <h1 class="lead-title">Where fandom meets footnotes</h1>
-          <p class="deck">
-            Readings of <em>Outlander</em> through its visual grammar—spiral connects, red thread commits.
-          </p>
-          <div class="meta-line">Season 1 · Bloodlines &amp; Timelines</div>
-          <div class="btn-row">
-            <a class="btn btn-primary" href="season-1.html">Start Season 1</a>
-            <a class="btn btn-ghost" href="#news">Latest updates</a>
-          </div>
-        </div>
-      </article>
+<main class="container">
 
-      <!-- TWO SECONDARY FEATURES -->
-      <div class="sec-grid">
-        <article class="feature-card">
-          <img class="card-media" src="assets/cards/s01e01.jpg" alt="">
-          <div class="card-body">
-            <span class="eyebrow">S01E01</span>
-            <h3 class="card-title">The Red Thread &amp; the Spiral</h3>
-            <p class="card-text">Outlander’s visual grammar in two motifs: spiral connects, thread commits.</p>
-            <a class="btn btn-ghost" href="season-1.html#s01e01">Read / Listen</a>
-          </div>
-        </article>
-
-        <article class="feature-card">
-          <img class="card-media" src="assets/season1-banner.jpg" alt="">
-          <div class="card-body">
-            <span class="eyebrow">Season</span>
-            <h3 class="card-title">Bloodlines &amp; Timelines</h3>
-            <p class="card-text">A six-part arc across medicine, memory, language, cloth, and time.</p>
-            <a class="btn btn-ghost" href="season-1.html">Explore</a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTENT + RAIL -->
-  <section class="section mag-split">
-    <div class="wrap mag-split-grid">
-      <!-- LEFT: ARTICLE GRID -->
-      <div class="mag-grid" id="episode-cards">
-        <article class="article-body">
-  <p class="byline">By TK · Season 1</p>
-  <p class="dropcap">For many, <em>Outlander</em> reads as destiny. We read its craft: spiral connects, red thread commits.</p>
-
-  <aside class="pull-quote">
-    “The spiral widens the story’s scope; the red thread binds its choices.”
-    <span class="pq-source">— S01E01, Notes</span>
-  </aside>
-
-  <p>Opening paragraph continues here with your analysis…</p>
-
-  <figure class="figure">
-    <img src="assets/cards/s01e01.jpg" alt="Season 1, Episode 1 cover artwork">
-    <figcaption class="figcaption">Pilot artwork — spiral &amp; red thread motifs.</figcaption>
-  </figure>
-
-  <div class="callout">
-    <div class="callout-icon">ℹ︎</div>
-    <div>We prioritize close reading over continuity nitpicks; sources appear in the footnotes.</div>
+  <!-- New Releases (max 4) -->
+  <div class="section-head">
+    <h2>New Releases</h2>
+    <a class="see-all" href="#all">See everything</a>
   </div>
+  <div id="new-releases" class="grid cols-4" aria-live="polite"></div>
 
-  <div class="media-grid">
-    <img src="assets/cards/s01e02.jpg" alt="">
-    <img src="assets/cards/s01e03.jpg" alt="">
+  <div class="hr"></div>
+
+  <!-- Timeline / Season selector -->
+  <div class="section-head">
+    <h2>Timeline</h2>
+    <small>Latest trio from the latest episode in each season</small>
   </div>
+  <div id="timeline" class="timeline" role="tablist" aria-label="Seasons"></div>
 
-  <div class="pq-overlay">
-    <img src="assets/season1-banner.jpg" alt="">
-    <blockquote>
-      “Competence as tenderness: Claire’s medicine frames care as craft.”
-      <cite>S01E02 — Botany &amp; the Body</cite>
-    </blockquote>
+  <div style="height:12px"></div>
+  <div id="episode-trio" class="grid cols-3"></div>
+
+  <div class="hr"></div>
+
+  <!-- By format — collage stacks -->
+  <div class="section-head">
+    <h2>Podcasts</h2>
+    <a class="see-all" href="https://listed.to/@sassenachstudies?tag=podcast" target="_blank" rel="noopener">More Podcasts</a>
   </div>
+  <div id="collage-audio" class="collage"></div>
 
-  <section class="footnotes" aria-label="Footnotes">
-    <h3>Notes</h3>
-    <ol>
-      <li>On the spiral/red-thread grammar, see Episode 1 transcript §2.</li>
-      <li>Historical mourning attire references, Episode 3, sources A–C.</li>
-    </ol>
-  </section>
-</article>
+  <div class="section-head">
+    <h2>Videos</h2>
+    <a class="see-all" href="https://listed.to/@sassenachstudies?tag=video" target="_blank" rel="noopener">More Videos</a>
+  </div>
+  <div id="collage-video" class="collage"></div>
 
- <!-- Optional placeholder; JS will replace if you keep the fetch -->
-        <article class="card article card--tall">
-          <img class="card-media" src="assets/cards/s01e03.jpg" alt="">
-          <div class="card-body">
-            <span class="eyebrow">S01E03</span>
-            <h3 class="card-title">Culloden Afterlives</h3>
-            <p class="card-text">Memory, mourning dress, and political myth.</p>
-            <a class="btn btn-ghost" href="season-1.html#s01e03">Open</a>
-          </div>
-        </article>
+  <div class="section-head">
+    <h2>Articles</h2>
+    <a class="see-all" href="https://listed.to/@sassenachstudies?tag=article" target="_blank" rel="noopener">More Articles</a>
+  </div>
+  <div id="collage-article" class="collage"></div>
 
-        <article class="card article">
-          <img class="card-media" src="assets/cards/s01e02.jpg" alt="">
-          <div class="card-body">
-            <span class="eyebrow">S01E02</span>
-            <h3 class="card-title">Botany &amp; the Body</h3>
-            <p class="card-text">Claire’s herbcraft between lore and medicine; competence as tenderness.</p>
-            <a class="btn btn-ghost" href="season-1.html#s01e02">Open</a>
-          </div>
-        </article>
-
-        <article class="card article card--wide">
-          <img class="card-media" src="assets/cards/s01e06.jpg" alt="">
-          <div class="card-body">
-            <span class="eyebrow">S01E06</span>
-            <h3 class="card-title">The Ethics of Time</h3>
-            <p class="card-text">Consent, agency, and causality—against predestination.</p>
-            <a class="btn btn-ghost" href="season-1.html#s01e06">Open</a>
-          </div>
-        </article>
-
-        <article class="card article">
-          <img class="card-media" src="assets/cards/s01e05.jpg" alt="">
-          <div class="card-body">
-            <span class="eyebrow">S01E05</span>
-            <h3 class="card-title">Cloth &amp; Kin</h3>
-            <p class="card-text">Tartan, thread, and identity.</p>
-            <a class="btn btn-ghost" href="season-1.html#s01e05">Open</a>
-          </div>
-        </article>
-      </div>        
-
-      <!-- RIGHT: RAIL -->
-      <aside class="rail">
-        <div class="rail-block rail-news">
-          <h3 class="rail-title">News &amp; Notes</h3>
-          <ul id="news-list" class="news-list" aria-live="polite">
-            <li class="news-empty">Loading news…</li>
-          </ul>
-        </div>
-
-        <div class="rail-block">
-          <h3 class="rail-title">Subscribe</h3>
-          <p class="rail-text">Get episodes and notes as they land.</p>
-          <div class="subscribe-grid">
-            <a class="chip" href="#">RSS</a>
-            <a class="chip" href="#">Apple</a>
-            <a class="chip" href="#">Spotify</a>
-            <a class="chip" href="#">Archive</a>
-            <a class="chip" href="#">Listed</a>
-          </div>
-        </div>
-
-        <div class="rail-block about">
-          <h3 class="rail-title">About</h3>
-          <p class="rail-text">
-            Scholarly-fan readings of <em>Outlander</em> focusing on motifs and craft. Spiral = connection; red thread = commitment.
-          </p>
-          <a class="btn btn-ghost" href="season-1.html#structure">Season structure</a>
-        </div>
-      </aside>
-    </div>
-  </section>
-</main>
-  
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>© <span id="y"></span> The Sassenach Studies. Spiral connects; thread commits.</p>
-    </div>
+  <footer class="footer">
+    <div>© <span id="year"></span> The Sassenach Studies · Parchment & Ink, Red Thread & Spiral</div>
   </footer>
+</main>
 
-  <script>
-    // Footer year
-    document.getElementById('y').textContent = new Date().getFullYear();
+<script>
+/* ================================
+   Data — just edit CONTENT to feed real items.
+   type: "audio" | "video" | "article"
+   season: "S01" etc.
+   episode: "E01" etc.  (used for “latest episode” calc per season)
+   date: ISO string for sorting newest
+==================================*/
+const CONTENT = [
+  // --- Examples (swap for your real links & cover images) ---
+  {type:"audio",  season:"S01", episode:"E06", date:"2025-11-06",
+   title:"S01E06 — The Ethics of Time",
+   desc:"Time travel as a moral amplifier: who consents, who decides, how vows travel.",
+   href:"https://archive.org/details/the_sassenach_studies_s01e06",
+   cover:"https://placehold.co/800x450/png?text=S01E06+Audio"},
+  {type:"video",  season:"S01", episode:"E06", date:"2025-11-06",
+   title:"Companion Video — S01E06",
+   desc:"Clips, diagrams, and motif overlays for the finale.",
+   href:"https://archive.org/details/the_sassenach_studies_s01e06_video",
+   cover:"https://placehold.co/800x450/png?text=S01E06+Video"},
+  {type:"article",season:"S01", episode:"E06", date:"2025-11-06",
+   title:"Blog Notes — The Ethics of Time",
+   desc:"Transcript + sources. Patterns attract, choices inscribe.",
+   href:"https://listed.to/@sassenachstudies/s01e06",
+   cover:"https://placehold.co/800x450/png?text=S01E06+Article"},
 
-    // Helpers
-    const byDateDesc = (a,b) => (a.date < b.date ? 1 : -1);
-    const sameOrigin = p => new URL(p, location.href).origin === location.origin;
+  {type:"audio",  season:"S01", episode:"E05", date:"2025-11-05",
+   title:"S01E05 — Cloth & Kin",
+   desc:"Tartan, thread, and identity: promises made material.",
+   href:"https://archive.org/details/the_sassenach_studies_s01e05",
+   cover:"https://placehold.co/800x450/png?text=S01E05+Audio"},
+  {type:"video",  season:"S01", episode:"E05", date:"2025-11-05",
+   title:"Companion Video — S01E05",
+   desc:"Palette & textile readings, costume as argument.",
+   href:"https://archive.org/details/the_sassenach_studies_s01e05_video",
+   cover:"https://placehold.co/800x450/png?text=S01E05+Video"},
+  {type:"article",season:"S01", episode:"E05", date:"2025-11-05",
+   title:"Blog Notes — Cloth & Kin",
+   desc:"Pull quotes, sources, and stills.",
+   href:"https://listed.to/@sassenachstudies/s01e05",
+   cover:"https://placehold.co/800x450/png?text=S01E05+Article"},
 
-    // NEWS: fetch /data/news.json with graceful fallback
-    (async function(){
-      const list = document.getElementById('news-list');
-      if (!list) return;
-      list.innerHTML = '<li class="news-empty">Loading news…</li>';
+  {type:"audio",  season:"S01", episode:"E04", date:"2025-11-04",
+   title:"S01E04 — Language & Power",
+   desc:"Gaelic, code-switching, and intimacy.",
+   href:"https://archive.org/details/the_sassenach_studies_s01e04",
+   cover:"https://placehold.co/800x450/png?text=S01E04+Audio"},
+  {type:"video",  season:"S01", episode:"E04", date:"2025-11-04",
+   title:"Companion Video — S01E04",
+   desc:"Prosody and power beats.",
+   href:"https://archive.org/details/the_sassenach_studies_s01e04_video",
+   cover:"https://placehold.co/800x450/png?text=S01E04+Video"},
+  {type:"article",season:"S01", episode:"E04", date:"2025-11-04",
+   title:"Blog Notes — Language & Power",
+   desc:"On drama, performance is authenticity.",
+   href:"https://listed.to/@sassenachstudies/s01e04",
+   cover:"https://placehold.co/800x450/png?text=S01E04+Article"}
+];
 
-      const url = 'data/news.json';
-      if (!sameOrigin(url)) { list.innerHTML = '<li class="news-empty">News unavailable.</li>'; return; }
+/* ============ Helpers ============ */
+const byDateDesc = (a,b) => new Date(b.date) - new Date(a.date);
+const $$ = (sel, el=document) => el.querySelector(sel);
+const $$$ = (sel, el=document) => [...el.querySelectorAll(sel)];
 
-      try {
-        const res = await fetch(url, {cache:'no-store'});
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const items = (await res.json()).sort(byDateDesc);
+function card(item){
+  const badge = item.type.toUpperCase();
+  const icon = item.type==="audio" ? "🔊"
+             : item.type==="video" ? "🎬"
+             : "📝";
+  return `
+  <article class="card">
+    <div class="media" style="background-image:url('${item.cover||""}')">
+      <span class="badge" aria-label="${badge}">${icon} ${badge}</span>
+    </div>
+    <div class="meta">
+      <div class="kicker">${item.season} · ${item.episode}</div>
+      <div class="title">${item.title}</div>
+      <div class="desc">${item.desc||""}</div>
+    </div>
+    <div class="actions">
+      <a class="button" href="${item.href}" target="_blank" rel="noopener">Open</a>
+    </div>
+  </article>`;
+}
 
-        if (!items.length) { list.innerHTML = '<li class="news-empty">No news yet—check back soon.</li>'; return; }
+/* ============ New Releases (max 4 items overall) ============ */
+function renderNewReleases(){
+  const target = $("#new-releases");
+  const latest = [...CONTENT].sort(byDateDesc).slice(0,4);
+  target.innerHTML = latest.map(card).join("");
+}
 
-        list.innerHTML = '';
-        const frag = document.createDocumentFragment();
-        for (const n of items) {
-          const li = document.createElement('li');
-          li.className = 'news-item';
-          const tag = n.tag ? `<span class="tag">${n.tag}</span>` : '';
-          const date = new Date(n.date + 'T00:00:00').toLocaleDateString(undefined, {year:'numeric', month:'short', day:'2-digit'});
-          li.innerHTML = `
-            <time class="news-date" datetime="${n.date}">${date}</time>
-            ${tag}
-            ${n.url ? `<a class="news-link" href="${n.url}">${n.title}</a>` : `<span class="news-link">${n.title}</span>`}
-          `;
-          frag.appendChild(li);
-        }
-        list.appendChild(frag);
-      } catch (e) {
-        list.innerHTML = '<li class="news-empty">Couldn’t load news.</li>';
-      }
-    })();
+/* ============ Timeline tabs + “latest episode trio” ============ */
+function seasons(){
+  return [...new Set(CONTENT.map(x=>x.season))].sort(); // S01, S02, …
+}
+function latestEpisodeIn(season){
+  const eps = CONTENT.filter(x=>x.season===season).sort(byDateDesc);
+  // pick most recent episode code by date, not lexicographic
+  return eps.length ? eps[0].episode : null;
+}
+function trioFor(season){
+  const ep = latestEpisodeIn(season);
+  if(!ep) return [];
+  const rows = CONTENT.filter(x=>x.season===season && x.episode===ep);
+  // want exactly one of each type, newest first
+  const pick = ["audio","video","article"].map(t =>
+    rows.filter(r => r.type===t).sort(byDateDesc)[0]).filter(Boolean);
+  return pick;
+}
+function renderTimeline(){
+  const wrap = $("#timeline");
+  const list = seasons();
+  wrap.innerHTML = `<span class="label">Season:</span>` + list.map((s,i)=>`<button class="tab${i===0?" active":""}" role="tab" aria-selected="${i===0}" data-season="${s}">${s.replace("S","Season ")}</button>`).join("");
+  // initial content
+  renderTrio(list[0]);
+  wrap.addEventListener("click", e=>{
+    const b = e.target.closest(".tab");
+    if(!b) return;
+    $$$(".tab", wrap).forEach(t=>{t.classList.remove("active"); t.setAttribute("aria-selected","false")});
+    b.classList.add("active"); b.setAttribute("aria-selected","true");
+    renderTrio(b.dataset.season);
+  }, {passive:true});
+}
+function renderTrio(season){
+  const target = $("#episode-trio");
+  const items = trioFor(season);
+  target.innerHTML = items.length ? items.map(card).join("") : `<p>No content yet for ${season}.</p>`;
+}
 
-    // EPISODES: fetch /data/episodes.json and render cards
-    (async function(){
-      const wrap = document.getElementById('episode-cards');
-      if (!wrap) return;
+/* ============ Collage by format ============ */
+function renderCollage(kind, targetId){
+  const target = $(targetId);
+  const list = CONTENT.filter(x=>x.type===kind).sort(byDateDesc).slice(0,4);
+  // Make a collage: 1 big + 2 small stacked (but we use grid auto-flow via ordering)
+  if(!list.length){ target.innerHTML = `<p>No ${kind} yet.</p>`; return; }
+  // ensure at least 3 tiles; duplicate if needed
+  while(list.length<3){ list.push(list[list.length-1]); }
+  target.innerHTML = list.map(card).join("");
+}
 
-      const url = 'data/episodes.json';
-      if (!sameOrigin(url)) { wrap.innerHTML = '<p class="news-empty">Episodes unavailable.</p>'; return; }
-
-      try {
-        const res = await fetch(url, {cache:'no-store'});
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const eps = await res.json();
-
-        if (!Array.isArray(eps) || !eps.length) { wrap.innerHTML = '<p class="news-empty">No episodes yet.</p>'; return; }
-
-        wrap.innerHTML = '';
-        const frag = document.createDocumentFragment();
-        for (const ep of eps) {
-          const a = document.createElement('article');
-          a.className = 'card episode';
-          a.innerHTML = `
-            ${ep.art ? `<img class="card-media" src="${ep.art}" alt="${ep.title}">` : ''}
-            <div class="card-body">
-              <h3 class="card-title">${ep.title}</h3>
-              <p class="card-text">${ep.blurb ?? ''}</p>
-              <a class="btn btn-ghost" href="${ep.url}">Open</a>
-            </div>
-          `;
-          frag.appendChild(a);
-        }
-        wrap.appendChild(frag);
-      } catch (e) {
-        wrap.innerHTML = '<p class="news-empty">Couldn’t load episodes.</p>';
-      }
-    })();
-  </script>
-
-  <noscript>
-    <style>.news-empty{display:none}</style>
-    <div class="wrap"><p><em>JavaScript is off. Dynamic sections won’t render.</em></p></div>
-  </noscript>
-
+/* Mount */
+function $(sel){ return document.querySelector(sel); }
+(function init(){
+  $("#year").textContent = new Date().getFullYear();
+  renderNewReleases();
+  renderTimeline();
+  renderCollage("audio",  "#collage-audio");
+  renderCollage("video",  "#collage-video");
+  renderCollage("article","#collage-article");
+})();
+</script>
 </body>
 </html>
