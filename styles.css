@@ -251,3 +251,46 @@ body.skin-parchment .hero .ribbon{
     background: linear-gradient(#111,#151515);
   }
 }
+
+/* ===== Compact density toggle ===== */
+body.density-compact .wrap{ max-width:1080px; padding:0 14px }
+body.density-compact .section{ padding:22px 0 }
+body.density-compact .section-alt{ padding:22px 0 }
+body.density-compact .site-footer{ padding:22px 0 }
+
+body.density-compact header .wrap{ min-height:56px; padding:0 14px }
+body.density-compact .top-nav a,
+body.density-compact .actions a{ padding:.35rem .55rem; border-radius:.55rem }
+
+body.density-compact .hero{ padding:24px 0 }
+body.density-compact .hero-grid{ gap:1rem }
+body.density-compact .cta-row{ gap:.5rem; margin-top:.6rem }
+body.density-compact .hero .ribbon{ padding:10px 12px; border-radius:.6rem }
+
+body.density-compact .feature-grid,
+body.density-compact .episode-grid,
+body.density-compact .mag-grid,
+body.density-compact .sec-grid{ gap:.9rem }
+
+body.density-compact .card{ border-radius:.8rem }
+body.density-compact .card-body{ padding:.75rem .8rem }
+body.density-compact .card-media{ height:160px }           /* was 180–200px */
+body.density-compact .article.card--tall .card-media{ height:220px }
+
+body.density-compact .news-list{ gap:.45rem }
+body.density-compact .news-item{ padding:.5rem .6rem; grid-template-columns:100px auto }
+body.density-compact .tag{ padding:.12rem .4rem; font-size:.68rem }
+
+body.density-compact .mag .lead{ padding:22px 0 }
+body.density-compact .lead-card{ gap:1rem }
+body.density-compact .lead-media img{ border-radius:.9rem }
+body.density-compact .btn{ padding:.5rem .7rem; border-radius:.6rem }
+
+body.density-compact .mag-split-grid{ gap:1.1rem }
+body.density-compact .rail{ gap:1rem }
+body.density-compact .rail-block{ padding:.8rem }
+
+@media (max-width: 620px){
+  body.density-compact .wrap{ padding:0 12px }
+  body.density-compact .news-item{ grid-template-columns:1fr }
+}
