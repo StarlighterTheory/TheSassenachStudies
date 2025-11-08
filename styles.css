@@ -291,3 +291,71 @@ body.density-roomy .rail-block{ padding: 1.1rem }
     grid-template-columns: minmax(0,1fr) 360px;
   }
 }
+/* === Fluid, full-width-ish layout (no compacting) === */
+
+/* 1) Container width scales with viewport */
+.wrap{
+  /* Grow with the window, cap gently so lines don’t get too long */
+  width: min(1400px, 92vw);
+  margin-inline: auto;
+  padding-inline: clamp(14px, 2vw, 28px);
+}
+
+/* 2) Section padding scales */
+.section,
+.section-alt,
+.mag .lead,
+.mag .mag-split{
+  padding-block: clamp(28px, 5vw, 56px);
+}
+
+/* 3) Lead area: fluid columns */
+.lead-card{
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  grid-template-columns: 1fr;             /* one column on narrow */
+}
+@media (min-width: 900px){
+  .lead-card{ grid-template-columns: 1.25fr .9fr; }
+}
+
+/* 4) Fluid typographic scale */
+.lead-title{ font-size: clamp(28px, 4vw, 56px); }
+.deck{ font-size: clamp(16px, 1.2vw, 18px); }
+
+/* 5) Cards & media scale with viewport */
+.card-media{
+  height: clamp(180px, 22vw, 360px);
+  object-fit: cover;
+}
+.article.card--tall .card-media{
+  height: clamp(240px, 28vw, 420px);
+}
+
+/* 6) Magazine grid: fluid columns with auto-fit */
+.mag-grid{
+  display: grid;
+  gap: clamp(.9rem, 2vw, 1.6rem);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.mag-grid > .article.card--wide{ grid-column: 1 / -1; } /* optional featured full row */
+
+/* 7) Content + rail split: rail width scales too */
+.mag-split-grid{
+  display: grid;
+  gap: clamp(1rem, 2vw, 2rem);
+  grid-template-columns: minmax(0,1fr);
+}
+@media (min-width: 980px){
+  .mag-split-grid{
+    /* rail grows a bit on big screens, never silly-wide */
+    grid-template-columns: minmax(0,1fr) clamp(260px, 24cqw, 420px);
+  }
+}
+
+/* 8) News list spacing grows a touch on big screens */
+.news-list{ gap: clamp(.5rem, 1.2vw, .9rem); }
+.news-item{ padding: clamp(.55rem, 1.2vw, .9rem) clamp(.6rem, 1.6vw, 1rem); }
+
+/* 9) Full-bleed utility if you want edge-to-edge sections */
+.full-bleed{ width:100vw; margin-left:50%; transform:translateX(-50%); }
