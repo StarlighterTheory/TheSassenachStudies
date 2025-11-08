@@ -377,3 +377,22 @@ body.density-roomy .rail-block{ padding: 1.1rem }
 /* Media scales with viewport so cards feel proportional */
 .card-media{ height: clamp(200px, 24vw, 420px) }
 .article.card--tall .card-media{ height: clamp(260px, 30vw, 520px) }
+/* 1) Remove the global cap — make the container full width with a small gutter */
+.wrap{
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+  padding-inline: clamp(12px, 2.5vw, 32px) !important;
+}
+
+/* 2) Let the hero text breathe */
+.hero .ribbon{
+  max-width: none !important;     /* was 60ch */
+}
+.deck{
+  max-width: none !important;     /* remove text column cap */
+}
+
+/* 3) If you want truly edge-to-edge in specific spots (no gutter), use .full-bleed */
+.full-bleed{ width:100vw; margin-left:50%; transform:translateX(-50%); }
+.full-bleed .wrap{ padding-inline: 0 !important; }
