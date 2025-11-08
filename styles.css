@@ -24,7 +24,7 @@ body{
   color:var(--ink-900);
   background:var(--paper);
 }
-.wrap{max-width:1100px;margin-inline:auto;padding:0 20px}
+.wrap{max-width:1600px;margin-inline:auto;padding:0 20px}
 
 /* Header (map your <header> into Season-1 header) */
 header{ /* your tag */
