@@ -257,9 +257,27 @@ function card(item){
 
 /* ============ New Releases (max 4 items overall) ============ */
 function renderNewReleases(){
-  const target = $("#new-releases");
+  const target = document.querySelector("#trends-list");
   const latest = [...CONTENT].sort(byDateDesc).slice(0,4);
-  target.innerHTML = latest.map(card).join("");
+
+  target.innerHTML = latest.map(item => {
+    const type = item.type.toUpperCase();
+    const date = new Date(item.date);
+    const nice = date.toLocaleDateString(undefined, {month:'short', day:'numeric'});
+    return `
+      <li>
+        <span class="trend-kicker">${type}</span>
+        <a class="trend-link" href="${item.href}" target="_blank" rel="noopener">
+          ${item.title}
+        </a>
+        ${item.desc ? `<div class="trend-sub">${item.desc}</div>` : ""}
+        <div class="trend-meta">
+          <span>${item.season} · ${item.episode}</span>
+          <span class="trend-dot"></span>
+          <time datetime="${item.date}">${nice}</time>
+        </div>
+      </li>`;
+  }).join("");
 }
 
 /* ============ Timeline tabs + “latest episode trio” ============ */
