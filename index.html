@@ -229,15 +229,18 @@ body{
 
 <!-- Hero + New Releases -->
 <section class="hero-row">
-  <!-- Left: hero banner -->
-  <article class="hero">
-   <div class="hero-media">
-  <img src="assets/hero-banner.jpg" alt="Sassenach Studies hero banner" style="width:60%;height:60%;object-fit:cover;display:block;">
-</div>
-    <div class="hero-body">
+  <!-- Left: split hero (image + text panel side-by-side) -->
+  <article class="hero hero-split">
+    <div class="hero-media">
+      <!-- use <img> to avoid background-path headaches -->
+      <img src="assets/hero-banner.jpg" alt="The Sassenach Studies — hero banner">
+    </div>
+    <div class="hero-pane">
       <div class="hero-kicker">Featured</div>
       <div class="hero-title">Bloodlines &amp; Timelines</div>
-      <div class="hero-desc">A six-part reading of Outlander’s spiral (connection) and red thread (commitment).</div>
+      <div class="hero-desc">
+        A six-part reading of Outlander’s spiral (connection) and red thread (commitment).
+      </div>
       <div class="hero-actions">
         <a class="hero-btn" href="season-1.html">Explore Season 1</a>
       </div>
@@ -250,6 +253,7 @@ body{
     <ol id="trends-list" class="trends-list" aria-live="polite"></ol>
   </aside>
 </section>
+
 
 
 
