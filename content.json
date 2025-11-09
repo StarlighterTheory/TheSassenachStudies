@@ -1,0 +1,32 @@
+[
+  {
+    "type": "audio",
+    "season": "S01",
+    "episode": "E06",
+    "date": "2025-11-06",
+    "title": "S01E06 — The Ethics of Time",
+    "desc": "Time travel as a moral amplifier.",
+    "href": "https://archive.org/details/the_sassenach_studies_s01e06",
+    "cover": "https://placehold.co/800x450/png?text=S01E06+Audio"
+  },
+  {
+    "type": "video",
+    "season": "S01",
+    "episode": "E06",
+    "date": "2025-11-06",
+    "title": "Companion Video — S01E06",
+    "desc": "Clips and motif overlays.",
+    "href": "https://archive.org/details/the_sassenach_studies_s01e06_video",
+    "cover": "https://placehold.co/800x450/png?text=S01E06+Video"
+  },
+  {
+    "type": "article",
+    "season": "S01",
+    "episode": "E06",
+    "date": "2025-11-06",
+    "title": "Blog Notes — The Ethics of Time",
+    "desc": "Transcript + sources.",
+    "href": "https://listed.to/@sassenachstudies/s01e06",
+    "cover": "https://placehold.co/800x450/png?text=S01E06+Article"
+  }
+]
