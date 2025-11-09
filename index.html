@@ -207,7 +207,29 @@ body{
 }
 .hero-btn:hover{ background:#ffffff14; border-color:#fff }
 
-/* New Releases*
+/* New Releases (trending list) */
+.trends{
+  background:linear-gradient(180deg,#fff9,#fff4);
+  border:1px solid var(--stone);
+  border-radius:var(--radius);
+  box-shadow:0 10px 25px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+  padding:12px 16px 6px;
+}
+.trends-head{ margin:2px 0 8px; padding-top:2px }
+.trends-head span{
+  display:inline-block; background:var(--accent); color:#fff; font-weight:800;
+  letter-spacing:.4px; font-size:14px; padding:6px 10px; border-radius:3px; text-transform:uppercase;
+}
+.trends-list{ list-style:none; margin:0; padding:0 }
+.trends-list li{ padding:14px 2px 14px 0; border-bottom:1px solid var(--stone) }
+.trends-list li:last-child{ border-bottom:0 }
+.trend-kicker{ font-size:11px; font-weight:700; letter-spacing:.3px; color:var(--ink-500); text-transform:uppercase; display:block; margin-bottom:4px }
+.trend-link{ display:block; text-decoration:none; font-weight:800; line-height:1.25; color:var(--ink-900) }
+.trend-link:hover{ color:var(--highlight) }
+.trend-sub{ margin-top:4px; font-size:13px; color:var(--ink-700) }
+.trend-meta{ display:flex; gap:10px; align-items:center; margin-top:6px; font-size:12px; color:var(--ink-500) }
+.trend-dot{ width:4px; height:4px; border-radius:50%; background:var(--stone) }
+
 
 </style>
 </head>
@@ -295,11 +317,12 @@ body{
 let CONTENT = []; // media items (audio/video/article) when content.json exists
 let NEWS = [];    // from data/news.json
 let EP_META = []; // from data/episodes.json
+let HERO = null;
 
 const byDateDesc = (a,b) => new Date(b.date) - new Date(a.date);
-const $  = s => document.querySelector(s);
-const $$ = (s,el=document) => el.querySelector(s);
-const $$$= (s,el=document) => [...el.querySelectorAll(s, el)];
+const $  = sel => document.querySelector(sel);
+const $$ = (sel,el=document) => el.querySelector(sel);
+const $$$= (sel,el=document) => [...el.querySelectorAll(sel)]; // <-- fixed
 
 /* ========= cover inference (Archive/YouTube) ========= */
 function inferCover(item){
@@ -410,38 +433,6 @@ function renderCollage(kind, targetId){
   while(list.length<3){ list.push(list[list.length-1]); }
   target.innerHTML = list.map(card).join("");
 }
-let HERO = null;
-
-function normalizeHero(raw){
-  if (!raw) return null;
-  const list = Array.isArray(raw) ? raw : [raw];
-  const h = list
-    .map(x => ({...x, date: x.date || new Date().toISOString()}))
-    .sort((a,b)=> new Date(b.date) - new Date(a.date))[0];
-  return {
-    kicker: h.kicker || 'Featured',
-    title:  h.title  || 'The Sassenach Studies',
-    desc:   h.desc   || '',
-    image:  h.image  || 'assets/hero-banner.jpg',
-    href:   h.href   || '#',
-    cta:    h.cta    || 'Learn more',
-    alt:    h.alt    || 'Hero banner'
-  };
-}
-
-function renderHero(){
-  if (!HERO) return;
-  const img = document.getElementById('hero-img');
-  const kicker = document.getElementById('hero-kicker');
-  const title  = document.getElementById('hero-title');
-  const desc   = document.getElementById('hero-desc');
-  const link   = document.getElementById('hero-link');
-  if (img){ img.src = HERO.image; img.alt = HERO.alt; }
-  if (kicker) kicker.textContent = HERO.kicker;
-  if (title)  title.textContent  = HERO.title;
-  if (desc)   desc.textContent   = HERO.desc;
-  if (link){ link.href = HERO.href; link.textContent = HERO.cta; }
-}
 
 /* ========= Normalizers for your files ========= */
 function normalizeNews(raw){
@@ -476,6 +467,38 @@ function normalizeEpisodesMeta(raw){
   });
 }
 
+/* ========= Hero normalizer/render ========= */
+function normalizeHero(raw){
+  if (!raw) return null;
+  const list = Array.isArray(raw) ? raw : [raw];
+  const h = list
+    .map(x => ({...x, date: x.date || new Date().toISOString()}))
+    .sort((a,b)=> new Date(b.date) - new Date(a.date))[0];
+  return {
+    kicker: h.kicker || 'Featured',
+    title:  h.title  || 'The Sassenach Studies',
+    desc:   h.desc   || '',
+    image:  h.image  || 'assets/hero-banner.jpg',
+    href:   h.href   || '#',
+    cta:    h.cta    || 'Learn more',
+    alt:    h.alt    || 'Hero banner'
+  };
+}
+function renderHero(){
+  if (!HERO) return;
+  const img = document.getElementById('hero-img');
+  const kicker = document.getElementById('hero-kicker');
+  const title  = document.getElementById('hero-title');
+  const desc   = document.getElementById('hero-desc');
+  const link   = document.getElementById('hero-link');
+  if (img){ img.src = HERO.image; img.alt = HERO.alt; }
+  if (kicker) kicker.textContent = HERO.kicker;
+  if (title)  title.textContent  = HERO.title;
+  if (desc)   desc.textContent   = HERO.desc;
+  if (link){ link.href = HERO.href; link.textContent = HERO.cta; }
+}
+
+/* ========= Load & render ========= */
 async function load(){
   const [newsRaw, epsRaw, contentRaw, heroRaw] = await Promise.all([
     fetch('data/news.json',     {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
@@ -488,16 +511,14 @@ async function load(){
   EP_META = normalizeEpisodesMeta(epsRaw);
   CONTENT = Array.isArray(contentRaw) ? contentRaw : [];
   HERO    = normalizeHero(heroRaw);
+
+  // Debug sanity check
+  console.log({hero: !!HERO, news: NEWS.length, episodes: EP_META.length, content: CONTENT.length});
+
+  // Render order
   renderHero();
-
-  // ...rest of your existing render calls unchanged...
-}
-
-
-  // New Releases
   renderNewReleases();
 
-  // Timeline & Collages
   const hasMedia = CONTENT.some(x => ['audio','video','article'].includes(x.type));
   if (hasMedia) {
     renderTimeline();
@@ -505,7 +526,7 @@ async function load(){
     renderCollage('video',  '#collage-video');
     renderCollage('article','#collage-article');
   } else {
-    // Fallback timeline using latest episode card only
+    // Fallback timeline using episode meta only
     const seasons = [...new Set(EP_META.map(x=>x.season))].sort();
     const wrap = $('#timeline');
     wrap.innerHTML = `<span class="label">Season:</span>` +
@@ -527,11 +548,11 @@ async function load(){
     $('#collage-article').innerHTML = `<p>Add <code>content.json</code> to show latest articles.</p>`;
   }
 
-  // Footer year
   $('#year').textContent = new Date().getFullYear();
 }
 load();
 </script>
+
 
 </body>
 </html>
