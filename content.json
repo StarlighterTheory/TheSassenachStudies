@@ -1,13 +1,10 @@
 [
   {
-    "type": "audio",
-    "season": "S01",
-    "episode": "E06",
-    "date": "2025-11-06",
-    "title": "S01E06 — The Ethics of Time",
-    "desc": "Time travel as a moral amplifier.",
-    "href": "https://archive.org/details/the_sassenach_studies_s01e06",
-    "cover": "https://placehold.co/800x450/png?text=S01E06+Audio"
+    "id": "s01e01",
+    "title": "The Red Thread & the Spiral (pilot)",
+    "blurb": "Outlander’s visual grammar in two motifs: spiral connects, thread commits.",
+    "art": "assets/cards/s01e01.jpg",
+    "url": "season-1.html#s01e01"
   },
   {
     "type": "video",
