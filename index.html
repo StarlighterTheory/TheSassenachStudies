@@ -333,6 +333,63 @@ async function load() {
 }
 load();
 </script>
+<script>
+// Auto-pick a cover image when none is provided
+function inferCover(item){
+  if (item.cover) return item.cover;
+
+  try {
+    const u = new URL(item.href);
+
+    // Archive.org -> use services/img/{identifier}
+    if (u.hostname.endsWith('archive.org')) {
+      const parts = u.pathname.split('/').filter(Boolean);
+      const id =
+        (parts[0]==='details'  && parts[1]) ? parts[1] :
+        (parts[0]==='download' && parts[1]) ? parts[1] : '';
+      if (id) return `https://archive.org/services/img/${id}`;
+    }
+
+    // YouTube -> default thumbnail
+    if (u.hostname.includes('youtube.com') || u.hostname==='youtu.be') {
+      let v = u.searchParams.get('v');
+      if (!v && u.hostname==='youtu.be') v = u.pathname.slice(1);
+      if (v) return `https://img.youtube.com/vi/${v}/hqdefault.jpg`;
+    }
+  } catch(e) {
+    // ignore bad URLs
+  }
+
+  // No good guess
+  return '';
+}
+
+// Override the existing card() to hide media when no cover
+function card(item){
+  const badge = item.type.toUpperCase();
+  const icon  = item.type==="audio" ? "🔊" : item.type==="video" ? "🎬" : "📝";
+  const cover = inferCover(item);
+
+  const media = cover
+    ? `<div class="media" style="background-image:url('${cover}')">
+         <span class="badge" aria-label="${badge}">${icon} ${badge}</span>
+       </div>`
+    : ''; // no placeholder if no cover
+
+  return `
+    <article class="card">
+      ${media}
+      <div class="meta">
+        <div class="kicker">${item.season} · ${item.episode}</div>
+        <div class="title">${item.title}</div>
+        <div class="desc">${item.desc||""}</div>
+      </div>
+      <div class="actions">
+        <a class="button" href="${item.href}" target="_blank" rel="noopener">Open</a>
+      </div>
+    </article>`;
+}
+</script>
 
 
 </body>
