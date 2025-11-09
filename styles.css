@@ -455,3 +455,29 @@ body.density-roomy .rail-block{ padding: 1.1rem }
   font-size:12px; color:var(--ink-500);
 }
 .trend-dot{ width:4px; height:4px; border-radius:50%; background:var(--stone) }
+
+.trends{
+  background:linear-gradient(180deg,#fff9,#fff4);
+  border:1px solid var(--stone);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:12px 16px 6px;
+}
+.trends-head{ margin:2px 0 8px; padding-top:2px; position:relative }
+.trends-head span{
+  display:inline-block; background:var(--accent); color:#fff; font-weight:800;
+  letter-spacing:.4px; font-size:14px; padding:6px 10px; border-radius:3px; text-transform:uppercase;
+  box-shadow:0 0 0 2px #fff, inset 0 -2px 0 rgba(0,0,0,.08);
+}
+.trends-head::after{ content:""; display:block; height:2px; margin-top:8px;
+  background:linear-gradient(90deg,var(--accent), transparent 40%); opacity:.65; }
+.trends-list{ list-style:none; margin:0; padding:0 }
+.trends-list li{ padding:14px 2px 14px 0; border-bottom:1px solid var(--stone) }
+.trends-list li:last-child{ border-bottom:0 }
+.trend-kicker{ font-size:11px; font-weight:700; letter-spacing:.3px; color:var(--ink-500); text-transform:uppercase; display:block; margin-bottom:4px }
+.trend-link{ display:block; text-decoration:none; font-weight:800; line-height:1.25; color:var(--ink-900) }
+.trend-link:hover{ color:var(--highlight) }
+.trend-sub{ margin-top:4px; font-size:13px; color:var(--ink-700) }
+.trend-meta{ display:flex; gap:10px; align-items:center; margin-top:6px; font-size:12px; color:var(--ink-500) }
+.trend-dot{ width:4px; height:4px; border-radius:50%; background:var(--stone) }
+
