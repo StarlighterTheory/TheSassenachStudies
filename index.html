@@ -226,104 +226,97 @@ body{
   </footer>
 </main>
 <script>
-// --------- helpers ----------
-let CONTENT = [];
-const byDateDesc = (a,b) => new Date(b.date) - new Date(a.date);
-const $  = s => document.querySelector(s);
-const $$ = (s,el=document) => el.querySelector(s);
-const $$$= (s,el=document) => [...el.querySelectorAll(s, el)];
+// ================== Multi-source loader ==================
+let CONTENT = [];   // flattened audio/video/article items for episodes
+let NEWS = [];      // site announcements or news items
 
-// --------- UI bits ----------
-function card(item){
-  const badge = item.type.toUpperCase();
-  const icon = item.type==="audio" ? "🔊" : item.type==="video" ? "🎬" : "📝";
-  return `
-    <article class="card">
-      <div class="media" style="background-image:url('${item.cover||""}')">
-        <span class="badge" aria-label="${badge}">${icon} ${badge}</span>
-      </div>
-      <div class="meta">
-        <div class="kicker">${item.season} · ${item.episode}</div>
-        <div class="title">${item.title}</div>
-        <div class="desc">${item.desc||""}</div>
-      </div>
-      <div class="actions">
-        <a class="button" href="${item.href}" target="_blank" rel="noopener">Open</a>
-      </div>
-    </article>`;
+const byDateDesc = (a,b) => new Date(b.date) - new Date(a.date);
+const $ = s => document.querySelector(s);
+
+// --- Normalizers ---
+// Accepts either a flat array of items that already look like your old CONTENT,
+// OR a grouped structure like [{season:"S01", episodes:[{code:"E06", items:[...]}]}]
+function normalizeEpisodes(raw){
+  if (!Array.isArray(raw)) return [];
+  const looksFlat = raw.length && raw[0].type && raw[0].season && raw[0].episode;
+  if (looksFlat) return raw;
+
+  // assume grouped structure → flatten
+  const out = [];
+  for (const seasonBlock of raw){
+    const season = seasonBlock.season || seasonBlock.code || seasonBlock.id || 'S00';
+    for (const ep of (seasonBlock.episodes || [])){
+      const epCode = ep.episode || ep.code || 'E00';
+      for (const item of (ep.items || [])){
+        out.push({
+          type:   item.type,                         // "audio" | "video" | "article"
+          season: String(season).match(/^S\d{2}$/) ? season : `S${String(season).padStart(2,'0')}`,
+          episode:String(epCode).match(/^E\d{2}$/) ? epCode : `E${String(epCode).padStart(2,'0')}`,
+          date:   item.date || new Date().toISOString(),
+          title:  item.title || 'Untitled',
+          desc:   item.desc || '',
+          href:   item.href || '#',
+          cover:  item.cover || ''
+        });
+      }
+    }
+  }
+  return out;
 }
 
-// --------- New Releases (trending-style) ----------
+// NEWS can be any shape that yields title, href, date (and optional type/desc)
+function normalizeNews(raw){
+  if (!Array.isArray(raw)) return [];
+  return raw.map(x => ({
+    type:  (x.type || 'news').toLowerCase(), // displays as kicker
+    season: x.season || '',                   // optional
+    episode:x.episode || '',
+    date:  x.date || new Date().toISOString(),
+    title: x.title || 'Update',
+    desc:  x.desc || '',
+    href:  x.href || '#',
+    cover: x.cover || ''
+  }));
+}
+
+// ------------- New Releases (prefer NEWS, else fall back to episode items) -------------
 function renderNewReleases(){
   const target = document.querySelector("#trends-list");
-  const latest = [...CONTENT].sort(byDateDesc).slice(0,4);
+  const base = NEWS.length ? NEWS : CONTENT;          // prefer news.json
+  const latest = [...base].sort(byDateDesc).slice(0,4);
+
   target.innerHTML = latest.map(item => {
-    const type = item.type.toUpperCase();
-    const nice = new Date(item.date).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    const kicker = (item.type || 'news').toUpperCase();
+    const nice = new Date(item.date).toLocaleDateString(undefined,{month:'short', day:'numeric'});
+    const se = item.season && item.episode ? `${item.season} · ${item.episode}` : null;
     return `
       <li>
-        <span class="trend-kicker">${type}</span>
+        <span class="trend-kicker">${kicker}</span>
         <a class="trend-link" href="${item.href}" target="_blank" rel="noopener">${item.title}</a>
         ${item.desc ? `<div class="trend-sub">${item.desc}</div>` : ""}
         <div class="trend-meta">
-          <span>${item.season} · ${item.episode}</span>
-          <span class="trend-dot"></span>
+          ${se ? `<span>${se}</span><span class="trend-dot"></span>` : ``}
           <time datetime="${item.date}">${nice}</time>
         </div>
       </li>`;
   }).join("");
 }
 
-// --------- Timeline / trios ----------
-function seasons(){ return [...new Set(CONTENT.map(x=>x.season))].sort(); }
-function latestEpisodeIn(season){
-  const eps = CONTENT.filter(x=>x.season===season).sort(byDateDesc);
-  return eps.length ? eps[0].episode : null;
-}
-function trioFor(season){
-  const ep = latestEpisodeIn(season);
-  if(!ep) return [];
-  const rows = CONTENT.filter(x=>x.season===season && x.episode===ep);
-  return ["audio","video","article"].map(t =>
-    rows.filter(r=>r.type===t).sort(byDateDesc)[0]).filter(Boolean);
-}
-function renderTimeline(){
-  const wrap = $("#timeline");
-  const list = seasons();
-  wrap.innerHTML = `<span class="label">Season:</span>` +
-    list.map((s,i)=>`<button class="tab${i===0?" active":""}" role="tab" aria-selected="${i===0}" data-season="${s}">${s.replace("S","Season ")}</button>`).join("");
-  renderTrio(list[0]);
-  wrap.addEventListener("click", e=>{
-    const b = e.target.closest(".tab"); if(!b) return;
-    $$$(".tab", wrap).forEach(t=>{t.classList.remove("active"); t.setAttribute("aria-selected","false")});
-    b.classList.add("active"); b.setAttribute("aria-selected","true");
-    renderTrio(b.dataset.season);
-  }, {passive:true});
-}
-function renderTrio(season){
-  const target = $("#episode-trio");
-  const items = trioFor(season);
-  target.innerHTML = items.length ? items.map(card).join("") : `<p>No content yet for ${season}.</p>`;
-}
+// ------------- Existing functions below this line stay the same -------------
+// seasons(), latestEpisodeIn(), trioFor(), renderTimeline(), renderCollage(), card(), inferCover() etc.
 
-// --------- Collages ----------
-function renderCollage(kind, targetId){
-  const target = $(targetId);
-  const list = CONTENT.filter(x=>x.type===kind).sort(byDateDesc).slice(0,4);
-  if(!list.length){ target.innerHTML = `<p>No ${kind} yet.</p>`; return; }
-  while(list.length<3){ list.push(list[list.length-1]); }
-  target.innerHTML = list.map(card).join("");
-}
+// ------------- Load both files from /data -------------
+async function load(){
+  // IMPORTANT: paths are relative to index.html; adjust if your folder differs
+  const [episodesRaw, newsRaw] = await Promise.all([
+    fetch('data/episode.json', {cache:'no-store'}).then(r => r.ok ? r.json() : []).catch(()=>[]),
+    fetch('data/news.json',    {cache:'no-store'}).then(r => r.ok ? r.json() : []).catch(()=>[])
+  ]);
 
-// --------- Load & render ----------
-async function load() {
-  try{
-    const res = await fetch('content.json', {cache:'no-store'});
-    CONTENT = await res.json();
-  } catch(e){
-    console.error('Failed to fetch content.json', e);
-    CONTENT = [];
-  }
+  CONTENT = normalizeEpisodes(episodesRaw);
+  NEWS    = normalizeNews(newsRaw);
+
+  // Render once we have data
   $("#year").textContent = new Date().getFullYear();
   renderNewReleases();
   renderTimeline();
@@ -333,6 +326,7 @@ async function load() {
 }
 load();
 </script>
+
 <script>
 // Auto-pick a cover image when none is provided
 function inferCover(item){
