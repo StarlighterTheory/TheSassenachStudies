@@ -334,29 +334,6 @@ async function load() {
 load();
 </script>
 
-   
-   <script>
-let CONTENT = [];
-const byDateDesc = (a,b) => new Date(b.date) - new Date(a.date);
-const $ = s => document.querySelector(s);
-
-async function load() {
-  try{
-    const res = await fetch('content.json', {cache:'no-store'});
-    CONTENT = await res.json();
-  } catch(e){
-    console.error('Failed to fetch content.json', e);
-    CONTENT = []; // stays empty if fetch fails
-  }
-  $("#year").textContent = new Date().getFullYear();
-  renderNewReleases();
-  renderTimeline();
-  renderCollage("audio",  "#collage-audio");
-  renderCollage("video",  "#collage-video");
-  renderCollage("article","#collage-article");
-}
-load();
-</script>
 
 </body>
 </html>
