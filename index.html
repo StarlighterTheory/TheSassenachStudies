@@ -388,6 +388,156 @@ function card(item){
 }
 </script>
 
+<script>
+/* ========= helpers ========= */
+let CONTENT = []; // media items (audio/video/article) when content.json exists
+let NEWS = [];    // from data/news.json
+let EP_META = []; // from data/episodes.json
+
+const byDateDesc = (a,b) => new Date(b.date) - new Date(a.date);
+const $  = s => document.querySelector(s);
+const $$ = (s,el=document) => el.querySelector(s);
+const $$$= (s,el=document) => [...el.querySelectorAll(s, el)];
+
+/* ========= cover inference (Archive/YouTube) ========= */
+function inferCover(item){
+  if (item.cover) return item.cover;
+  try{
+    const u = new URL(item.href);
+    if (u.hostname.endsWith('archive.org')) {
+      const parts = u.pathname.split('/').filter(Boolean);
+      const id = (parts[0]==='details' && parts[1]) ? parts[1]
+              : (parts[0]==='download' && parts[1]) ? parts[1] : '';
+      if (id) return `https://archive.org/services/img/${id}`;
+    }
+    if (u.hostname.includes('youtube.com') || u.hostname==='youtu.be') {
+      let v = u.searchParams.get('v');
+      if (!v && u.hostname==='youtu.be') v = u.pathname.slice(1);
+      if (v) return `https://img.youtube.com/vi/${v}/hqdefault.jpg`;
+    }
+  }catch{}
+  return '';
+}
+
+/* ========= card ========= */
+function card(item){
+  const badge = (item.type || 'item').toUpperCase();
+  const icon  = item.type==="audio" ? "🔊" : item.type==="video" ? "🎬" : item.type==="article" ? "📝" : "📌";
+  const cover = inferCover(item);
+  const media = cover ? `
+    <div class="media" style="background-image:url('${cover}')">
+      <span class="badge" aria-label="${badge}">${icon} ${badge}</span>
+    </div>` : '';
+  const se = item.season && item.episode ? `${item.season} · ${item.episode}` : '';
+  return `
+    <article class="card">
+      ${media}
+      <div class="meta">
+        ${se ? `<div class="kicker">${se}</div>` : ``}
+        <div class="title">${item.title}</div>
+        <div class="desc">${item.desc||""}</div>
+      </div>
+      <div class="actions">
+        <a class="button" href="${item.href||'#'}" target="_blank" rel="noopener">Open</a>
+      </div>
+    </article>`;
+}
+
+/* ========= New Releases (Trending-style list) ========= */
+function renderNewReleases(){
+  const target = $("#trends-list");
+  const base = NEWS.length ? NEWS : CONTENT;
+  const latest = [...base].sort(byDateDesc).slice(0,4);
+  target.innerHTML = latest.map(item=>{
+    const kicker = (item.type || 'news').toUpperCase();
+    const nice = new Date(item.date).toLocaleDateString(undefined,{month:'short', day:'numeric'});
+    const se = item.season && item.episode ? `${item.season} · ${item.episode}` : null;
+    return `
+      <li>
+        <span class="trend-kicker">${kicker}</span>
+        <a class="trend-link" href="${item.href||'#'}" target="_blank" rel="noopener">${item.title}</a>
+        ${item.desc ? `<div class="trend-sub">${item.desc}</div>` : ""}
+        <div class="trend-meta">
+          ${se ? `<span>${se}</span><span class="trend-dot"></span>` : ``}
+          <time datetime="${item.date}">${nice}</time>
+        </div>
+      </li>`;
+  }).join("");
+  if (!latest.length){
+    target.innerHTML = `<li><em>No releases yet. Check your JSON paths.</em></li>`;
+  }
+}
+
+/* ========= Timeline trio (when CONTENT exists) ========= */
+function seasons(){ return [...new Set(CONTENT.map(x=>x.season))].sort(); }
+function latestEpisodeIn(season){
+  const eps = CONTENT.filter(x=>x.season===season).sort(byDateDesc);
+  return eps.length ? eps[0].episode : null;
+}
+function trioFor(season){
+  const ep = latestEpisodeIn(season);
+  if(!ep) return [];
+  const rows = CONTENT.filter(x=>x.season===season && x.episode===ep);
+  return ["audio","video","article"].map(t =>
+    rows.filter(r=>r.type===t).sort(byDateDesc)[0]).filter(Boolean);
+}
+function renderTrio(season){
+  const target = $("#episode-trio");
+  const items = trioFor(season);
+  target.innerHTML = items.length ? items.map(card).join("") : `<p>No content yet for ${season}.</p>`;
+}
+function renderTimeline(){
+  const wrap = $("#timeline");
+  const list = seasons();
+  wrap.innerHTML = `<span class="label">Season:</span>` +
+    list.map((s,i)=>`<button class="tab${i===0?" active":""}" role="tab" aria-selected="${i===0}" data-season="${s}">${s.replace("S","Season ")}</button>`).join("");
+  if (list[0]) renderTrio(list[0]);
+  wrap.addEventListener("click", e=>{
+    const b = e.target.closest(".tab"); if(!b) return;
+    $$$(".tab", wrap).forEach(t=>{t.classList.remove("active"); t.setAttribute("aria-selected","false")});
+    b.classList.add("active"); b.setAttribute("aria-selected","true");
+    renderTrio(b.dataset.season);
+  }, {passive:true});
+}
+
+/* ========= Collages (only with CONTENT) ========= */
+function renderCollage(kind, targetId){
+  const target = $(targetId);
+  const list = CONTENT.filter(x=>x.type===kind).sort(byDateDesc).slice(0,4);
+  if(!list.length){ target.innerHTML = `<p>No ${kind} yet.</p>`; return; }
+  while(list.length<3){ list.push(list[list.length-1]); }
+  target.innerHTML = list.map(card).join("");
+}
+
+/* ========= Normalizers for your files ========= */
+function normalizeNews(raw){
+  if (!Array.isArray(raw)) return [];
+  return raw.map(x => ({
+    type: (x.tag || 'news').toLowerCase(),
+    title: x.title || 'Update',
+    href:  x.url   || '#',
+    date:  x.date  || new Date().toISOString(),
+    desc:  x.desc  || '',
+    season: '', episode: '', cover: ''
+  }));
+}
+function seFromId(id=''){
+  const m = String(id).match(/s(\d{1,2})e(\d{1,2})/i);
+  return m ? { season:`S${m[1].padStart(2,'0')}`, episode:`E${m[2].padStart(2,'0')}` }
+           : { season:'S00', episode:'E00' };
+}
+function normalizeEpisodesMeta(raw){
+  if (!Array.isArray(raw)) return [];
+  return raw.map(ep => {
+    const {season, episode} = seFromId(ep.id || '');
+    return {
+      type: 'episode',
+      season, episode,
+      date: new Date().toISOString(),
+      title: ep.title || ep.id,
+      desc:  ep.blurb || '',
+      href:  ep.url   || '#',
+      cover: ep.art   || ''
 
 </body>
 </html>
