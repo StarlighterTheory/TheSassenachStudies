@@ -226,106 +226,109 @@ body{
   </footer>
 </main>
 <script>
-// ================== Multi-source loader ==================
-let CONTENT = [];   // flattened audio/video/article items for episodes
-let NEWS = [];      // site announcements or news items
-
-const byDateDesc = (a,b) => new Date(b.date) - new Date(a.date);
-const $ = s => document.querySelector(s);
-
-// --- Normalizers ---
-// Accepts either a flat array of items that already look like your old CONTENT,
-// OR a grouped structure like [{season:"S01", episodes:[{code:"E06", items:[...]}]}]
-function normalizeEpisodes(raw){
-  if (!Array.isArray(raw)) return [];
-  const looksFlat = raw.length && raw[0].type && raw[0].season && raw[0].episode;
-  if (looksFlat) return raw;
-
-  // assume grouped structure → flatten
-  const out = [];
-  for (const seasonBlock of raw){
-    const season = seasonBlock.season || seasonBlock.code || seasonBlock.id || 'S00';
-    for (const ep of (seasonBlock.episodes || [])){
-      const epCode = ep.episode || ep.code || 'E00';
-      for (const item of (ep.items || [])){
-        out.push({
-          type:   item.type,                         // "audio" | "video" | "article"
-          season: String(season).match(/^S\d{2}$/) ? season : `S${String(season).padStart(2,'0')}`,
-          episode:String(epCode).match(/^E\d{2}$/) ? epCode : `E${String(epCode).padStart(2,'0')}`,
-          date:   item.date || new Date().toISOString(),
-          title:  item.title || 'Untitled',
-          desc:   item.desc || '',
-          href:   item.href || '#',
-          cover:  item.cover || ''
-        });
-      }
-    }
-  }
-  return out;
-}
-
-// NEWS can be any shape that yields title, href, date (and optional type/desc)
+// --- maps your news.json shape to the list renderer ---
 function normalizeNews(raw){
   if (!Array.isArray(raw)) return [];
   return raw.map(x => ({
-    type:  (x.type || 'news').toLowerCase(), // displays as kicker
-    season: x.season || '',                   // optional
-    episode:x.episode || '',
-    date:  x.date || new Date().toISOString(),
+    type: (x.tag || 'news').toLowerCase(), // shows as the kicker
     title: x.title || 'Update',
-    desc:  x.desc || '',
-    href:  x.href || '#',
-    cover: x.cover || ''
+    href:  x.url   || '#',
+    date:  x.date  || new Date().toISOString(),
+    desc:  x.desc  || '',
+    season: '', episode: '', cover: ''
   }));
 }
 
-// ------------- New Releases (prefer NEWS, else fall back to episode items) -------------
-function renderNewReleases(){
-  const target = document.querySelector("#trends-list");
-  const base = NEWS.length ? NEWS : CONTENT;          // prefer news.json
-  const latest = [...base].sort(byDateDesc).slice(0,4);
-
-  target.innerHTML = latest.map(item => {
-    const kicker = (item.type || 'news').toUpperCase();
-    const nice = new Date(item.date).toLocaleDateString(undefined,{month:'short', day:'numeric'});
-    const se = item.season && item.episode ? `${item.season} · ${item.episode}` : null;
-    return `
-      <li>
-        <span class="trend-kicker">${kicker}</span>
-        <a class="trend-link" href="${item.href}" target="_blank" rel="noopener">${item.title}</a>
-        ${item.desc ? `<div class="trend-sub">${item.desc}</div>` : ""}
-        <div class="trend-meta">
-          ${se ? `<span>${se}</span><span class="trend-dot"></span>` : ``}
-          <time datetime="${item.date}">${nice}</time>
-        </div>
-      </li>`;
-  }).join("");
+// --- parse "s01e06" -> {season:"S01", episode:"E06"} ---
+function seFromId(id=''){
+  const m = String(id).match(/s(\d{1,2})e(\d{1,2})/i);
+  return m ? { season:`S${m[1].padStart(2,'0')}`, episode:`E${m[2].padStart(2,'0')}` }
+           : { season:'S00', episode:'E00' };
 }
 
-// ------------- Existing functions below this line stay the same -------------
-// seasons(), latestEpisodeIn(), trioFor(), renderTimeline(), renderCollage(), card(), inferCover() etc.
+// --- flatten your episodes.json to simple episode cards (fallback when no content.json) ---
+function normalizeEpisodesMeta(raw){
+  if (!Array.isArray(raw)) return [];
+  return raw.map(ep => {
+    const {season, episode} = seFromId(ep.id || '');
+    return {
+      type: 'episode',
+      season, episode,
+      date: new Date().toISOString(),
+      title: ep.title || ep.id,
+      desc:  ep.blurb || '',
+      href:  ep.url   || '#',
+      cover: ep.art   || ''
+    };
+  });
+}
 
-// ------------- Load both files from /data -------------
+// Keep your existing helpers: byDateDesc, $, card(), renderTimeline(), etc.
+// We'll add a safe fallback trio renderer if CONTENT is missing.
+
+let CONTENT = []; // media items (audio/video/article) if content.json exists
+let NEWS = [];    // mapped from news.json
+let EP_META = []; // episode cards from episodes.json
+
 async function load(){
-  // IMPORTANT: paths are relative to index.html; adjust if your folder differs
-  const [episodesRaw, newsRaw] = await Promise.all([
-    fetch('data/episode.json', {cache:'no-store'}).then(r => r.ok ? r.json() : []).catch(()=>[]),
-    fetch('data/news.json',    {cache:'no-store'}).then(r => r.ok ? r.json() : []).catch(()=>[])
+  // fetch all three, but content.json may not exist yet
+  const [newsRaw, epsRaw, contentRaw] = await Promise.all([
+    fetch('data/news.json',     {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
+    fetch('data/episodes.json', {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
+    fetch('content.json',       {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[])
   ]);
 
-  CONTENT = normalizeEpisodes(episodesRaw);
   NEWS    = normalizeNews(newsRaw);
+  EP_META = normalizeEpisodesMeta(epsRaw);
+  CONTENT = Array.isArray(contentRaw) ? contentRaw : [];
 
-  // Render once we have data
-  $("#year").textContent = new Date().getFullYear();
+  // 1) New Releases prefers NEWS; if empty, falls back to CONTENT (as you already coded)
   renderNewReleases();
-  renderTimeline();
-  renderCollage("audio",  "#collage-audio");
-  renderCollage("video",  "#collage-video");
-  renderCollage("article","#collage-article");
+
+  // 2) Timeline:
+  //    If CONTENT exists → use your existing trio logic.
+  //    If not → show the latest episode card from EP_META.
+  const hasMedia = CONTENT.some(x => ['audio','video','article'].includes(x.type));
+  if (hasMedia) {
+    renderTimeline(); // unchanged
+  } else {
+    // simple timeline from EP_META
+    const seasons = [...new Set(EP_META.map(x=>x.season))].sort();
+    const wrap = document.querySelector('#timeline');
+    wrap.innerHTML = `<span class="label">Season:</span>` +
+      seasons.map((s,i)=>`<button class="tab${i===0?' active':''}" role="tab" aria-selected="${i===0}" data-season="${s}">${s.replace('S','Season ')}</button>`).join('');
+    const mount = s=>{
+      const items = EP_META.filter(x=>x.season===s).sort((a,b)=>a.episode.localeCompare(b.episode)).slice(-1);
+      document.querySelector('#episode-trio').innerHTML = items.length
+        ? items.map(card).join('')
+        : `<p>No episodes yet for ${s}.</p>`;
+    };
+    const first = seasons[0]; if (first) mount(first);
+    wrap.addEventListener('click', e=>{
+      const b = e.target.closest('.tab'); if(!b) return;
+      [...wrap.querySelectorAll('.tab')].forEach(t=>{t.classList.remove('active'); t.setAttribute('aria-selected','false')});
+      b.classList.add('active'); b.setAttribute('aria-selected','true');
+      mount(b.dataset.season);
+    }, {passive:true});
+  }
+
+  // 3) Collages: only make sense with media items; otherwise show a tip
+  if (hasMedia) {
+    renderCollage('audio',  '#collage-audio');
+    renderCollage('video',  '#collage-video');
+    renderCollage('article','#collage-article');
+  } else {
+    document.querySelector('#collage-audio').innerHTML   = `<p>Add <code>content.json</code> to show latest podcasts.</p>`;
+    document.querySelector('#collage-video').innerHTML   = `<p>Add <code>content.json</code> to show latest videos.</p>`;
+    document.querySelector('#collage-article').innerHTML = `<p>Add <code>content.json</code> to show latest articles.</p>`;
+  }
+
+  // footer year
+  document.querySelector('#year').textContent = new Date().getFullYear();
 }
 load();
 </script>
+
 
 <script>
 // Auto-pick a cover image when none is provided
