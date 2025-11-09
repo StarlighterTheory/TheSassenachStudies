@@ -226,169 +226,6 @@ body{
   </footer>
 </main>
 <script>
-// --- maps your news.json shape to the list renderer ---
-function normalizeNews(raw){
-  if (!Array.isArray(raw)) return [];
-  return raw.map(x => ({
-    type: (x.tag || 'news').toLowerCase(), // shows as the kicker
-    title: x.title || 'Update',
-    href:  x.url   || '#',
-    date:  x.date  || new Date().toISOString(),
-    desc:  x.desc  || '',
-    season: '', episode: '', cover: ''
-  }));
-}
-
-// --- parse "s01e06" -> {season:"S01", episode:"E06"} ---
-function seFromId(id=''){
-  const m = String(id).match(/s(\d{1,2})e(\d{1,2})/i);
-  return m ? { season:`S${m[1].padStart(2,'0')}`, episode:`E${m[2].padStart(2,'0')}` }
-           : { season:'S00', episode:'E00' };
-}
-
-// --- flatten your episodes.json to simple episode cards (fallback when no content.json) ---
-function normalizeEpisodesMeta(raw){
-  if (!Array.isArray(raw)) return [];
-  return raw.map(ep => {
-    const {season, episode} = seFromId(ep.id || '');
-    return {
-      type: 'episode',
-      season, episode,
-      date: new Date().toISOString(),
-      title: ep.title || ep.id,
-      desc:  ep.blurb || '',
-      href:  ep.url   || '#',
-      cover: ep.art   || ''
-    };
-  });
-}
-
-// Keep your existing helpers: byDateDesc, $, card(), renderTimeline(), etc.
-// We'll add a safe fallback trio renderer if CONTENT is missing.
-
-let CONTENT = []; // media items (audio/video/article) if content.json exists
-let NEWS = [];    // mapped from news.json
-let EP_META = []; // episode cards from episodes.json
-
-async function load(){
-  // fetch all three, but content.json may not exist yet
-  const [newsRaw, epsRaw, contentRaw] = await Promise.all([
-    fetch('data/news.json',     {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
-    fetch('data/episodes.json', {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
-    fetch('content.json',       {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[])
-  ]);
-
-  NEWS    = normalizeNews(newsRaw);
-  EP_META = normalizeEpisodesMeta(epsRaw);
-  CONTENT = Array.isArray(contentRaw) ? contentRaw : [];
-
-  // 1) New Releases prefers NEWS; if empty, falls back to CONTENT (as you already coded)
-  renderNewReleases();
-
-  // 2) Timeline:
-  //    If CONTENT exists → use your existing trio logic.
-  //    If not → show the latest episode card from EP_META.
-  const hasMedia = CONTENT.some(x => ['audio','video','article'].includes(x.type));
-  if (hasMedia) {
-    renderTimeline(); // unchanged
-  } else {
-    // simple timeline from EP_META
-    const seasons = [...new Set(EP_META.map(x=>x.season))].sort();
-    const wrap = document.querySelector('#timeline');
-    wrap.innerHTML = `<span class="label">Season:</span>` +
-      seasons.map((s,i)=>`<button class="tab${i===0?' active':''}" role="tab" aria-selected="${i===0}" data-season="${s}">${s.replace('S','Season ')}</button>`).join('');
-    const mount = s=>{
-      const items = EP_META.filter(x=>x.season===s).sort((a,b)=>a.episode.localeCompare(b.episode)).slice(-1);
-      document.querySelector('#episode-trio').innerHTML = items.length
-        ? items.map(card).join('')
-        : `<p>No episodes yet for ${s}.</p>`;
-    };
-    const first = seasons[0]; if (first) mount(first);
-    wrap.addEventListener('click', e=>{
-      const b = e.target.closest('.tab'); if(!b) return;
-      [...wrap.querySelectorAll('.tab')].forEach(t=>{t.classList.remove('active'); t.setAttribute('aria-selected','false')});
-      b.classList.add('active'); b.setAttribute('aria-selected','true');
-      mount(b.dataset.season);
-    }, {passive:true});
-  }
-
-  // 3) Collages: only make sense with media items; otherwise show a tip
-  if (hasMedia) {
-    renderCollage('audio',  '#collage-audio');
-    renderCollage('video',  '#collage-video');
-    renderCollage('article','#collage-article');
-  } else {
-    document.querySelector('#collage-audio').innerHTML   = `<p>Add <code>content.json</code> to show latest podcasts.</p>`;
-    document.querySelector('#collage-video').innerHTML   = `<p>Add <code>content.json</code> to show latest videos.</p>`;
-    document.querySelector('#collage-article').innerHTML = `<p>Add <code>content.json</code> to show latest articles.</p>`;
-  }
-
-  // footer year
-  document.querySelector('#year').textContent = new Date().getFullYear();
-}
-load();
-</script>
-
-
-<script>
-// Auto-pick a cover image when none is provided
-function inferCover(item){
-  if (item.cover) return item.cover;
-
-  try {
-    const u = new URL(item.href);
-
-    // Archive.org -> use services/img/{identifier}
-    if (u.hostname.endsWith('archive.org')) {
-      const parts = u.pathname.split('/').filter(Boolean);
-      const id =
-        (parts[0]==='details'  && parts[1]) ? parts[1] :
-        (parts[0]==='download' && parts[1]) ? parts[1] : '';
-      if (id) return `https://archive.org/services/img/${id}`;
-    }
-
-    // YouTube -> default thumbnail
-    if (u.hostname.includes('youtube.com') || u.hostname==='youtu.be') {
-      let v = u.searchParams.get('v');
-      if (!v && u.hostname==='youtu.be') v = u.pathname.slice(1);
-      if (v) return `https://img.youtube.com/vi/${v}/hqdefault.jpg`;
-    }
-  } catch(e) {
-    // ignore bad URLs
-  }
-
-  // No good guess
-  return '';
-}
-
-// Override the existing card() to hide media when no cover
-function card(item){
-  const badge = item.type.toUpperCase();
-  const icon  = item.type==="audio" ? "🔊" : item.type==="video" ? "🎬" : "📝";
-  const cover = inferCover(item);
-
-  const media = cover
-    ? `<div class="media" style="background-image:url('${cover}')">
-         <span class="badge" aria-label="${badge}">${icon} ${badge}</span>
-       </div>`
-    : ''; // no placeholder if no cover
-
-  return `
-    <article class="card">
-      ${media}
-      <div class="meta">
-        <div class="kicker">${item.season} · ${item.episode}</div>
-        <div class="title">${item.title}</div>
-        <div class="desc">${item.desc||""}</div>
-      </div>
-      <div class="actions">
-        <a class="button" href="${item.href}" target="_blank" rel="noopener">Open</a>
-      </div>
-    </article>`;
-}
-</script>
-
-<script>
 /* ========= helpers ========= */
 let CONTENT = []; // media items (audio/video/article) when content.json exists
 let NEWS = [];    // from data/news.json
@@ -538,6 +375,60 @@ function normalizeEpisodesMeta(raw){
       desc:  ep.blurb || '',
       href:  ep.url   || '#',
       cover: ep.art   || ''
+    };
+  });
+}
+
+/* ========= Load & render ========= */
+async function load(){
+  const [newsRaw, epsRaw, contentRaw] = await Promise.all([
+    fetch('data/news.json',     {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
+    fetch('data/episodes.json', {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
+    fetch('content.json',       {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[])
+  ]);
+
+  NEWS    = normalizeNews(newsRaw);
+  EP_META = normalizeEpisodesMeta(epsRaw);
+  CONTENT = Array.isArray(contentRaw) ? contentRaw : [];
+
+  // New Releases
+  renderNewReleases();
+
+  // Timeline & Collages
+  const hasMedia = CONTENT.some(x => ['audio','video','article'].includes(x.type));
+  if (hasMedia) {
+    renderTimeline();
+    renderCollage('audio',  '#collage-audio');
+    renderCollage('video',  '#collage-video');
+    renderCollage('article','#collage-article');
+  } else {
+    // Fallback timeline using latest episode card only
+    const seasons = [...new Set(EP_META.map(x=>x.season))].sort();
+    const wrap = $('#timeline');
+    wrap.innerHTML = `<span class="label">Season:</span>` +
+      seasons.map((s,i)=>`<button class="tab${i===0?' active':''}" role="tab" aria-selected="${i===0}" data-season="${s}">${s.replace('S','Season ')}</button>`).join('');
+    const mount = s=>{
+      const items = EP_META.filter(x=>x.season===s).sort((a,b)=>a.episode.localeCompare(b.episode)).slice(-1);
+      $('#episode-trio').innerHTML = items.length ? items.map(card).join('') : `<p>No episodes yet for ${s}.</p>`;
+    };
+    if (seasons[0]) mount(seasons[0]);
+    wrap.addEventListener('click', e=>{
+      const b = e.target.closest('.tab'); if(!b) return;
+      $$$('.tab', wrap).forEach(t=>{t.classList.remove('active'); t.setAttribute('aria-selected','false')});
+      b.classList.add('active'); b.setAttribute('aria-selected','true');
+      mount(b.dataset.season);
+    }, {passive:true});
+
+    $('#collage-audio').innerHTML   = `<p>Add <code>content.json</code> to show latest podcasts.</p>`;
+    $('#collage-video').innerHTML   = `<p>Add <code>content.json</code> to show latest videos.</p>`;
+    $('#collage-article').innerHTML = `<p>Add <code>content.json</code> to show latest articles.</p>`;
+  }
+
+  // Footer year
+  $('#year').textContent = new Date().getFullYear();
+}
+load();
+</script>
 
 </body>
 </html>
