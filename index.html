@@ -226,32 +226,29 @@ body{
 
 <main class="container">
 
-<!-- Hero + New Releases -->
 <section class="hero-row">
-  <!-- Left: split hero (image + text panel side-by-side) -->
   <article class="hero hero-split">
     <div class="hero-media">
-      <!-- use <img> to avoid background-path headaches -->
-      <img src="assets/hero-banner.jpg" alt="The Sassenach Studies — hero banner">
+      <img id="hero-img" src="assets/hero-banner.jpg" alt="The Sassenach Studies — hero banner">
     </div>
     <div class="hero-pane">
-      <div class="hero-kicker">Featured</div>
-      <div class="hero-title">Bloodlines &amp; Timelines</div>
-      <div class="hero-desc">
+      <div id="hero-kicker" class="hero-kicker">Featured</div>
+      <div id="hero-title"  class="hero-title">Bloodlines &amp; Timelines</div>
+      <div id="hero-desc"   class="hero-desc">
         A six-part reading of Outlander’s spiral (connection) and red thread (commitment).
       </div>
       <div class="hero-actions">
-        <a class="hero-btn" href="season-1.html">Explore Season 1</a>
+        <a id="hero-link" class="hero-btn" href="season-1.html">Explore Season 1</a>
       </div>
     </div>
   </article>
 
-  <!-- Right: New Releases (trending list) -->
   <aside class="trends">
     <div class="trends-head"><span>NEW RELEASES</span></div>
     <ol id="trends-list" class="trends-list" aria-live="polite"></ol>
   </aside>
 </section>
+
 
 
 
@@ -413,6 +410,38 @@ function renderCollage(kind, targetId){
   while(list.length<3){ list.push(list[list.length-1]); }
   target.innerHTML = list.map(card).join("");
 }
+let HERO = null;
+
+function normalizeHero(raw){
+  if (!raw) return null;
+  const list = Array.isArray(raw) ? raw : [raw];
+  const h = list
+    .map(x => ({...x, date: x.date || new Date().toISOString()}))
+    .sort((a,b)=> new Date(b.date) - new Date(a.date))[0];
+  return {
+    kicker: h.kicker || 'Featured',
+    title:  h.title  || 'The Sassenach Studies',
+    desc:   h.desc   || '',
+    image:  h.image  || 'assets/hero-banner.jpg',
+    href:   h.href   || '#',
+    cta:    h.cta    || 'Learn more',
+    alt:    h.alt    || 'Hero banner'
+  };
+}
+
+function renderHero(){
+  if (!HERO) return;
+  const img = document.getElementById('hero-img');
+  const kicker = document.getElementById('hero-kicker');
+  const title  = document.getElementById('hero-title');
+  const desc   = document.getElementById('hero-desc');
+  const link   = document.getElementById('hero-link');
+  if (img){ img.src = HERO.image; img.alt = HERO.alt; }
+  if (kicker) kicker.textContent = HERO.kicker;
+  if (title)  title.textContent  = HERO.title;
+  if (desc)   desc.textContent   = HERO.desc;
+  if (link){ link.href = HERO.href; link.textContent = HERO.cta; }
+}
 
 /* ========= Normalizers for your files ========= */
 function normalizeNews(raw){
@@ -447,17 +476,23 @@ function normalizeEpisodesMeta(raw){
   });
 }
 
-/* ========= Load & render ========= */
 async function load(){
-  const [newsRaw, epsRaw, contentRaw] = await Promise.all([
+  const [newsRaw, epsRaw, contentRaw, heroRaw] = await Promise.all([
     fetch('data/news.json',     {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
     fetch('data/episodes.json', {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
-    fetch('content.json',       {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[])
+    fetch('content.json',       {cache:'no-store'}).then(r=>r.ok?r.json():[]).catch(()=>[]),
+    fetch('data/hero.json',     {cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)
   ]);
 
   NEWS    = normalizeNews(newsRaw);
   EP_META = normalizeEpisodesMeta(epsRaw);
   CONTENT = Array.isArray(contentRaw) ? contentRaw : [];
+  HERO    = normalizeHero(heroRaw);
+  renderHero();
+
+  // ...rest of your existing render calls unchanged...
+}
+
 
   // New Releases
   renderNewReleases();
