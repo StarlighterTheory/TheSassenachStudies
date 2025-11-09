@@ -494,7 +494,7 @@ body.density-roomy .rail-block{ padding: 1.1rem }
 }
 .hero .hero-media{
   aspect-ratio:21/9;
-  background: #ddd url('/assets/hero-banner.jpg') center/cover no-repeat;
+  background: #ddd url('assets/hero-banner.jpg') center/cover no-repeat;
   border-bottom:1px solid var(--stone);
 }
 .hero .hero-body{ padding:14px }
