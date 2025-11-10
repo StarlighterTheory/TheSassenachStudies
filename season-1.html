@@ -111,15 +111,39 @@
       </div>
     </header>
 
-    <!-- Hero poster for Season 1 -->
-    <section class="hero" id="seasonHero" hidden>
-      <!-- FIX: give the img a proper ID; JS will set src -->
-      <img id="heroImg" alt="Season poster" loading="lazy" decoding="async" />
-      <div class="ribbon">
-        <h2 id="heroTitle">Season 1 — Bloodlines &amp; Timelines</h2>
-        <p id="heroBlurb">A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment).</p>
-      </div>
-    </section>
+  <!-- Hero -->
+<section class="hero" id="seasonHero" hidden>
+  <img id="heroImg" alt="Season poster" loading="lazy" decoding="async" />
+  <div class="ribbon">
+    <h2 id="heroTitle">Season 1 — Bloodlines &amp; Timelines</h2>
+    <p id="heroBlurb">A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment).</p>
+  </div>
+</section>
+
+<script>
+// Set this to the REAL path of your image *from Seasonal-1.html*.
+// If Seasonal-1.html is at site root and the file is in /assets/, do:
+const POSTER_PATH = "assets/season1-feature.jpg"; // <-- adjust to your filename
+
+(function initHero(){
+  const hero = document.getElementById('seasonHero');
+  const img  = document.getElementById('heroImg');
+  const title= document.getElementById('heroTitle');
+  const blurb= document.getElementById('heroBlurb');
+
+  // Safety: unhide only after we know the image loads
+  img.addEventListener('load', () => { hero.hidden = false; });
+  img.addEventListener('error', (e) => {
+    console.error("Hero image failed to load:", POSTER_PATH, e);
+    // Fallback: unhide the hero so the ribbon text still shows
+    hero.hidden = false;
+  });
+
+  img.src = POSTER_PATH;               // << actually load the image
+  title.textContent = "Season 1 — Bloodlines & Timelines";
+  blurb.textContent = "A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment).";
+})();
+</script>
 
     <section class="filters" aria-label="Filters">
       <div class="seg" role="group" aria-label="Media type">
