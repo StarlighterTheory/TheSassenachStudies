@@ -9,7 +9,7 @@
 <style>
   /* =============================
      Sassenach Studies — parchment & ink skin
-     Single‑file GitHub Pages site
+     Single-file GitHub Pages site
      ============================= */
   :root{
     /* Watercolor/ink palette to match your artwork */
@@ -52,12 +52,12 @@
 
   .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:22px; margin-top:12px}
   /* Fixed column counts for cohesion */
-@media (min-width: 720px){
-  .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (min-width: 1200px){
-  .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
+  @media (min-width: 720px){
+    .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1200px){
+    .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
   .card{background:linear-gradient(#fff, #faf7ee); border:2px solid rgba(0,0,0,.18); border-radius:16px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.10); transition:transform .12s ease, box-shadow .12s ease}
   .thumb{aspect-ratio:16/9; background:#ddd; position:relative}
   .thumb img{width:100%; height:100%; object-fit:cover; display:block}
@@ -113,10 +113,11 @@
 
     <!-- Hero poster for Season 1 -->
     <section class="hero" id="seasonHero" hidden>
-      <img id="assets/season1-banner.jpg" alt="Season poster" />
+      <!-- FIX: give the img a proper ID; JS will set src -->
+      <img id="heroImg" alt="Season poster" loading="lazy" decoding="async" />
       <div class="ribbon">
         <h2 id="heroTitle">Season 1 — Bloodlines &amp; Timelines</h2>
-        <p id="heroBlurb">A six‑part, Outlander‑themed analytical series on spiral (connection) and red thread (commitment).</p>
+        <p id="heroBlurb">A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment).</p>
       </div>
     </section>
 
@@ -132,7 +133,7 @@
     <section class="grid" id="grid" aria-live="polite"></section>
 
     <footer>
-      <p>Files stream from <strong>archive.org</strong> (direct links). This page is a static, privacy‑friendly player hosted on <strong>GitHub Pages</strong>.</p>
+      <p>Files stream from <strong>archive.org</strong> (direct links). This page is a static, privacy-friendly player hosted on <strong>GitHub Pages</strong>.</p>
     </footer>
   </div>
 
@@ -146,14 +147,12 @@
 
 <script>
 // ======== Data model ========
-// Edit or replace this array with your real items.
-// Tip: keep filenames simple (no spaces/apostrophes) for tidy URLs.
 const LIB = {
   season: {
     id: "S01",
     title: "Season 1 — Bloodlines & Timelines",
     poster: "./season1_poster.jpg", // put your Season 1 poster image here
-    blurb: "A six‑part, Outlander‑themed analytical series on spiral (connection) and red thread (commitment)."
+    blurb: "A six-part, Outlander-themed analytical series on spiral (connection) and red thread (commitment)."
   },
   items: [
     {
@@ -162,22 +161,20 @@ const LIB = {
       title:"The Spiral & the Red Thread — How Outlander’s Visual Grammar Creates an Ethical Stage for Time Travel",
       date:"2025-11-05", duration:"36:12",
       mediaUrl:"https://archive.org/download/the-spiral-and-the-red-thread-how-outlanders-visual-grammar-creates-an-ethical-s_20251107/The_Spiral_and_the_Red_Thread_How_Outlander%27s_Visual_Grammar_Creates_an_Ethical_Stage_for_Time_Travel_Sassenach_Studies_S01E01.mp3",
-      thumb:"./thumbs/s01e01.jpg", // use your watercolor cover
+      thumb:"./thumbs/s01e01.jpg",
       listedUrl:"https://listed.to/@SassenachStudies/",
       notes:"Pilot: spiral connects, red thread commits.", tags:["analysis","motifs","pilot","Jamie & Claire cameo"]
     },
-    // Example video entry
     {
       id:"S01E01-V",
       season:"S01", type:"video",
       title:"Episode Companion — Visual Grammar Walkthrough (Video)",
       date:"2025-11-05", duration:"08:45",
-      mediaUrl:"https://archive.org/download/thesassenachstudies/S1E1.mp4", // replace with your real mp4
+      mediaUrl:"https://archive.org/download/thesassenachstudies/S1E1.mp4",
       thumb:"./thumbs/s01e01-video_parchment_toned.png",
       listedUrl:"https://listed.to/@SassenachStudies/",
       notes:"Short visual companion. ", tags:["companion","visuals"]
     },
-    // Pre-fill placeholders for remaining S01 episodes so you can swap URLs quickly
     {id:"S01E02-A", season:"S01", type:"audio", title:"Botany & the Body — Claire’s Pharmacopeia", date:"2025-11-10", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode02.mp3", thumb:"./thumbs/s01e02.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Herbcraft between lore and medicine; competence as tenderness.", tags:["Claire","botany"]},
     {id:"S01E03-A", season:"S01", type:"audio", title:"Culloden Afterlives — Memory, Mourning & Myth", date:"2025-11-15", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode03.mp3", thumb:"./thumbs/s01e03.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Sites of remembrance and narrative work.", tags:["history","memory"]},
     {id:"S01E04-A", season:"S01", type:"audio", title:"Language & Power — Gaelic, Oaths & Authority", date:"2025-11-20", duration:"—", mediaUrl:"https://archive.org/download/REPLACE/episode04.mp3", thumb:"./thumbs/s01e04.jpg", listedUrl:"https://listed.to/@SassenachStudies/", notes:"Speech acts & sovereignty.", tags:["language","power"]},
@@ -196,12 +193,15 @@ const hero = document.getElementById('seasonHero');
 
 (function initHero(){
   if(!LIB.season) return;
-  const img = document.getElementById('heroImg');
+  const img = document.getElementById('heroImg');   // FIX: correct element id
   const title = document.getElementById('heroTitle');
   const blurb = document.getElementById('heroBlurb');
-  if(LIB.season.poster){ img.src = LIB.season.poster; hero.hidden = false; }
-  if(LIB.season.title) title.textContent = LIB.season.title;
-  if(LIB.season.blurb) blurb.textContent = LIB.season.blurb;
+  if (LIB.season.poster) {
+    img.src = LIB.season.poster;                    // set src properly
+    hero.hidden = false;                            // unhide only when poster exists
+  }
+  if (LIB.season.title) title.textContent = LIB.season.title;
+  if (LIB.season.blurb) blurb.textContent = LIB.season.blurb;
 })();
 
 let filter = 'all';
@@ -262,7 +262,7 @@ function playItem(id){
   player.showModal();
 }
 
-function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
+function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;","&gt;":"&gt;","\"":"&quot;","'":"&#39;"}[m])) }
 
 render();
 </script>
